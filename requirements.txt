@@ -1,0 +1,8 @@
+markdown-it-py==3.0.0
+mdurl==0.1.2
+Pygments==2.19.1
+PyQt6==6.8.1
+PyQt6-Qt6==6.8.2
+PyQt6_sip==13.10.0
+PyYAML==6.0.2
+rich==13.9.4
