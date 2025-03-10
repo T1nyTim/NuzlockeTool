@@ -1,0 +1,13 @@
+# Byte-compiled
+**/__pycache__/
+
+# Environments
+.venv/
+
+# Formatting / Linting
+.ruff_cache/
+
+# Project Specific
+journal/
+logs/
+save/

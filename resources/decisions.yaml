@@ -1,0 +1,18 @@
+Starter:
+- game: [Blue, Red]
+  options: [Charmander, Squirtle, Bulbasaur]
+Fossil:
+- game: [Blue, Red, Yellow]
+  options: [Dome Fossil, Helix Fossil]
+SaffronGift:
+- game: [Blue, Red, Yellow]
+  options: [Fighting Dojo, Silph Co.]
+DojoGift:
+- game: [Blue, Red, Yellow]
+  options: [Hitmonchan, Hitmonlee]
+Eeveelution:
+- game: [Blue, Red, Yellow]
+  options: [Flareon, Jolteon, Vaporeon]
+CinnabarEncounter:
+- game: [Blue, Red, Yellow]
+  options: [Amber, Fossil, Wild Encounter]

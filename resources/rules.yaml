@@ -1,0 +1,11 @@
+Nuzlocke:
+  earliest_gen: 1
+  rules:
+  - You may only catch the first wild Pokemon encountered in each area. If it faints or flees, no second chances. In Double Battles or Horde Encounters, you may choose one to catch.
+  - Any fainted Pokemon is considered dead and must be released. Revives of any kind are banned. Running out of living Pokemon means failure.
+Sololocke:
+  earliest_gen: 1
+  rules:
+  - You may only catch the first wild Pokemon encountered in each area. If it faints or flees, no second chances. In Double Battles or Horde Encounters, you may choose one to catch.
+  - Any fainted Pokemon is considered dead and must be released. Revives of any kind are banned. Running out of living Pokemon means failure.
+  - You may have only one Pokemon in your party at a time.

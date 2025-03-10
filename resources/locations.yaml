@@ -1,0 +1,187 @@
+Pallet Town:
+  games: [Blue, Red, Yellow]
+Route 1:
+  games: [Blue, Red, Yellow]
+Viridian City:
+  games: [Blue, Red, Yellow]
+Route 22:
+  games: [Blue, Red, Yellow]
+Route 2:
+  games: [Blue, Red, Yellow]
+Viridian Forest:
+  games: [Blue, Red, Yellow]
+Pewter City:
+  games: [Blue, Red, Yellow]
+Route 3:
+  games: [Blue, Red, Yellow]
+Mt. Moon:
+  games: [Blue, Red, Yellow]
+  type: Full
+Mt. Moon 1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Mt. Moon B1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Mt. Moon B2F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Route 4:
+  games: [Blue, Red, Yellow]
+Cerulean City:
+  games: [Blue, Red, Yellow]
+Route 24:
+  games: [Blue, Red, Yellow]
+Route 25:
+  games: [Blue, Red, Yellow]
+Route 5:
+  games: [Blue, Red, Yellow]
+Underground Path (Routes 5-6):
+  games: [Blue, Red, Yellow]
+Route 6:
+  games: [Blue, Red, Yellow]
+Vermilion City:
+  games: [Blue, Red, Yellow]
+Digletts Cave:
+  games: [Blue, Red, Yellow]
+Route 11:
+  games: [Blue, Red, Yellow]
+Route 9:
+  games: [Blue, Red, Yellow]
+Route 10:
+  games: [Blue, Red, Yellow]
+Rock Tunnel:
+  games: [Blue, Red, Yellow]
+  type: Full
+Rock Tunnel 1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Rock Tunnel B1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Route 8:
+  games: [Blue, Red, Yellow]
+Route 7:
+  games: [Blue, Red, Yellow]
+Celadon City:
+  games: [Blue, Red, Yellow]
+Saffron City:
+  games: [Blue, Red, Yellow]
+Pokemon Tower:
+  games: [Blue, Red, Yellow]
+  type: Full
+Pokemon Tower 3F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Pokemon Tower 4F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Pokemon Tower 5F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Pokemon Tower 6F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Pokemon Tower 7F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Route 12:
+  games: [Blue, Red, Yellow]
+Route 13:
+  games: [Blue, Red, Yellow]
+Route 14:
+  games: [Blue, Red, Yellow]
+Route 15:
+  games: [Blue, Red, Yellow]
+Fuschsia City:
+  games: [Blue, Red, Yellow]
+Route 16:
+  games: [Blue, Red, Yellow]
+Route 17:
+  games: [Blue, Red, Yellow]
+Route 18:
+  games: [Blue, Red, Yellow]
+Safari Zone:
+  games: [Blue, Red, Yellow]
+  type: Full
+Safari Zone Center:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Safari Zone East:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Safari Zone North:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Safari Zone West:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Power Plant:
+  games: [Blue, Red, Yellow]
+Route 19:
+  games: [Blue, Red, Yellow]
+Route 20:
+  games: [Blue, Red, Yellow]
+Seafoam Islands:
+  games: [Blue, Red, Yellow]
+  type: Full
+Seafoam Islands 1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Seafoam Islands B1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Seafoam Islands B2F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Seafoam Islands B3F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Seafoam Islands B4F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Route 21:
+  games: [Blue, Red, Yellow]
+Cinnabar Island:
+  games: [Blue, Red, Yellow]
+Pokemon Mansion:
+  games: [Blue, Red, Yellow]
+  type: Full
+Pokemon Mansion 1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Pokemon Mansion 2F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Pokemon Mansion 3F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Pokemon Mansion B1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Route 23:
+  games: [Blue, Red, Yellow]
+Victory Road:
+  games: [Blue, Red, Yellow]
+  type: Full
+Victory Road 1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Victory Road 2F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Victory Road 3F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Cerulean Cave:
+  games: [Blue, Red, Yellow]
+  type: Full
+Cerulean Cave 1F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Cerulean Cave 2F:
+  games: [Blue, Red, Yellow]
+  type: Partial
+Cerulean Cave B1F:
+  games: [Blue, Red, Yellow]
+  type: Partial

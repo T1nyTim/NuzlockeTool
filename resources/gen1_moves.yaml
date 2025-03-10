@@ -1,0 +1,660 @@
+Absorb:
+  power: 20
+  type: Grass
+  accuracy: 100
+Acid:
+  power: 40
+  type: Poison
+  accuracy: 100
+Acid Armor:
+  power: 0
+  type: Poison
+  accuracy: 100
+Agility:
+  power: 0
+  type: Psychic
+  accuracy: 100
+Amnesia:
+  power: 0
+  type: Psychic
+  accuracy: 100
+Aurora Beam:
+  power: 65
+  type: Ice
+  accuracy: 100
+Barrage:
+  power: 15
+  type: Normal
+  accuracy: 85
+Barrier:
+  power: 0
+  type: Psychic
+  accuracy: 100
+Bide:
+  power: 0
+  type: Normal
+  accuracy: 100
+Bind:
+  power: 15
+  type: Normal
+  accuracy: 75
+Bite:
+  power: 60
+  type: Normal
+  accuracy: 100
+Blizzard:
+  power: 120
+  type: Ice
+  accuracy: 90
+Body Slam:
+  power: 85
+  type: Normal
+  accuracy: 100
+Bonemerang:
+  power: 50
+  type: Ground
+  accuracy: 90
+Bone Club:
+  power: 65
+  type: Ground
+  accuracy: 85
+Bubble:
+  power: 20
+  type: Water
+  accuracy: 100
+Bubblebeam:
+  power: 65
+  type: Water
+  accuracy: 100
+Clamp:
+  power: 35
+  type: Water
+  accuracy: 75
+Comet Punch:
+  power: 18
+  type: Normal
+  accuracy: 85
+Confuse Ray:
+  power: 0
+  type: Ghost
+  accuracy: 100
+Confusion:
+  power: 50
+  type: Psychic
+  accuracy: 100
+Constrict:
+  power: 10
+  type: Normal
+  accuracy: 100
+Conversion:
+  power: 0
+  type: Normal
+  accuracy: 100
+Counter:
+  power: 1
+  type: Fighting
+  accuracy: 100
+Crabhammer:
+  power: 90
+  type: Water
+  accuracy: 85
+Cut:
+  power: 50
+  type: Normal
+  accuracy: 95
+Defense Curl:
+  power: 0
+  type: Normal
+  accuracy: 100
+Dig:
+  power: 100
+  type: Ground
+  accuracy: 100
+Disable:
+  power: 0
+  type: Normal
+  accuracy: 55
+Dizzy Punch:
+  power: 70
+  type: Normal
+  accuracy: 100
+Doubleslap:
+  power: 15
+  type: Normal
+  accuracy: 85
+Double-Edge:
+  power: 100
+  type: Normal
+  accuracy: 100
+Double Kick:
+  power: 30
+  type: Fighting
+  accuracy: 100
+Double Team:
+  power: 0
+  type: Normal
+  accuracy: 100
+Dragon Rage:
+  power: 1
+  type: Dragon
+  accuracy: 100
+Dream Eater:
+  power: 100
+  type: Psychic
+  accuracy: 100
+Drill Peck:
+  power: 80
+  type: Flying
+  accuracy: 100
+Earthquake:
+  power: 100
+  type: Ground
+  accuracy: 100
+Egg Bomb:
+  power: 100
+  type: Normal
+  accuracy: 75
+Ember:
+  power: 40
+  type: Fire
+  accuracy: 100
+Explosion:
+  power: 170
+  type: Normal
+  accuracy: 100
+Fire Blast:
+  power: 120
+  type: Fire
+  accuracy: 85
+Fire Punch:
+  power: 75
+  type: Fire
+  accuracy: 100
+Fire Spin:
+  power: 15
+  type: Fire
+  accuracy: 70
+Fissure:
+  power: 1
+  type: Ground
+  accuracy: 30
+Flamethrower:
+  power: 95
+  type: Fire
+  accuracy: 100
+Flash:
+  power: 0
+  type: Normal
+  accuracy: 70
+Fly:
+  power: 70
+  type: Flying
+  accuracy: 95
+Focus Energy:
+  power: 0
+  type: Normal
+  accuracy: 100
+Fury Attack:
+  power: 15
+  type: Normal
+  accuracy: 85
+Fury Swipes:
+  power: 18
+  type: Normal
+  accuracy: 80
+Glare:
+  power: 0
+  type: Normal
+  accuracy: 75
+Growl:
+  power: 0
+  type: Normal
+  accuracy: 100
+Growth:
+  power: 0
+  type: Normal
+  accuracy: 100
+Guillotine:
+  power: 1
+  type: Normal
+  accuracy: 30
+Gust:
+  power: 40
+  type: Normal
+  accuracy: 100
+Harden:
+  power: 0
+  type: Normal
+  accuracy: 100
+Haze:
+  power: 0
+  type: Ice
+  accuracy: 100
+Headbutt:
+  power: 70
+  type: Normal
+  accuracy: 100
+Hi Jump_KICK:
+  power: 85
+  type: Fighting
+  accuracy: 90
+Horn Attack:
+  power: 65
+  type: Normal
+  accuracy: 100
+Horn Drill:
+  power: 1
+  type: Normal
+  accuracy: 30
+Hydro Pump:
+  power: 120
+  type: Water
+  accuracy: 80
+Hyper Beam:
+  power: 150
+  type: Normal
+  accuracy: 90
+Hyper Fang:
+  power: 80
+  type: Normal
+  accuracy: 90
+Hypnosis:
+  power: 0
+  type: Psychic
+  accuracy: 60
+Ice Beam:
+  power: 95
+  type: Ice
+  accuracy: 100
+Ice Punch:
+  power: 75
+  type: Ice
+  accuracy: 100
+Jump Kick:
+  power: 70
+  type: Fighting
+  accuracy: 95
+Karate Chop:
+  power: 50
+  type: Normal
+  accuracy: 100
+Kinesis:
+  power: 0
+  type: Psychic
+  accuracy: 80
+Leech Life:
+  power: 20
+  type: Bug
+  accuracy: 100
+Leech Seed:
+  power: 0
+  type: Grass
+  accuracy: 90
+Leer:
+  power: 0
+  type: Normal
+  accuracy: 100
+Lick:
+  power: 20
+  type: Ghost
+  accuracy: 100
+Light Screen:
+  power: 0
+  type: Psychic
+  accuracy: 100
+Lovely Kiss:
+  power: 0
+  type: Normal
+  accuracy: 75
+Low Kick:
+  power: 50
+  type: Fighting
+  accuracy: 90
+Meditate:
+  power: 0
+  type: Psychic
+  accuracy: 100
+Mega Drain:
+  power: 40
+  type: Grass
+  accuracy: 100
+Mega Kick:
+  power: 120
+  type: Normal
+  accuracy: 75
+Mega Punch:
+  power: 80
+  type: Normal
+  accuracy: 85
+Metronome:
+  power: 0
+  type: Normal
+  accuracy: 100
+Mimic:
+  power: 0
+  type: Normal
+  accuracy: 100
+Minimize:
+  power: 0
+  type: Normal
+  accuracy: 100
+Mirror Move:
+  power: 0
+  type: Flying
+  accuracy: 100
+Mist:
+  power: 0
+  type: Ice
+  accuracy: 100
+Night Shade:
+  power: 0
+  type: Ghost
+  accuracy: 100
+Pay Day:
+  power: 40
+  type: Normal
+  accuracy: 100
+Peck:
+  power: 35
+  type: Flying
+  accuracy: 100
+Petal Dance:
+  power: 70
+  type: Grass
+  accuracy: 100
+Pin Missile:
+  power: 14
+  type: Bug
+  accuracy: 85
+Poisonpowder:
+  power: 0
+  type: Poison
+  accuracy: 75
+Poison Gas:
+  power: 0
+  type: Poison
+  accuracy: 55
+Poison Sting:
+  power: 15
+  type: Poison
+  accuracy: 100
+Pound:
+  power: 40
+  type: Normal
+  accuracy: 100
+Psybeam:
+  power: 65
+  type: Psychic
+  accuracy: 100
+Psychic M:
+  power: 90
+  type: Psychic
+  accuracy: 100
+Psywave:
+  power: 1
+  type: Psychic
+  accuracy: 80
+Quick Attack:
+  power: 40
+  type: Normal
+  accuracy: 100
+Rage:
+  power: 20
+  type: Normal
+  accuracy: 100
+Razor Leaf:
+  power: 55
+  type: Grass
+  accuracy: 95
+Razor Wind:
+  power: 80
+  type: Normal
+  accuracy: 75
+Recover:
+  power: 0
+  type: Normal
+  accuracy: 100
+Reflect:
+  power: 0
+  type: Psychic
+  accuracy: 100
+Rest:
+  power: 0
+  type: Psychic
+  accuracy: 100
+Roar:
+  power: 0
+  type: Normal
+  accuracy: 100
+Rock Slide:
+  power: 75
+  type: Rock
+  accuracy: 90
+Rock Throw:
+  power: 50
+  type: Rock
+  accuracy: 65
+Rolling Kick:
+  power: 60
+  type: Fighting
+  accuracy: 85
+Sand-Attack:
+  power: 0
+  type: Normal
+  accuracy: 100
+Scratch:
+  power: 40
+  type: Normal
+  accuracy: 100
+Screech:
+  power: 0
+  type: Normal
+  accuracy: 85
+Seismic Toss:
+  power: 1
+  type: Fighting
+  accuracy: 100
+Selfdestruct:
+  power: 130
+  type: Normal
+  accuracy: 100
+Sharpen:
+  power: 0
+  type: Normal
+  accuracy: 100
+Sing:
+  power: 0
+  type: Normal
+  accuracy: 55
+Skull Bash:
+  power: 100
+  type: Normal
+  accuracy: 100
+Sky Attack:
+  power: 140
+  type: Flying
+  accuracy: 90
+Slam:
+  power: 80
+  type: Normal
+  accuracy: 75
+Slash:
+  power: 70
+  type: Normal
+  accuracy: 100
+Sleep Powder:
+  power: 0
+  type: Grass
+  accuracy: 75
+Sludge:
+  power: 65
+  type: Poison
+  accuracy: 100
+Smog:
+  power: 20
+  type: Poison
+  accuracy: 70
+Smokescreen:
+  power: 0
+  type: Normal
+  accuracy: 100
+Softboiled:
+  power: 0
+  type: Normal
+  accuracy: 100
+Solarbeam:
+  power: 120
+  type: Grass
+  accuracy: 100
+Sonicboom:
+  power: 1
+  type: Normal
+  accuracy: 90
+Spike Cannon:
+  power: 20
+  type: Normal
+  accuracy: 100
+Splash:
+  power: 0
+  type: Normal
+  accuracy: 100
+Spore:
+  power: 0
+  type: Grass
+  accuracy: 100
+Stomp:
+  power: 65
+  type: Normal
+  accuracy: 100
+Strength:
+  power: 80
+  type: Normal
+  accuracy: 100
+String Shot:
+  power: 0
+  type: Bug
+  accuracy: 95
+Struggle:
+  power: 50
+  type: Normal
+  accuracy: 100
+Stun Spore:
+  power: 0
+  type: Grass
+  accuracy: 75
+Submission:
+  power: 80
+  type: Fighting
+  accuracy: 80
+Substitute:
+  power: 0
+  type: Normal
+  accuracy: 100
+Supersonic:
+  power: 0
+  type: Normal
+  accuracy: 55
+Super Fang:
+  power: 1
+  type: Normal
+  accuracy: 90
+Surf:
+  power: 95
+  type: Water
+  accuracy: 100
+Swift:
+  power: 60
+  type: Normal
+  accuracy: 100
+Swords Dance:
+  power: 0
+  type: Normal
+  accuracy: 100
+Tackle:
+  power: 35
+  type: Normal
+  accuracy: 95
+Tail Whip:
+  power: 0
+  type: Normal
+  accuracy: 100
+Take Down:
+  power: 90
+  type: Normal
+  accuracy: 85
+Teleport:
+  power: 0
+  type: Psychic
+  accuracy: 100
+Thrash:
+  power: 90
+  type: Normal
+  accuracy: 100
+Thunder:
+  power: 120
+  type: Electric
+  accuracy: 70
+Thunderbolt:
+  power: 95
+  type: Electric
+  accuracy: 100
+Thunderpunch:
+  power: 75
+  type: Electric
+  accuracy: 100
+Thundershock:
+  power: 40
+  type: Electric
+  accuracy: 100
+Thunder Wave:
+  power: 0
+  type: Electric
+  accuracy: 100
+Toxic:
+  power: 0
+  type: Poison
+  accuracy: 85
+Transform:
+  power: 0
+  type: Normal
+  accuracy: 100
+Tri Attack:
+  power: 80
+  type: Normal
+  accuracy: 100
+Twineedle:
+  power: 25
+  type: Bug
+  accuracy: 100
+Vicegrip:
+  power: 55
+  type: Normal
+  accuracy: 100
+Vine Whip:
+  power: 35
+  type: Grass
+  accuracy: 100
+Waterfall:
+  power: 80
+  type: Water
+  accuracy: 100
+Water Gun:
+  power: 40
+  type: Water
+  accuracy: 100
+Whirlwind:
+  power: 0
+  type: Normal
+  accuracy: 85
+Wing Attack:
+  power: 35
+  type: Flying
+  accuracy: 100
+Withdraw:
+  power: 0
+  type: Water
+  accuracy: 100
+Wrap:
+  power: 15
+  type: Normal
+  accuracy: 85

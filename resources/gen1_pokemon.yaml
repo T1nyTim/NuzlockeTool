@@ -1,0 +1,1276 @@
+Abra:
+  atk: 20
+  def: 15
+  evolve: [Kadabra]
+  hp: 25
+  moves: [Bide, Body Slam, Counter, Double Team, Double-Edge, Flash, Mega Kick, Mega Punch, Metronome, Mimic, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Submission, Substitute, Take Down, Teleport, Thunder Wave, Toxic, Tri Attack]
+  spd: 90
+  spe: 105
+  type: [Psychic]
+Aerodactyl:
+  atk: 105
+  def: 65
+  hp: 80
+  moves: [Agility, Bide, Bite, Double Team, Double-Edge, Dragon Rage, Fire Blast, Fly, Hyper Beam, Mimic, Rage, Razor Wind, Reflect, Rest, Sky Attack, Substitute, Supersonic, Swift, Take Down, Toxic, Whirlwind, Wing Attack]
+  spd: 130
+  spe: 60
+  type: [Rock, Flying]
+Alakazam:
+  atk: 50
+  def: 45
+  hp: 55
+  moves: [Bide, Body Slam, Confusion, Counter, Dig, Disable, Double Team, Double-Edge, Flash, Hyper Beam, Mega Kick, Mega Punch, Metronome, Mimic, Psybeam, Psychic, Psywave, Rage, Recover, Reflect, Rest, Seismic Toss, Skull Bash, Submission, Substitute, Take Down, Teleport, Thunder Wave, Toxic, Tri Attack]
+  spd: 120
+  spe: 135
+  type: [Psychic]
+Arbok:
+  atk: 85
+  def: 69
+  hp: 60
+  moves: [Acid, Bide, Bite, Body Slam, Dig, Double Team, Double-Edge, Earthquake, Fissure, Glare, Hyper Beam, Leer, Mega Drain, Mimic, Poison Sting, Rage, Rest, Rock Slide, Screech, Skull Bash, Strength, Substitute, Take Down, Toxic, Wrap]
+  spd: 80
+  spe: 65
+  type: [Poison]
+Arcanine:
+  atk: 110
+  def: 80
+  hp: 90
+  moves: [Bide, Body Slam, Dig, Double Team, Double-Edge, Dragon Rage, Ember, Fire Blast, Hyper Beam, Leer, Mimic, Rage, Reflect, Rest, Roar, Skull Bash, Substitute, Swift, Take Down, Teleport, Toxic]
+  spd: 95
+  spe: 80
+  type: [Fire]
+Articuno:
+  atk: 85
+  def: 100
+  hp: 90
+  moves: [Agility, Bide, Blizzard, Bubblebeam, Double Team, Double-Edge, Fly, Hyper Beam, Ice Beam, Mimic, Mist, Peck, Rage, Razor Wind, Reflect, Rest, Sky Attack, Substitute, Swift, Take Down, Toxic, Water Gun, Whirlwind]
+  spd: 85
+  spe: 125
+  type: [Ice, Flying]
+Beedrill:
+  atk: 80
+  def: 40
+  hp: 65
+  moves: [Agility, Bide, Cut, Double Team, Double-Edge, Focus Energy, Fury Attack, Hyper Beam, Mega Drain, Mimic, Pin Missile, Rage, Reflect, Rest, Skull Bash, Substitute, Swift, Swords Dance, Take Down, Toxic, Twineedle]
+  spd: 75
+  spe: 45
+  type: [Bug, Poison]
+Bellsprout:
+  atk: 75
+  def: 35
+  evolve: [Weepinbell]
+  hp: 50
+  moves: [Acid, Bide, Cut, Double Team, Double-Edge, Growth, Mega Drain, Mimic, Poisonpowder, Rage, Razor Leaf, Reflect, Rest, Slam, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swords Dance, Take Down, Toxic, Vine Whip, Wrap]
+  spd: 40
+  spe: 70
+  type: [Grass, Poison]
+Blastoise:
+  atk: 83
+  def: 100
+  hp: 79
+  moves: [Bide, Bite, Blizzard, Body Slam, Bubble, Bubblebeam, Counter, Dig, Double Team, Double-Edge, Earthquake, Fissure, Hydro Pump, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Mimic, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Tackle, Tail Whip, Take Down, Toxic, Water Gun, Withdraw]
+  spd: 78
+  spe: 85
+  type: [Water]
+Bulbasaur:
+  atk: 49
+  def: 49
+  evolve: [Ivysaur]
+  hp: 45
+  moves: [Bide, Body Slam, Cut, Double Team, Double-Edge, Growl, Growth, Leech Seed, Mega Drain, Mimic, Poisonpowder, Rage, Razor Leaf, Reflect, Rest, Sleep Powder, Solarbeam, Substitute, Swords Dance, Tackle, Take Down, Toxic, Vine Whip]
+  spd: 45
+  spe: 65
+  type: [Grass, Poison]
+Butterfree:
+  atk: 45
+  def: 50
+  hp: 60
+  moves: [Bide, Confusion, Double Team, Double-Edge, Hyper Beam, Mega Drain, Mimic, Poisonpowder, Psybeam, Psychic, Psywave, Rage, Razor Wind, Reflect, Rest, Sleep Powder, Solarbeam, Stun Spore, Substitute, Supersonic, Swift, Take Down, Teleport, Toxic, Whirlwind]
+  spd: 70
+  spe: 80
+  type: [Bug, Flying]
+Caterpie:
+  atk: 30
+  def: 35
+  evolve: [Metapod]
+  hp: 45
+  moves: [String Shot, Tackle]
+  spd: 45
+  spe: 20
+  type: [Bug]
+Chansey:
+  atk: 5
+  def: 5
+  hp: 250
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Defense Curl, Double Team, Double-Edge, Doubleslap, Egg Bomb, Fire Blast, Flash, Growl, Hyper Beam, Ice Beam, Light Screen, Mega Kick, Mega Punch, Metronome, Mimic, Minimize, Pound, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Sing, Skull Bash, Softboiled, Solarbeam, Strength, Submission, Substitute, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack, Water Gun]
+  spd: 50
+  spe: 105
+  type: [Normal]
+Charizard:
+  atk: 84
+  def: 78
+  hp: 78
+  moves: [Bide, Body Slam, Counter, Cut, Dig, Double Team, Double-Edge, Dragon Rage, Earthquake, Ember, Fire Blast, Fire Spin, Fissure, Flamethrower, Fly, Growl, Hyper Beam, Leer, Mega Kick, Mega Punch, Mimic, Rage, Reflect, Rest, Scratch, Seismic Toss, Skull Bash, Slash, Strength, Submission, Substitute, Swift, Swords Dance, Take Down, Toxic]
+  spd: 100
+  spe: 85
+  type: [Fire, Flying]
+Charmander:
+  atk: 52
+  def: 43
+  evolve: [Charmeleon]
+  hp: 39
+  moves: [Bide, Body Slam, Counter, Cut, Dig, Double Team, Double-Edge, Dragon Rage, Ember, Fire Blast, Fire Spin, Flamethrower, Growl, Leer, Mega Kick, Mega Punch, Mimic, Rage, Reflect, Rest, Scratch, Seismic Toss, Skull Bash, Slash, Strength, Submission, Substitute, Swift, Swords Dance, Take Down, Toxic]
+  spd: 65
+  spe: 50
+  type: [Fire]
+Charmeleon:
+  atk: 64
+  def: 58
+  evolve: [Charizard]
+  hp: 58
+  moves: [Bide, Body Slam, Counter, Cut, Dig, Double Team, Double-Edge, Dragon Rage, Ember, Fire Blast, Fire Spin, Flamethrower, Growl, Leer, Mega Kick, Mega Punch, Mimic, Rage, Reflect, Rest, Scratch, Seismic Toss, Skull Bash, Slash, Strength, Submission, Substitute, Swift, Swords Dance, Take Down, Toxic]
+  spd: 80
+  spe: 65
+  type: [Fire]
+Clefable:
+  atk: 70
+  def: 73
+  hp: 95
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Double Team, Double-Edge, Doubleslap, Fire Blast, Flash, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Metronome, Mimic, Minimize, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Sing, Skull Bash, Solarbeam, Strength, Submission, Substitute, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack, Water Gun]
+  spd: 60
+  spe: 85
+  type: [Normal]
+Clefairy:
+  atk: 45
+  def: 48
+  evolve: [Clefable]
+  hp: 70
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Defense Curl, Double Team, Double-Edge, Doubleslap, Fire Blast, Flash, Growl, Ice Beam, Light Screen, Mega Kick, Mega Punch, Metronome, Mimic, Minimize, Pound, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Sing, Skull Bash, Solarbeam, Strength, Submission, Substitute, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack, Water Gun]
+  spd: 35
+  spe: 60
+  type: [Normal]
+Cloyster:
+  atk: 95
+  def: 180
+  hp: 50
+  moves: [Aurora Beam, Bide, Blizzard, Bubblebeam, Clamp, Double Team, Double-Edge, Explosion, Hyper Beam, Ice Beam, Mimic, Rage, Reflect, Rest, Selfdestruct, Spike Cannon, Substitute, Supersonic, Surf, Swift, Take Down, Teleport, Toxic, Tri Attack, Water Gun, Withdraw]
+  spd: 70
+  spe: 85
+  type: [Water, Ice]
+Cubone:
+  atk: 50
+  def: 95
+  evolve: [Marowak]
+  hp: 50
+  moves: [Bide, Blizzard, Body Slam, Bone Club, Bonemerang, Bubblebeam, Counter, Dig, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Focus Energy, Growl, Ice Beam, Leer, Mega Kick, Mega Punch, Mimic, Rage, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Take Down, Thrash, Toxic, Water Gun]
+  spd: 35
+  spe: 40
+  type: [Ground]
+Dewgong:
+  atk: 70
+  def: 80
+  hp: 90
+  moves: [Aurora Beam, Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Growl, Headbutt, Horn Drill, Hyper Beam, Ice Beam, Mimic, Pay Day, Rage, Rest, Skull Bash, Strength, Substitute, Surf, Take Down, Toxic, Water Gun]
+  spd: 70
+  spe: 95
+  type: [Water, Ice]
+Diglett:
+  atk: 55
+  def: 25
+  evolve: [Dugtrio]
+  hp: 10
+  moves: [Bide, Body Slam, Dig, Double Team, Double-Edge, Earthquake, Fissure, Growl, Mimic, Rage, Rest, Rock Slide, Sand-Attack, Scratch, Slash, Substitute, Take Down, Toxic]
+  spd: 95
+  spe: 45
+  type: [Ground]
+Ditto:
+  atk: 48
+  def: 48
+  hp: 48
+  moves: [Transform]
+  spd: 48
+  spe: 48
+  type: [Normal]
+Dodrio:
+  atk: 110
+  def: 70
+  hp: 60
+  moves: [Agility, Bide, Body Slam, Double Team, Double-Edge, Drill Peck, Fly, Fury Attack, Growl, Hyper Beam, Mimic, Peck, Rage, Reflect, Rest, Skull Bash, Sky Attack, Substitute, Take Down, Toxic, Tri Attack, Whirlwind]
+  spd: 100
+  spe: 60
+  type: [Normal, Flying]
+Doduo:
+  atk: 85
+  def: 45
+  evolve: [Dodrio]
+  hp: 35
+  moves: [Agility, Bide, Body Slam, Double Team, Double-Edge, Drill Peck, Fly, Fury Attack, Growl, Mimic, Peck, Rage, Reflect, Rest, Skull Bash, Sky Attack, Substitute, Take Down, Toxic, Tri Attack, Whirlwind]
+  spd: 75
+  spe: 35
+  type: [Normal, Flying]
+Dragonair:
+  atk: 84
+  def: 65
+  evolve: [Dragonite]
+  hp: 61
+  moves: [Agility, Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Dragon Rage, Fire Blast, Horn Drill, Hyper Beam, Ice Beam, Leer, Mimic, Rage, Reflect, Rest, Skull Bash, Slam, Substitute, Surf, Swift, Take Down, Thunder, Thunder Wave, Thunderbolt, Toxic, Water Gun, Wrap]
+  spd: 70
+  spe: 70
+  type: [Dragon]
+Dragonite:
+  atk: 134
+  def: 95
+  hp: 91
+  moves: [Agility, Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Dragon Rage, Fire Blast, Horn Drill, Hyper Beam, Ice Beam, Leer, Mimic, Rage, Razor Wind, Reflect, Rest, Skull Bash, Slam, Strength, Substitute, Surf, Swift, Take Down, Thunder, Thunder Wave, Thunderbolt, Toxic, Water Gun, Wrap]
+  spd: 80
+  spe: 100
+  type: [Dragon, Flying]
+Dratini:
+  atk: 64
+  def: 45
+  evolve: [Dragonair]
+  hp: 41
+  moves: [Agility, Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Dragon Rage, Fire Blast, Hyper Beam, Ice Beam, Leer, Mimic, Rage, Reflect, Rest, Skull Bash, Slam, Substitute, Surf, Swift, Take Down, Thunder, Thunder Wave, Thunderbolt, Toxic, Water Gun, Wrap]
+  spd: 50
+  spe: 50
+  type: [Dragon]
+Drowzee:
+  atk: 48
+  def: 45
+  evolve: [Hypno]
+  hp: 60
+  moves: [Bide, Body Slam, Confusion, Counter, Disable, Double Team, Double-Edge, Dream Eater, Flash, Headbutt, Hypnosis, Meditate, Mega Kick, Mega Punch, Metronome, Mimic, Poison Gas, Pound, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Submission, Substitute, Take Down, Teleport, Thunder Wave, Toxic, Tri Attack]
+  spd: 42
+  spe: 90
+  type: [Psychic]
+Dugtrio:
+  atk: 80
+  def: 50
+  hp: 35
+  moves: [Bide, Body Slam, Dig, Double Team, Double-Edge, Earthquake, Fissure, Growl, Hyper Beam, Mimic, Rage, Rest, Rock Slide, Sand-Attack, Scratch, Slash, Substitute, Take Down, Toxic]
+  spd: 120
+  spe: 70
+  type: [Ground]
+Eevee:
+  atk: 55
+  def: 50
+  evolve: [Vaporean, Jolteon, Flareon]
+  hp: 55
+  moves: [Bide, Bite, Body Slam, Double Team, Double-Edge, Mimic, Quick Attack, Rage, Reflect, Rest, Sand-Attack, Skull Bash, Substitute, Swift, Tackle, Tail Whip, Take Down, Toxic]
+  spd: 55
+  spe: 65
+  type: [Normal]
+Ekans:
+  atk: 60
+  def: 44
+  evolve: [Arbok]
+  hp: 35
+  moves: [Acid, Bide, Bite, Body Slam, Dig, Double Team, Double-Edge, Earthquake, Fissure, Glare, Leer, Mega Drain, Mimic, Poison Sting, Rage, Rest, Rock Slide, Screech, Skull Bash, Strength, Substitute, Take Down, Toxic, Wrap]
+  spd: 55
+  spe: 40
+  type: [Ekans]
+Electabuzz:
+  atk: 83
+  def: 57
+  hp: 65
+  moves: [Bide, Body Slam, Counter, Double Team, Double-Edge, Flash, Hyper Beam, Leer, Light Screen, Mega Kick, Mega Punch, Metronome, Mimic, Psychic, Psywave, Quick Attack, Rage, Reflect, Rest, Screech, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Swift, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Thunderpunch, Thundershock, Toxic]
+  spd: 105
+  spe: 85
+  type: [Electric]
+Electrode:
+  atk: 50
+  def: 70
+  hp: 60
+  moves: [Bide, Double Team, Explosion, Flash, Hyper Beam, Light Screen, Mimic, Rage, Reflect, Rest, Screech, Selfdestruct, Skull Bash, Sonicboom, Substitute, Swift, Tackle, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic]
+  spd: 140
+  spe: 80
+  type: [Electric]
+Exeggcute:
+  atk: 40
+  def: 80
+  evolve: [Exeggutor]
+  hp: 60
+  moves: [Barrage, Bide, Double Team, Double-Edge, Egg Bomb, Explosion, Hypnosis, Leech Seed, Mimic, Poisonpowder, Psychic, Psywave, Rage, Reflect, Rest, Selfdestruct, Sleep Powder, Solarbeam, Stun Spore, Substitute, Take Down, Teleport, Toxic]
+  spd: 40
+  spe: 60
+  type: [Grass, Psychic]
+Exeggutor:
+  atk: 95
+  def: 85
+  hp: 95
+  moves: [Barrage, Bide, Double Team, Double-Edge, Egg Bomb, Explosion, Hyper Beam, Hypnosis, Mega Drain, Mimic, Psychic, Psywave, Rage, Reflect, Rest, Selfdestruct, Solarbeam, Stomp, Strength, Substitute, Take Down, Teleport, Toxic]
+  spd: 55
+  spe: 125
+  type: [Grass, Psychic]
+Farfetch'd:
+  atk: 65
+  def: 55
+  hp: 52
+  moves: [Agility, Bide, Body Slam, Cut, Double Team, Double-Edge, Fly, Fury Attack, Leer, Mimic, Peck, Rage, Razor Wind, Reflect, Rest, Sand-Attack, Skull Bash, Slash, Substitute, Swift, Swords Dance, Take Down, Toxic, Whirlwind]
+  spd: 60
+  spe: 58
+  type: [Normal, Flying]
+Fearow:
+  atk: 90
+  def: 65
+  hp: 65
+  moves: [Agility, Bide, Double Team, Double-Edge, Drill Peck, Fly, Fury Attack, Growl, Hyper Beam, Leer, Mimic, Mirror Move, Peck, Rage, Razor Wind, Rest, Sky Attack, Substitute, Swift, Take Down, Toxic, Whirlwind]
+  spd: 100
+  spe: 61
+  type: [Normal, Flying]
+Flareon:
+  atk: 130
+  def: 60
+  hp: 65
+  moves: [Bide, Bite, Body Slam, Double Team, Double-Edge, Ember, Fire Blast, Fire Spin, Flamethrower, Hyper Beam, Leer, Mimic, Quick Attac, Rage, Reflect, Rest, Sand-Attack, Skull Bash, Substitute, Swift, Tackle, Tail Whip, Take Down, Toxic]
+  spd: 65
+  spe: 110
+  type: [Fire]
+Gastly:
+  atk: 35
+  def: 30
+  evolve: [Haunter]
+  hp: 30
+  moves: [Bide, Confuse Ray, Double Team, Dream Eater, Explosion, Hypnosis, Lick, Mega Drain, Mimic, Night Shade, Psychic, Psywave, Rage, Rest, Selfdestruct, Substitute, Thunder, Thunderbolt, Toxic]
+  spd: 80
+  spe: 100
+  type: [Ghost, Poison]
+Gengar:
+  atk: 65
+  def: 60
+  hp: 60
+  moves: [Bide, Body Slam, Confuse Ray, Counter, Double Team, Double-Edge, Dream Eater, Explosion, Hyper Beam, Hypnosis, Lick, Mega Drain, Mega Kick, Mega Punch, Metronome, Mimic, Night Shade, Psychic, Psywave, Rage, Rest, Seismic Toss, Selfdestruct, Skull Bash, Strength, Submission, Substitute, Take Down, Thunder, Thunderbolt, Toxic]
+  spd: 110
+  spe: 130
+  type: [Ghost, Poison]
+Geodude:
+  atk: 80
+  def: 100
+  evolve: [Graveler]
+  hp: 40
+  moves: [Bide, Body Slam, Counter, Defense Curl, Dig, Double Team, Double-Edge, Earthquake, Explosion, Fire Blast, Fissure, Harden, Mega Punch, Metronome, Mimic, Rage, Rest, Rock Slide, Rock Throw, Seismic Toss, Selfdestruct, Strength, Submission, Substitute, Tackle, Take Down, Toxic]
+  spd: 20
+  spe: 30
+  type: [Rock, Ground]
+Gloom:
+  atk: 65
+  def: 70
+  hp: 60
+  moves: [Absorb, Acid, Bide, Cut, Double Team, Double-Edge, Mega Drain, Mimic, Petal Dance, Poisonpowder, Rage, Reflect, Rest, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swords Dance, Take Down, Toxic]
+  spd: 40
+  spe: 85
+  type: [Grass, Poison]
+Golbat:
+  atk: 80
+  def: 70
+  hp: 75
+  moves: [Bide, Bite, Confuse Ray, Double Team, Double-Edge, Haze, Hyper Beam, Leech Life, Mega Drain, Mimic, Rage, Razor Wind, Rest, Screech, Substitute, Supersonic, Swift, Take Down, Toxic, Whirlwind, Wing Attack]
+  spd: 90
+  spe: 75
+  type: [Poison, Flying]
+Goldeen:
+  atk: 67
+  def: 60
+  evolve: [Seaking]
+  hp: 45
+  moves: [Agility, Bide, Blizzard, Bubblebeam, Double Team, Double-Edge, Fury Attack, Horn Attack, Horn Drill, Ice Beam, Mimic, Peck, Rage, Rest, Skull Bash, Substitute, Supersonic, Surf, Swift, Tail Whip, Take Down, Toxic, Water Gun, Waterfall]
+  spd: 63
+  spe: 50
+  type: [Water]
+Golduck:
+  atk: 82
+  def: 78
+  hp: 80
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Confusion, Counter, Dig, Disable, Double Team, Double-Edge, Fury Swipes, Hydro Pump, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Mimic, Pay Day, Rage, Rest, Scratch, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Swift, Tail Whip, Take Down, Toxic, Water Gun]
+  spd: 85
+  spe: 80
+  type: [Water]
+Golem:
+  atk: 110
+  def: 130
+  hp: 80
+  moves: [Bide, Body Slam, Counter, Defense Curl, Dig, Double Team, Double-Edge, Earthquake, Explosion, Fire Blast, Fissure, Harden, Hyper Beam, Mega Kick, Mega Punch, Metronome, Mimic, Rage, Rest, Rock Slide, Rock Throw, Seismic Toss, Selfdestruct, Strength, Submission, Substitute, Tackle, Take Down, Toxic]
+  spd: 45
+  spe: 55
+  type: [Rock, Ground]
+Graveler:
+  atk: 95
+  def: 115
+  evolve: [Golem]
+  hp: 55
+  moves: [Bide, Body Slam, Counter, Defense Curl, Dig, Double Team, Double-Edge, Earthquake, Explosion, Fire Blast, Fissure, Harden, Mega Punch, Metronome, Mimic, Rage, Rest, Rock Slide, Rock Throw, Seismic Toss, Selfdestruct, Strength, Submission, Substitute, Tackle, Take Down, Toxic]
+  spd: 35
+  spe: 45
+  type: [Rock, Ground]
+Grimer:
+  atk: 80
+  def: 50
+  evolve: [Muk]
+  hp: 80
+  moves: [Acid Armor, Bide, Body Slam, Disable, Double Team, Explosion, Fire Blast, Harden, Mega Drain, Mimic, Minimize, Poison Gas, Pound, Rage, Rest, Screech, Selfdestruct, Sludge, Substitute, Thunder, Thunderbolt, Toxic]
+  spd: 25
+  spe: 40
+  type: [Poison]
+Growlithe:
+  atk: 70
+  def: 45
+  evolve: [Arcanine]
+  hp: 55
+  moves: [Agility, Bide, Bite, Body Slam, Dig, Double Team, Double-Edge, Dragon Rage, Ember, Fire Blast, Flamethrower, Leer, Mimic, Rage, Reflect, Rest, Roar, Skull Bash, Substitute, Swift, Take Down, Toxic]
+  spd: 60
+  spe: 50
+  type: [Fire]
+Gyarados:
+  atk: 125
+  def: 79
+  hp: 95
+  moves: [Bide, Bite, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Dragon Rage, Fire Blast, Hydro Pump, Hyper Beam, Ice Beam, Leer, Mimic, Rage, Reflect, Rest, Skull Bash, Strength, Substitute, Surf, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 81
+  spe: 100
+  type: [Water, Flying]
+Haunter:
+  atk: 50
+  def: 45
+  evolve: [Gengar]
+  hp: 45
+  moves: [Bide, Confuse Ray, Double Team, Dream Eater, Explosion, Hypnosis, Lick, Mega Drain, Mimic, Night Shade, Psychic, Psywave, Rage, Rest, Selfdestruct, Substitute, Thunder, Thunderbolt, Toxic]
+  spd: 95
+  spe: 115
+  type: [Ghost, Poison]
+Hitmonchan:
+  atk: 105
+  def: 79
+  hp: 50
+  moves: [Agility, Bide, Body Slam, Comet Punch, Counter, Double Team, Double-Edge, Fire Punch, Ice Punch, Mega Kick, Mega Punch, Metronome, Mimic, Rage, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Swift, Take Down, Thunderpunch, Toxic]
+  spd: 76
+  spe: 35
+  type: [Fighting]
+Hitmonlee:
+  atk: 120
+  def: 53
+  hp: 50
+  moves: [Bide, Body Slam, Counter, Double Kick, Double Team, Double-Edge, Focus Energy, Hi Jump Kick, Jump Kick, Meditate, Mega Kick, Mega Punch, Metronome, Mimic, Rage, Rest, Rolling Kick, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Swift, Take Down, Toxic]
+  spd: 87
+  spe: 35
+  type: [Fighting]
+Horsea:
+  atk: 40
+  def: 70
+  hp: 30
+  moves: [Agility, Bide, Blizzard, Bubble, Bubblebeam, Double Team, Double-Edge, Hydro Pump, Ice Beam, Leer, Mimic, Rage, Rest, Skull Bash, Smokescreen, Substitute, Surf, Swift, Take Down, Toxic, Water Gun]
+  spd: 60
+  spe: 70
+  type: [Water]
+Hypno:
+  atk: 73
+  def: 70
+  hp: 85
+  moves: [Bide, Body Slam, Confusion, Counter, Disable, Double Team, Double-Edge, Dream Eater, Flash, Headbutt, Hyper Beam, Hypnosis, Meditate, Mega Kick, Mega Punch, Metronome, Mimic, Poison Gas, Pound, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Submission, Substitute, Take Down, Teleport, Thunder Wave, Toxic, Tri Attack]
+  spd: 67
+  spe: 115
+  type: [Psychic]
+Ivysaur:
+  atk: 62
+  def: 63
+  evolve: [Venusaur]
+  hp: 60
+  moves: [Bide, Body Slam, Cut, Double Team, Double-Edge, Growl, Growth, Leech Seed, Mega Drain, Mimic, Poisonpowder, Rage, Razor Leaf, Reflect, Rest, Sleep Powder, Solarbeam, Substitute, Swords Dance, Tackle, Take Down, Toxic, Vine Whip]
+  spd: 60
+  spe: 80
+  type: [Grass, Poison]
+Jigglypuff:
+  atk: 45
+  def: 20
+  evolve: [Wigglytuff]
+  hp: 115
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Defense Curl, Disable, Double Team, Double-Edge, Doubleslap, Fire Blast, Flash, Ice Beam, Mega Kick, Mega Punch, Mimic, Pound, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Sing, Skull Bash, Solarbeam, Strength, Submission, Substitute, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack, Water Gun]
+  spd: 20
+  spe: 25
+  type: [Normal]
+Jolteon:
+  atk: 65
+  def: 60
+  hp: 65
+  moves: [Agility, Bide, Body Slam, Double Kick, Double Team, Double-Edge, Flash, Hyper Beam, Mimic, Pin Missile, Quick Attack, Rage, Reflect, Rest, Sand-Attack, Skull Bash, Substitute, Swift, Tail Whip, Take Down, Tackle, Thunder, Thunder Wave, Thunderbolt, Thundershock, Toxic]
+  spd: 130
+  spe: 110
+  type: [Electric]
+Jynx:
+  atk: 50
+  def: 35
+  hp: 65
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Double Team, Double-Edge, Doubleslap, Hyper Beam, Ice Beam, Ice Punch, Lick, Lovely Kiss, Mega Kick, Mega Punch, Metronome, Mimic, Pound, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Submission, Substitute, Take Down, Teleport, Thrash, Toxic, Water Gun]
+  spd: 95
+  spe: 95
+  type: [Ice, Psychic]
+Kabuto:
+  atk: 80
+  def: 90
+  evolve: [Kabutops]
+  hp: 30
+  moves: [Absorb, Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Harden, Hydro Pump, Ice Beam, Leer, Mimic, Rage, Reflect, Rest, Scratch, Slash, Substitute, Surf, Take Down, Toxic, Water Gun]
+  spd: 55
+  spe: 45
+  type: [Rock, Water]
+Kabutops:
+  atk: 115
+  def: 105
+  hp: 60
+  moves: [Absorb, Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Harden, Hydro Pump, Hyper Beam, Ice Beam, Leer, Mega Kick, Mimic, Rage, Razor Wind, Reflect, Rest, Scratch, Seismic Toss, Skull Bash, Slash, Submission, Substitute, Surf, Swords Dance, Take Down, Toxic, Water Gun]
+  spd: 80
+  spe: 70
+  type: [Rock, Water]
+Kadabra:
+  atk: 35
+  def: 30
+  evolve: [Alakazam]
+  hp: 40
+  moves: [Bide, Body Slam, Confusion, Counter, Dig, Disable, Double Team, Double-Edge, Flash, Mega Kick, Mega Punch, Metronome, Mimic, Psybeam, Psychic, Psywave, Rage, Recover, Reflect, Rest, Seismic Toss, Skull Bash, Submission, Substitute, Take Down, Teleport, Thunder Wave, Toxic, Tri Attack]
+  spd: 105
+  spe: 120
+  type: [Psychic]
+Kakuna:
+  atk: 25
+  def: 50
+  evolve: [Beedrill]
+  hp: 45
+  moves: [Harden]
+  spd: 35
+  spe: 25
+  type: [Bug, Poison]
+Kangaskhan:
+  atk: 95
+  def: 80
+  hp: 105
+  moves: [Bide, Bite, Blizzard, Body Slam, Bubblebeam, Comet Punch, Counter, Dizzy Punch, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Hyper Beam, Ice Beam, Leer, Mega Kick, Mega Punch, Mimic, Rage, Rest, Rock Slide, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 90
+  spe: 40
+  type: [Normal]
+Kingler:
+  atk: 130
+  def: 115
+  hp: 55
+  moves: [Bide, Blizzard, Body Slam, Bubble, Bubblebeam, Crabhammer, Cut, Double Team, Double-Edge, Guillotine, Harden, Hyper Beam, Ice Beam, Leer, Mimic, Rage, Rest, Stomp, Strength, Substitute, Surf, Swords Dance, Take Down, Toxic, Vicegrip, Water Gun]
+  spd: 75
+  spe: 50
+  type: [Water]
+Koffing:
+  atk: 65
+  def: 95
+  evolve: [Weezing]
+  hp: 40
+  moves: [Bide, Double Team, Explosion, Fire Blast, Haze, Mimic, Rage, Rest, Selfdestruct, Sludge, Smog, Smokescreen, Substitute, Tackle, Thunder, Thunderbolt, Toxic]
+  spd: 35
+  spe: 60
+  type: [Poison]
+Krabby:
+  atk: 105
+  def: 90
+  evolve: [Kingler]
+  hp: 30
+  moves: [Bide, Blizzard, Body Slam, Bubble, Bubblebeam, Crabhammer, Cut, Double Team, Double-Edge, Guillotine, Harden, Ice Beam, Leer, Mimic, Rage, Rest, Stomp, Strength, Substitute, Surf, Swords Dance, Take Down, Toxic, Vicegrip, Water Gun]
+  spd: 50
+  spe: 25
+  type: [Water]
+Lapras:
+  atk: 85
+  def: 80
+  hp: 130
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Confuse Ray, Double Team, Double-Edge, Dragon Rage, Growl, Horn Drill, Hydro Pump, Hyper Beam, Ice Beam, Mimic, Mist, Psychic, Psywave, Rage, Reflect, Rest, Sing, Skull Bash, Solarbeam, Strength, Substitute, Surf, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 60
+  spe: 95
+  type: [Water, Ice]
+Lickitung:
+  atk: 55
+  def: 75
+  hp: 90
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Cut, Defense Curl, Disable, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Mimic, Rage, Rest, Screech, Seismic Toss, Skull Bash, Slam, Stomp, Strength, Submission, Substitute, Supersonic, Surf, Swords Dance, Take Down, Thunder, Thunderbolt, Toxic, Water Gun, Wrap]
+  spd: 30
+  spe: 60
+  type: [Normal]
+Machamp:
+  atk: 130
+  def: 80
+  hp: 90
+  moves: [Bide, Body Slam, Counter, Dig, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Focus Energy, Hyper Beam, Karate Chop, Leer, Low Kick, Mega Kick, Mega Punch, Metronome, Mimic, Rage, Rest, Rock Slide, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Take Down, Toxic]
+  spd: 55
+  spe: 65
+  type: [Fighting]
+Machoke:
+  atk: 100
+  def: 70
+  evolve: Machamp
+  hp: 80
+  moves: [Bide, Body Slam, Counter, Dig, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Focus Energy, Karate Chop, Leer, Low Kick, Mega Kick, Mega Punch, Metronome, Mimic, Rage, Rest, Rock Slide, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Take Down, Toxic]
+  spd: 45
+  spe: 50
+  type: [Fighting]
+Machop:
+  atk: 80
+  def: 50
+  evolve: [Machoke]
+  hp: 70
+  moves: [Bide, Body Slam, Counter, Dig, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Focus Energy, Karate Chop, Leer, Low Kick, Mega Kick, Mega Punch, Metronome, Mimic, Rage, Rest, Rock Slide, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Take Down, Toxic]
+  spd: 35
+  spe: 35
+  type: [Fighting]
+Magikarp:
+  atk: 10
+  def: 55
+  evolve: [Gyarados]
+  hp: 20
+  moves: [Splash, Tackle]
+  spd: 80
+  spe: 20
+  type: [Water]
+Magmar:
+  atk: 95
+  def: 57
+  hp: 65
+  moves: [Bide, Body Slam, Confuse Ray, Counter, Double Team, Double-Edge, Ember, Fire Blast, Fire Punch, Flamethrower, Hyper Beam, Leer, Mega Kick, Mega Punch, Metronome, Mimic, Psychic, Psywave, Rage, Rest, Seismic Toss, Skull Bash, Smog, Smokescreen, Strength, Submission, Substitute, Take Down, Teleport, Toxic]
+  spd: 93
+  spe: 85
+  type: [Fire]
+Magnemite:
+  atk: 35
+  def: 70
+  evolve: [Magneton]
+  hp: 25
+  moves: [Bide, Double Team, Double-Edge, Flash, Mimic, Rage, Reflect, Rest, Screech, Sonicboom, Substitute, Supersonic, Swift, Tackle, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Thundershock, Toxic]
+  spd: 45
+  spe: 95
+  type: [Electric]
+Magneton:
+  atk: 60
+  def: 95
+  hp: 50
+  moves: [Bide, Double Team, Double-Edge, Flash, Hyper Beam, Mimic, Rage, Reflect, Rest, Screech, Sonicboom, Substitute, Supersonic, Swift, Tackle, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Thundershock, Toxic]
+  spd: 70
+  spe: 120
+  type: [Electric]
+Mankey:
+  atk: 80
+  def: 35
+  evolve: [Primeape]
+  hp: 40
+  moves: [Bide, Body Slam, Counter, Dig, Double Team, Double-Edge, Focus Energy, Fury Swipes, Karate Chop, Leer, Mega Kick, Mega Punch, Metronome, Mimic, Pay Day, Rage, Rest, Rock Slide, Scratch, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Swift, Take Down, Thrash, Thunder, Thunderbolt, Toxic]
+  spd: 70
+  spe: 35
+  type: [Fighting]
+Marowak:
+  atk: 80
+  def: 110
+  hp: 60
+  moves: [Bide, Blizzard, Body Slam, Bone Club, Bonemerang, Bubblebeam, Counter, Dig, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Focus Energy, Growl, Hyper Beam, Ice Beam, Leer, Mega Kick, Mega Punch, Mimic, Rage, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Take Down, Thrash, Toxic, Water Gun]
+  spd: 45
+  spe: 50
+  type: [Ground]
+Meowth:
+  atk: 45
+  def: 35
+  evolve: [Persian]
+  hp: 40
+  moves: [Bide, Bite, Body Slam, Bubblebeam, Double Team, Double-Edge, Fury Swipes, Growl, Mimic, Pay Day, Rage, Rest, Scratch, Screech, Skull Bash, Slash, Substitute, Swift, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 90
+  spe: 40
+  type: [Normal]
+Metapod:
+  atk: 20
+  def: 55
+  evolve: [Butterfree]
+  hp: 50
+  moves: [Harden]
+  spd: 30
+  spe: 25
+  type: [Bug]
+Mew:
+  atk: 100
+  def: 100
+  hp: 100
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Cut, Dig, Double Team, Double-Edge, Dragon Rage, Dream Eater, Earthquake, Egg Bomb, Explosion, Fire Blast, Fissure, Flash, Fly, Horn Drill, Hyper Beam, Ice Beam, Mega Drain, Mega Kick, Mega Punch, Metronome, Mimic, Pay Day, Pound, Psychic, Psywave, Rage, Razor Wind, Reflect, Rest, Rock Slide, Seismic Toss, Selfdestruct, Skull Bash, Sky Attack, Softboiled, Solarbeam, Strength, Submission, Substitute, Surf, Swift, Swords Dance, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Transform, Tri Attack, Water Gun, Whirlwind]
+  spd: 100
+  spe: 100
+  type: [Psychic]
+Mewtwo:
+  atk: 110
+  def: 90
+  hp: 106
+  moves: [Amnesia, Barrier, Bide, Blizzard, Body Slam, Bubblebeam, Confusion, Counter, Disable, Double Team, Double-Edge, Fire Blast, Flash, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Metronome, Mimic, Mist, Pay Day, Psychic, Psywave, Rage, Recover, Reflect, Rest, Seismic Toss, Selfdestruct, Skull Bash, Solarbeam, Strength, Submission, Substitute, Swift, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack, Water Gun]
+  spd: 130
+  spe: 154
+  type: [Psychic]
+Moltres:
+  atk: 100
+  def: 90
+  hp: 90
+  moves: [Agility, Bide, Double Team, Double-Edge, Fire Blast, Fire Spin, Fly, Hyper Beam, Leer, Mimic, Peck, Rage, Razor Wind, Reflect, Rest, Sky Attack, Substitute, Swift, Take Down, Toxic, Whirlwind]
+  spd: 90
+  spe: 125
+  type: [Fire, Flying]
+Mr. Mime:
+  atk: 45
+  def: 65
+  hp: 40
+  moves: [Barrier, Bide, Body Slam, Confusion, Counter, Double Team, Double-Edge, Doubleslap, Flash, Hyper Beam, Light Screen, Meditate, Mega Kick, Mega Punch, Metronome, Mimic, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Solarbeam, Submission, Substitute, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic]
+  spd: 90
+  spe: 100
+  type: [Psychic]
+Muk:
+  atk: 105
+  def: 75
+  hp: 105
+  moves: [Acid Armor, Bide, Body Slam, Disable, Double Team, Explosion, Fire Blast, Harden, Hyper Beam, Mega Drain, Mimic, Minimize, Poison Gas, Pound, Rage, Rest, Screech, Selfdestruct, Sludge, Substitute, Thunder, Thunderbolt, Toxic]
+  spd: 50
+  spe: 65
+  type: [Poison]
+Nidoking:
+  atk: 92
+  def: 77
+  hp: 81
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Double Kick, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Focus Energy, Fury Attack, Horn Attack, Horn Drill, Hyper Beam, Ice Beam, Leer, Mega Kick, Mega Punch, Mimic, Pay Day, Poison Sting, Rage, Reflect, Rest, Rock Slide, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Tackle, Take Down, Thrash, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 85
+  spe: 75
+  type: [Poison, Ground]
+Nidoqueen:
+  atk: 82
+  def: 87
+  hp: 90
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Horn Drill, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Mimic, Pay Day, Poison Sting, Rage, Reflect, Rest, Rock Slide, Scratch, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Tackle, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 76
+  spe: 75
+  type: [Poison, Ground]
+Nidoran (F):
+  atk: 47
+  def: 52
+  evolve: [Nidorina]
+  hp: 55
+  moves: [Bide, Bite, Blizzard, Body Slam, Double Kick, Double Team, Double-Edge, Fury Swipes, Growl, Mimic, Poison Sting, Rage, Reflect, Rest, Scratch, Skull Bash, Substitute, Tackle, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic]
+  spd: 41
+  spe: 40
+  type: [Poison]
+Nidoran (M):
+  atk: 57
+  def: 40
+  evolve: [Nidorino]
+  hp: 46
+  moves: [Bide, Blizzard, Body Slam, Double Kick, Double Team, Double-Edge, Focus Energy, Fury Attack, Horn Attack, Horn Drill, Leer, Mimic, Poison Sting, Rage, Reflect, Rest, Skull Bash, Substitute, Tackle, Take Down, Thunder, Thunderbolt, Toxic]
+  spd: 50
+  spe: 40
+  type: [Poison]
+Nidorina:
+  atk: 62
+  def: 67
+  evolve: [Nidoqueen]
+  hp: 70
+  moves: [Bide, Bite, Blizzard, Body Slam, Bubblebeam, Double Kick, Double Team, Double-Edge, Fury Swipes, Growl, Horn Drill, Ice Beam, Mimic, Poison Sting, Rage, Reflect, Rest, Scratch, Skull Bash, Substitute, Tackle, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 56
+  spe: 55
+  type: [Poison]
+Nidorino:
+  atk: 72
+  def: 57
+  evolve: [Nidoking]
+  hp: 61
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Double Kick, Double Team, Double-Edge, Focus Energy, Fury Attack, Horn Attack, Horn Drill, Ice Beam, Leer, Mimic, Poison Sting, Rage, Reflect, Rest, Skull Bash, Substitute, Tackle, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 65
+  spe: 55
+  type: [Poison]
+Ninetales:
+  atk: 76
+  def: 75
+  hp: 73
+  moves: [Bide, Body Slam, Dig, Double Team, Double-Edge, Ember, Fire Blast, Hyper Beam, Mimic, Quick Attack, Rage, Reflect, Rest, Roar, Skull Bash, Substitute, Swift, Tail Whip, Take Down, Toxic]
+  spd: 100
+  spe: 100
+  type: [Fire]
+Oddish:
+  atk: 50
+  def: 55
+  evolve: [Gloom]
+  hp: 45
+  moves: [Absorb, Acid, Bide, Cut, Double Team, Double-Edge, Mega Drain, Mimic, Petal Dance, Poisonpowder, Rage, Reflect, Rest, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swords Dance, Take Down, Toxic]
+  spd: 30
+  spe: 75
+  type: [Grass, Poison]
+Omanyte:
+  atk: 40
+  def: 100
+  evolve: [Omastar]
+  hp: 35
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Horn Attack, Hydro Pump, Ice Beam, Leer, Mimic, Rage, Reflect, Rest, Spike Cannon, Substitute, Surf, Take Down, Toxic, Water Gun, Withdraw]
+  spd: 35
+  spe: 90
+  type: [Rock, Water]
+Omastar:
+  atk: 60
+  def: 125
+  hp: 70
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Horn Attack, Horn Drill, Hydro Pump, Hyper Beam, Ice Beam, Leer, Mimic, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Spike Cannon, Submission, Substitute, Surf, Take Down, Toxic, Water Gun, Withdraw]
+  spd: 55
+  spe: 115
+  type: [Rock, Water]
+Onix:
+  atk: 45
+  def: 160
+  hp: 35
+  moves: [Bide, Bind, Body Slam, Dig, Double Team, Double-Edge, Earthquake, Explosion, Fissure, Harden, Mimic, Rage, Rest, Rock Slide, Rock Throw, Screech, Selfdestruct, Skull Bash, Slam, Strength, Substitute, Tackle, Take Down, Toxic]
+  spd: 70
+  spe: 30
+  type: [Rock, Ground]
+Paras:
+  atk: 70
+  def: 55
+  evolve: [Parasect]
+  hp: 35
+  moves: [Bide, Body Slam, Cut, Dig, Double Team, Double-Edge, Growth, Leech Life, Mega Drain, Mimic, Rage, Reflect, Rest, Scratch, Skull Bash, Slash, Solarbeam, Spore, Stun Spore, Substitute, Swords Dance, Take Down, Toxic]
+  spd: 25
+  spe: 55
+  type: [Bug, Grass]
+Parasect:
+  atk: 95
+  def: 80
+  hp: 60
+  moves: [Bide, Body Slam, Cut, Dig, Double Team, Double-Edge, Growth, Hyper Beam, Leech Life, Mega Drain, Mimic, Rage, Reflect, Rest, Scratch, Skull Bash, Slash, Solarbeam, Spore, Stun Spore, Substitute, Swords Dance, Take Down, Toxic]
+  spd: 30
+  spe: 80
+  type: [Bug, Grass]
+Persian:
+  atk: 70
+  def: 60
+  hp: 65
+  moves: [Bide, Bite, Body Slam, Bubblebeam, Double Team, Double-Edge, Fury Swipes, Growl, Hyper Beam, Mimic, Pay Day, Rage, Rest, Scratch, Screech, Skull Bash, Slash, Substitute, Swift, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 115
+  spe: 65
+  type: [Normal]
+Pidgeot:
+  atk: 80
+  def: 75
+  hp: 83
+  moves: [Agility, Bide, Double Team, Double-Edge, Fly, Gust, Hyper Beam, Mimic, Mirror Move, Quick Attack, Rage, Razor Wind, Reflect, Rest, Sand-Attack, Sky Attack, Substitute, Swift, Take Down, Toxic, Whirlwind, Wing Attack]
+  spd: 91
+  spe: 70
+  type: [Normal, Flying]
+Pidgeotto:
+  atk: 60
+  def: 55
+  evolve: [Pidgeot]
+  hp: 63
+  moves: [Agility, Bide, Double Team, Double-Edge, Fly, Gust, Mimic, Mirror Move, Quick Attack, Rage, Razor Wind, Reflect, Rest, Sand-Attack, Sky Attack, Substitute, Swift, Take Down, Toxic, Whirlwind, Wing Attack]
+  spd: 71
+  spe: 50
+  type: [Normal, Flying]
+Pidgey:
+  atk: 45
+  def: 40
+  evolve: [Pidgeotto]
+  hp: 40
+  moves: [Agility, Bide, Double Team, Double-Edge, Fly, Gust, Mimic, Mirror Move, Quick Attack, Rage, Razor Wind, Reflect, Rest, Sand-Attack, Sky Attack, Substitute, Swift, Take Down, Toxic, Whirlwind, Wing Attack]
+  spd: 56
+  spe: 35
+  type: [Normal, Flying]
+Pikachu:
+  atk: 55
+  def: 30
+  evolve: [Raichu]
+  hp: 35
+  moves: [Agility, Bide, Body Slam, Double Team, Double-Edge, Flash, Growl, Mega Kick, Mega Punch, Mimic, Pay Day, Quick Attack, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Submission, Substitute, Swift, Take Down, Thunder, Thunder Wave, Thunderbolt, Thundershock, Toxic]
+  spd: 90
+  spe: 50
+  type: [Electric]
+Pinsir:
+  atk: 125
+  def: 100
+  hp: 65
+  moves: [Bide, Body Slam, Cut, Double Team, Double-Edge, Focus Energy, Guillotine, Harden, Hyper Beam, Mimic, Rage, Rest, Seismic Toss, Slash, Strength, Submission, Substitute, Swords Dance, Take Down, Toxic, Vicegrip]
+  spd: 85
+  spe: 55
+  type: [Bug]
+Poliwag:
+  atk: 50
+  def: 40
+  evolve: [Poliwhirl]
+  hp: 40
+  moves: [Amnesia, Bide, Blizzard, Body Slam, Bubble, Bubblebeam, Double Team, Double-Edge, Doubleslap, Hydro Pump, Hypnosis, Ice Beam, Mimic, Psychic, Psywave, Rage, Rest, Skull Bash, Substitute, Surf, Take Down, Toxic, Water Gun]
+  spd: 90
+  spe: 40
+  type: [Water]
+Poliwhirl:
+  atk: 65
+  def: 65
+  evolve: [Poliwrath]
+  hp: 65
+  moves: [Amnesia, Bide, Blizzard, Body Slam, Bubble, Bubblebeam, Counter, Double Team, Double-Edge, Doubleslap, Earthquake, Fissure, Hydro Pump, Hypnosis, Ice Beam, Mega Kick, Mega Punch, Metronome, Mimic, Psychic, Psywave, Rage, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Take Down, Toxic, Water Gun]
+  spd: 90
+  spe: 50
+  type: [Water]
+Poliwrath:
+  atk: 85
+  def: 95
+  hp: 90
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Double Team, Double-Edge, Doubleslap, Earthquake, Fissure, Hyper Beam, Hypnosis, Ice Beam, Mega Kick, Mega Punch, Metronome, Mimic, Psychic, Psywave, Rage, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Take Down, Toxic, Water Gun]
+  spd: 70
+  spe: 70
+  type: [Water, Fighting]
+Ponyta:
+  atk: 85
+  def: 55
+  evolve: [Rapidash]
+  hp: 50
+  moves: [Agility, Bide, Body Slam, Double Team, Double-Edge, Ember, Fire Blast, Fire Spin, Growl, Horn Drill, Mimic, Rage, Reflect, Rest, Skull Bash, Stomp, Substitute, Swift, Tail Whip, Take Down, Toxic]
+  spd: 90
+  spe: 65
+  type: [Fire]
+Porygon:
+  atk: 60
+  def: 70
+  hp: 65
+  moves: [Agility, Bide, Blizzard, Conversion, Double Team, Double-Edge, Flash, Hyper Beam, Ice Beam, Mimic, Psybeam, Psychic, Psywave, Rage, Recover, Reflect, Rest, Sharpen, Skull Bash, Substitute, Swift, Tackle, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack]
+  spd: 40
+  spe: 75
+  type: [Normal]
+Primeape:
+  atk: 105
+  def: 60
+  hp: 65
+  moves: [Bide, Body Slam, Counter, Dig, Double Team, Double-Edge, Focus Energy, Fury Swipes, Hyper Beam, Karate Chop, Leer, Mega Kick, Mega Punch, Metronome, Mimic, Pay Day, Rage, Rest, Rock Slide, Scratch, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Swift, Take Down, Thrash, Thunder, Thunderbolt, Toxic]
+  spd: 95
+  spe: 60
+  type: [Fighting]
+Psyduck:
+  atk: 52
+  def: 48
+  evolve: [Golduck]
+  hp: 50
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Confusion, Counter, Dig, Disable, Double Team, Double-Edge, Fury Swipes, Hydro Pump, Ice Beam, Mega Kick, Mega Punch, Mimic, Pay Day, Rage, Rest, Scratch, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Swift, Tail Whip, Take Down, Toxic, Water Gun]
+  spd: 55
+  spe: 50
+  type: [Water]
+Raichu:
+  atk: 90
+  def: 55
+  hp: 60
+  moves: [Bide, Body Slam, Double Team, Double-Edge, Flash, Growl, Hyper Beam, Mega Kick, Mega Punch, Mimic, Pay Day, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Submission, Substitute, Swift, Take Down, Thunder, Thunder Wave, Thunderbolt, Thundershock, Toxic]
+  spd: 100
+  spe: 90
+  type: [Electric]
+Rapidash:
+  atk: 100
+  def: 70
+  hp: 65
+  moves: [Agility, Bide, Body Slam, Double Team, Double-Edge, Ember, Fire Blast, Fire Spin, Growl, Horn Drill, Hyper Beam, Mimic, Rage, Reflect, Rest, Skull Bash, Stomp, Substitute, Swift, Tail Whip, Take Down, Toxic]
+  spd: 105
+  spe: 80
+  type: [Fire]
+Raticate:
+  atk: 81
+  def: 60
+  hp: 55
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Dig, Double Team, Double-Edge, Focus Energy, Hyper Beam, Hyper Fang, Ice Beam, Mimic, Quick Attack, Rage, Rest, Skull Bash, Substitute, Super Fang, Swift, Tackle, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 97
+  spe: 50
+  type: [Normal]
+Rattata:
+  atk: 56
+  def: 35
+  evolve: [Raticate]
+  hp: 30
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Dig, Double Team, Double-Edge, Focus Energy, Hyper Fang, Mimic, Quick Attack, Rage, Rest, Skull Bash, Substitute, Super Fang, Swift, Tackle, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 72
+  spe: 25
+  type: [Normal]
+Rhydon:
+  atk: 130
+  def: 120
+  hp: 105
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Dig, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Fury Attack, Horn Attack, Horn Drill, Hyper Beam, Ice Beam, Leer, Mega Kick, Mega Punch, Mimic, Pay Day, Rage, Rest, Rock Slide, Seismic Toss, Skull Bash, Stomp, Strength, Submission, Substitute, Surf, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 40
+  spe: 45
+  type: [Ground, Rock]
+Rhyhorn:
+  atk: 85
+  def: 95
+  evolve: [Rhydon]
+  hp: 80
+  moves: [Bide, Body Slam, Dig, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Fury Attack, Horn Attack, Horn Drill, Leer, Mimic, Rage, Rest, Rock Slide, Skull Bash, Stomp, Strength, Substitute, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic]
+  spd: 25
+  spe: 30
+  type: [Ground, Rock]
+Sandshrew:
+  atk: 75
+  def: 85
+  evolve: [Sandslash]
+  hp: 50
+  moves: [Bide, Body Slam, Cut, Dig, Double Team, Double-Edge, Earthquake, Fissure, Fury Swipes, Mimic, Poison Sting, Rage, Rest, Rock Slide, Sand-Attack, Scratch, Seismic Toss, Skull Bash, Slash, Strength, Submission, Substitute, Swift, Swords Dance, Take Down, Toxic]
+  spd: 40
+  spe: 30
+  type: [Ground]
+Sandslash:
+  atk: 100
+  def: 110
+  hp: 75
+  moves: [Bide, Body Slam, Cut, Dig, Double Team, Double-Edge, Earthquake, Fissure, Fury Swipes, Hyper Beam, Mimic, Poison Sting, Rage, Rest, Rock Slide, Sand-Attack, Scratch, Seismic Toss, Skull Bash, Slash, Strength, Submission, Substitute, Swift, Swords Dance, Take Down, Toxic]
+  spd: 65
+  spe: 55
+  type: [Ground]
+Scyther:
+  atk: 110
+  def: 80
+  hp: 70
+  moves: [Agility, Bide, Cut, Double Team, Double-Edge, Focus Energy, Hyper Beam, Leer, Mimic, Quick Attack, Rage, Rest, Skull Bash, Slash, Substitute, Swift, Swords Dance, Take Down, Toxic]
+  spd: 105
+  spe: 55
+  type: [Bug, Flying]
+Seadra:
+  atk: 65
+  def: 95
+  hp: 55
+  moves: [Agility, Bide, Blizzard, Bubble, Bubblebeam, Double Team, Double-Edge, Hydro Pump, Hyper Beam, Ice Beam, Leer, Mimic, Rage, Rest, Skull Bash, Smokescreen, Substitute, Surf, Swift, Take Down, Toxic, Water Gun]
+  spd: 85
+  spe: 95
+  type: [Water]
+Seaking:
+  atk: 92
+  def: 65
+  hp: 80
+  moves: [Agility, Bide, Blizzard, Bubblebeam, Double Team, Double-Edge, Fury Attack, Horn Attack, Horn Drill, Hyper Beam, Ice Beam, Mimic, Peck, Rage, Rest, Skull Bash, Substitute, Supersonic, Surf, Swift, Tail Whip, Take Down, Toxic, Water Gun, Waterfall]
+  spd: 68
+  spe: 80
+  type: [Water]
+Seel:
+  atk: 45
+  def: 55
+  evolve: [Dewgong]
+  hp: 65
+  moves: [Aurora Beam, Bide, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Growl, Headbutt, Horn Drill, Ice Beam, Mimic, Pay Day, Rage, Rest, Skull Bash, Strength, Substitute, Surf, Take Down, Toxic, Water Gun]
+  spd: 45
+  spe: 70
+  type: [Water]
+Shellder:
+  atk: 65
+  def: 100
+  evolve: [Cloyster]
+  hp: 30
+  moves: [Aurora Beam, Bide, Blizzard, Bubblebeam, Clamp, Double Team, Double-Edge, Explosion, Ice Beam, Leer, Mimic, Rage, Reflect, Rest, Selfdestruct, Substitute, Supersonic, Surf, Swift, Tackle, Take Down, Teleport, Toxic, Tri Attack, Water Gun, Withdraw]
+  spd: 40
+  spe: 45
+  type: [Water]
+Slowbro:
+  atk: 75
+  def: 110
+  hp: 95
+  moves: [Amnesia, Bide, Blizzard, Body Slam, Bubblebeam, Confusion, Counter, Dig, Disable, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Flash, Growl, Headbutt, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Mimic, Pay Day, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Swift, Take Down, Teleport, Thunder Wave, Toxic, Tri Attack, Water Gun, Withdraw]
+  spd: 30
+  spe: 80
+  type: [Water, Psychic]
+Slowpoke:
+  atk: 65
+  def: 65
+  evolve: [Slowbro]
+  hp: 90
+  moves: [Amnesia, Bide, Blizzard, Body Slam, Bubblebeam, Confusion, Dig, Disable, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Flash, Growl, Headbutt, Ice Beam, Mimic, Pay Day, Psychic, Psywave, Rage, Reflect, Rest, Skull Bash, Strength, Substitute, Surf, Swift, Take Down, Teleport, Thunder Wave, Toxic, Tri Attack, Water Gun]
+  spd: 15
+  spe: 40
+  type: [Water, Psychic]
+Snorlax:
+  atk: 110
+  def: 65
+  hp: 160
+  moves: [Amnesia, Bide, Blizzard, Body Slam, Bubblebeam, Counter, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Harden, Headbutt, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Metronome, Mimic, Pay Day, Psychic, Psywave, Rage, Reflect, Rest, Rock Slide, Seismic Toss, Selfdestruct, Skull Bash, Solarbeam, Strength, Submission, Substitute, Surf, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  spd: 30
+  spe: 65
+  type: [Normal]
+Spearow:
+  atk: 60
+  def: 30
+  evolve: [Fearow]
+  hp: 40
+  moves: [Agility, Bide, Double Team, Double-Edge, Drill Peck, Fly, Fury Attack, Growl, Leer, Mimic, Mirror Move, Peck, Rage, Razor Wind, Rest, Sky Attack, Substitute, Swift, Take Down, Toxic, Whirlwind]
+  spd: 70
+  spe: 31
+  type: [Normal, Flying]
+Squirtle:
+  atk: 48
+  def: 65
+  evolve: [Wartortle]
+  hp: 44
+  moves: [Bide, Bite, Blizzard, Body Slam, Bubble, Bubblebeam, Counter, Dig, Double Team, Double-Edge, Hydro Pump, Ice Beam, Mega Kick, Mega Punch, Mimic, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Tackle, Tail Whip, Take Down, Toxic, Water Gun, Withdraw]
+  spd: 43
+  spe: 50
+  type: [Water]
+Starmie:
+  atk: 75
+  def: 85
+  hp: 60
+  moves: [Bide, Blizzard, Bubblebeam, Double Team, Double-Edge, Flash, Harden, Hyper Beam, Ice Beam, Mimic, Psychic, Psywave, Rage, Reflect, Rest, Skull Bash, Substitute, Surf, Swift, Tackle, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack, Water Gun]
+  spd: 115
+  spe: 100
+  type: [Water, Psychic]
+Staryu:
+  atk: 45
+  def: 55
+  evolve: [Starmie]
+  hp: 30
+  moves: [Bide, Blizzard, Bubblebeam, Double Team, Double-Edge, Flash, Harden, Hydro Pump, Ice Beam, Light Screen, Mimic, Minimize, Psychic, Psywave, Rage, Recover, Reflect, Rest, Skull Bash, Substitute, Surf, Swift, Tackle, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack, Water Gun]
+  spd: 85
+  spe: 70
+  type: [Water]
+Tangela:
+  atk: 55
+  def: 115
+  hp: 65
+  moves: [Absorb, Bide, Bind, Body Slam, Constrict, Cut, Double Team, Double-Edge, Growth, Hyper Beam, Mega Drain, Mimic, Poisonpowder, Rage, Rest, Skull Bash, Slam, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swords Dance, Take Down, Toxic]
+  spd: 60
+  spe: 100
+  type: [Grass]
+Tauros:
+  atk: 100
+  def: 95
+  hp: 75
+  moves: [Bide, Blizzard, Body Slam, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Horn Drill, Hyper Beam, Ice Beam, Leer, Mimic, Rage, Rest, Skull Bash, Stomp, Strength, Substitute, Tackle, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic]
+  spd: 110
+  spe: 70
+  type: [Normal]
+Tentacool:
+  atk: 40
+  def: 35
+  evolve: Tentacruel
+  hp: 40
+  moves: [Acid, Barrier, Bide, Blizzard, Bubblebeam, Constrict, Cut, Double Team, Double-Edge, Hydro Pump, Ice Beam, Mega Drain, Mimic, Poison Sting, Rage, Reflect, Rest, Screech, Skull Bash, Substitute, Supersonic, Surf, Swords Dance, Take Down, Toxic, Water Gun, Wrap]
+  spd: 70
+  spe: 100
+  type: [Water, Poison]
+Tentacruel:
+  atk: 70
+  def: 65
+  hp: 80
+  moves: [Acid, Barrier, Bide, Blizzard, Bubblebeam, Constrict, Cut, Double Team, Double-Edge, Hydro Pump, Hyper Beam, Ice Beam, Mega Drain, Mimic, Poison Sting, Rage, Reflect, Rest, Screech, Skull Bash, Substitute, Supersonic, Surf, Swords Dance, Take Down, Toxic, Water Gun, Wrap]
+  spd: 100
+  spe: 120
+  type: [Water, Poison]
+Vaporeon:
+  atk: 65
+  def: 60
+  hp: 130
+  moves: [Acid Armor, Bide, Bite, Blizzard, Body Slam, Bubblebeam, Double Team, Double-Edge, Haze, Hydro Pump, Hyper Beam, Ice Beam, Mimic, Mist, Quick Attack, Rage, Reflect, Rest, Sand-Attack, Skull Bash, Substitute, Surf, Swift, Tackle, Tail Whip, Take Down, Toxic, Water Gun]
+  spd: 65
+  spe: 110
+  type: [Water]
+Venomoth:
+  atk: 65
+  def: 60
+  hp: 70
+  moves: [Bide, Disable, Double Team, Double-Edge, Hyper Beam, Leech Life, Mega Drain, Mimic, Poisonpowder, Psybeam, Psychic, Psywave, Rage, Razor Wind, Reflect, Rest, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swift, Tackle, Take Down, Teleport, Toxic, Whirlwind]
+  spd: 90
+  spe: 90
+  type: [Bug, Poison]
+Venonat:
+  atk: 55
+  def: 50
+  evolve: [Venomoth]
+  hp: 60
+  moves: [Bide, Disable, Double Team, Double-Edge, Leech Life, Mega Drain, Mimic, Poisonpowder, Psybeam, Psychic, Psywave, Rage, Reflect, Rest, Sleep Powder, Solarbeam, Stun Spore, Substitute, Tackle, Take Down, Toxic]
+  spd: 45
+  spe: 40
+  type: [Bug, Poison]
+Venusaur:
+  atk: 82
+  def: 83
+  hp: 80
+  moves: [Bide, Body Slam, Cut, Double Team, Double-Edge, Growl, Growth, Hyper Beam, Leech Seed, Mega Drain, Mimic, Poisonpowder, Rage, Razor Leaf, Reflect, Rest, Sleep Powder, Solarbeam, Substitute, Swords Dance, Tackle, Take Down, Toxic, Vine Whip]
+  spd: 80
+  spe: 100
+  type: [Grass, Poison]
+Victreebel:
+  atk: 105
+  def: 65
+  hp: 80
+  moves: [Acid, Bide, Body Slam, Cut, Double Team, Double-Edge, Hyper Beam, Mega Drain, Mimic, Poisonpowder, Rage, Razor Leaf, Reflect, Rest, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swords Dance, Take Down, Toxic, Wrap]
+  spd: 70
+  spe: 100
+  type: [Grass, Poison]
+Vileplume:
+  atk: 80
+  def: 85
+  hp: 75
+  moves: [Acid, Bide, Body Slam, Cut, Double Team, Double-Edge, Hyper Beam, Mega Drain, Mimic, Petal Dance, Poisonpowder, Rage, Reflect, Rest, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swords Dance, Take Down, Toxic]
+  spd: 50
+  spe: 100
+  type: [Grass, Poison]
+Voltorb:
+  atk: 30
+  def: 50
+  evolve: [Electrode]
+  hp: 40
+  moves: [Bide, Double Team, Explosion, Flash, Light Screen, Mimic, Rage, Reflect, Rest, Screech, Selfdestruct, Sonicboom, Substitute, Swift, Tackle, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic]
+  spd: 100
+  spe: 55
+  type: [Electric]
+Vulpix:
+  atk: 41
+  def: 40
+  evolve: [Ninetales]
+  hp: 38
+  moves: [Bide, Body Slam, Confuse Ray, Dig, Double Team, Double-Edge, Ember, Fire Blast, Fire Spin, Flamethrower, Mimic, Quick Attack, Rage, Reflect, Rest, Roar, Skull Bash, Substitute, Swift, Tail Whip, Take Down, Toxic]
+  spd: 65
+  spe: 65
+  type: [Fire]
+Wartortle:
+  atk: 63
+  def: 80
+  evolve: [Blastoise]
+  hp: 59
+  moves: [Bide, Bite, Blizzard, Body Slam, Bubble, Bubblebeam, Counter, Dig, Double Team, Double-Edge, Hydro Pump, Ice Beam, Mega Kick, Mega Punch, Mimic, Rage, Reflect, Rest, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Tackle, Tail Whip, Take Down, Toxic, Water Gun, Withdraw]
+  spd: 58
+  spe: 65
+  type: [Water]
+Weedle:
+  atk: 35
+  def: 30
+  evolve: [Kakuna]
+  hp: 40
+  moves: [Poison Sting, String Shot]
+  spd: 50
+  spe: 20
+  type: [Bug, Poison]
+Weepinbell:
+  atk: 90
+  def: 50
+  evolve: [Victreebel]
+  hp: 65
+  moves: [Acid, Bide, Cut, Double Team, Double-Edge, Growth, Mega Drain, Mimic, Poisonpowder, Rage, Razor Leaf, Reflect, Rest, Slam, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swords Dance, Take Down, Toxic, Vine Whip, Wrap]
+  spd: 55
+  spe: 85
+  type: [Grass, Poison]
+Weezing:
+  atk: 90
+  def: 120
+  hp: 65
+  moves: [Bide, Double Team, Explosion, Fire Blast, Haze, Hyper Beam, Mimic, Rage, Rest, Selfdestruct, Sludge, Smog, Smokescreen, Substitute, Tackle, Thunder, Thunderbolt, Toxic]
+  spd: 60
+  spe: 85
+  type: [Poison]
+Wigglytuff:
+  atk: 70
+  def: 45
+  hp: 140
+  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Defense Curl, Disable, Double Team, Double-Edge, Doubleslap, Fire Blast, Flash, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Mimic, Psychic, Psywave, Rage, Reflect, Rest, Seismic Toss, Sing, Skull Bash, Solarbeam, Strength, Submission, Substitute, Take Down, Teleport, Thunder, Thunder Wave, Thunderbolt, Toxic, Tri Attack, Water Gun]
+  spd: 45
+  spe: 50
+  type: [Normal]
+Zapdos:
+  atk: 90
+  def: 85
+  hp: 90
+  moves: [Agility, Bide, Double Team, Double-Edge, Drill Peck, Flash, Fly, Hyper Beam, Light Screen, Mimic, Rage, Razor Wind, Reflect, Rest, Sky Attack, Substitute, Swift, Take Down, Thunder, Thunder Wave, Thunderbolt, Thundershock, Toxic, Whirlwind]
+  spd: 100
+  spe: 125
+  type: [Electric, Flying]
+Zubat:
+  atk: 45
+  def: 35
+  evolve: [Golbat]
+  hp: 40
+  moves: [Bide, Bite, Confuse Ray, Double Team, Double-Edge, Haze, Leech Life, Mega Drain, Mimic, Rage, Razor Wind, Rest, Substitute, Supersonic, Swift, Take Down, Toxic, Whirlwind, Wing Attack]
+  spd: 55
+  spe: 40
+  type: [Poison, Flying]
