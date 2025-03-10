@@ -16,13 +16,18 @@ Initially the application only supports Generation 1 games and the standard Nuzl
 
 ## Installation
 To install the NuzlockeTool, you need to have Python installed on your system. Clone this repository to your local machine using:
+
 `git clone https://github.com/T1nyTim/NuzlockeTool.git`
+
 Navigate to the project directory and install the required dependencies:
+
 `cd NuzlockeTool`
+
 `pip install -r requirements.txt`
 
 ## Usage
 To run the application, use the following command in the project directory:
+
 `python -m nuzlocke_tool`
 
 log files for debugging purposes will be generated under the `logs` directory
