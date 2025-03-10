@@ -1,0 +1,33 @@
+[project]
+authors = [{name = "T1nyTim"}]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Natural Language :: English",
+  "Programming Language :: Python",
+  "Typing :: Typed"
+]
+dependencies = ["PyQt6 >= 6.8.1", "PyYAML >= 6.0.2", "rich >= 13.9.4"]
+description = "Nuzlocke tracking tool"
+keywords = ["Pokemon", "Nuzlocke"]
+license = {file = "LICENSE"}
+maintainers = [{name = "T1nyTim"}]
+name = "NuzlockeTool"
+readme = "README.md"
+requires-python = ">= 3.13"
+version = "0.5.0"
+
+[project.scripts]
+NuzlockeTool = "nuzlocke_tool.__main__:main"
+
+[tool.ruff]
+line-length = 110
+output-format = "grouped"
+show-fixes = true
+target-version = "py313"
+
+[tool.ruff.lint]
+ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D107", "S311"]
+unfixable = ["F841"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

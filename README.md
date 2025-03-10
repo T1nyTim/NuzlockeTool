@@ -23,7 +23,7 @@ Navigate to the project directory and install the required dependencies:
 
 `cd NuzlockeTool`
 
-`pip install -r requirements.txt`
+`pip install -e .`
 
 ## Usage
 To run the application, use the following command in the project directory:
