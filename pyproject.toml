@@ -19,6 +19,9 @@ version = "0.5.0"
 [project.scripts]
 NuzlockeTool = "nuzlocke_tool.__main__:main"
 
+[tool.setuptools]
+packages = ["nuzlocke_tool"]
+
 [tool.ruff]
 line-length = 110
 output-format = "grouped"

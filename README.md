@@ -28,7 +28,7 @@ Navigate to the project directory and install the required dependencies:
 ## Usage
 To run the application, use the following command in the project directory:
 
-`python -m nuzlocke_tool`
+`NuzlockeTool`
 
 log files for debugging purposes will be generated under the `logs` directory
 
