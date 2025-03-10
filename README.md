@@ -31,5 +31,7 @@ To run the application, use the following command in the project directory:
 `python -m nuzlocke_tool`
 
 log files for debugging purposes will be generated under the `logs` directory
+
 journal files for keeping track of a players progress for a given playthrough will be generated under the `journal` directory
+
 save files for loading previous sessions will be auto-saved and kept in the `save` directory
