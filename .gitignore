@@ -4,6 +4,9 @@
 # Environments
 .venv/
 
+# Build tools
+NuzlockeTool.egg-info
+
 # Formatting / Linting
 .ruff_cache/
 
