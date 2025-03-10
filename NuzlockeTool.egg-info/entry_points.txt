@@ -1,2 +1,0 @@
-[console_scripts]
-NuzlockeTool = nuzlocke_tool.__main__:main
