@@ -10,6 +10,7 @@ from nuzlocke_tool.constants import (
     LABEL_DECISION_DOJO_GIFT,
     LABEL_DECISION_EEVEELUTION,
     LABEL_DECISION_FOSSIL,
+    LABEL_DECISION_MAGIKARP,
     LABEL_DECISION_SAFFRON_GIFT,
     LABEL_DECISION_STARTER,
     OBJECT_NAME_LABEL_OUTCOME,
@@ -65,6 +66,7 @@ class RandomDecisionToolWidget(QWidget):
     def _generate_decision_name(decision_key: str) -> str:
         statements = {
             "Starter": LABEL_DECISION_STARTER,
+            "Magikarp": LABEL_DECISION_MAGIKARP,
             "Fossil": LABEL_DECISION_FOSSIL,
             "SaffronGift": LABEL_DECISION_SAFFRON_GIFT,
             "DojoGift": LABEL_DECISION_DOJO_GIFT,

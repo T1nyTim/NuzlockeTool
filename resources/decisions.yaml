@@ -1,6 +1,9 @@
 Starter:
 - game: [Blue, Red]
   options: [Charmander, Squirtle, Bulbasaur]
+Magikarp:
+- game: [Blue, Red, Yellow]
+  options: [Magikarp, Wild Encounter]
 Fossil:
 - game: [Blue, Red, Yellow]
   options: [Dome Fossil, Helix Fossil]
