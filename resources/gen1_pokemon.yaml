@@ -51,7 +51,7 @@ Beedrill:
   atk: 80
   def: 40
   hp: 65
-  moves: [Agility, Bide, Cut, Double Team, Double-Edge, Focus Energy, Fury Attack, Hyper Beam, Mega Drain, Mimic, Pin Missile, Rage, Reflect, Rest, Skull Bash, Substitute, Swift, Swords Dance, Take Down, Toxic, Twineedle]
+  moves: [Agility, Bide, Cut, Double Team, Double-Edge, Focus Energy, Fury Attack, Harden, Hyper Beam, Mega Drain, Mimic, Pin Missile, Poison Sting, Rage, Reflect, Rest, Skull Bash, String Shot, Substitute, Swift, Swords Dance, Take Down, Toxic, Twineedle]
   spd: 75
   spe: 45
   type: [Bug, Poison]
@@ -534,7 +534,7 @@ Kakuna:
   def: 50
   evolve: [Beedrill]
   hp: 45
-  moves: [Harden]
+  moves: [Harden, Poison Sting, String Shot]
   spd: 35
   spe: 25
   type: [Bug, Poison]

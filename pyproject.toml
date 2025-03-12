@@ -14,7 +14,7 @@ maintainers = [{name = "T1nyTim"}]
 name = "NuzlockeTool"
 readme = "README.md"
 requires-python = ">= 3.13"
-version = "0.5.2"
+version = "0.5.3"
 
 [project.scripts]
 NuzlockeTool = "nuzlocke_tool.__main__:main"

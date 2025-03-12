@@ -6,7 +6,7 @@ from rich.logging import RichHandler
 
 from nuzlocke_tool.constants import CONSOLE, LOG_FILE_LIMIT
 
-__version__ = "0.5.2"
+__version__ = "0.5.3"
 
 LOGGER = logging.getLogger(__name__)
 

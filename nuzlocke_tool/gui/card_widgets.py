@@ -246,6 +246,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _on_level_changed(self, value: int) -> None:
         self._pokemon.level = value
+        save_session(self._game_state, self._party_manager)
 
     def _on_species_changed(self, index: int) -> None:
         new_species = self._species_widget.itemData(index)
@@ -256,7 +257,9 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             )
             LOGGER.info("Pokemon evolved from %s to %s", self._pokemon.species, new_species)
             self._pokemon.species = new_species
+            save_session(self._game_state, self._party_manager)
             self._refresh_species()
+            self._refresh_moves()
 
     @staticmethod
     def _process_species_name(name: str) -> str:
@@ -273,6 +276,9 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         dv_text = " | ".join(f"{stat}: {value}" for stat, value in self._pokemon.dvs.items())
         self._dvs_label.setText(dv_text)
         self._details_layout.removeWidget(self._moves_group)
+        self._refresh_moves()
+
+    def _refresh_moves(self) -> None:
         self._moves_group.deleteLater()
         self._moves_widget = self._create_moves_widget()
         self._moves_group = self._create_group_widget(LABEL_MOVES, self._moves_widget)
