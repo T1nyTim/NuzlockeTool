@@ -1,7 +1,7 @@
 [project]
 authors = [{name = "T1nyTim"}]
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 3 - Alpha",
   "Natural Language :: English",
   "Programming Language :: Python",
   "Typing :: Typed"
@@ -14,7 +14,7 @@ maintainers = [{name = "T1nyTim"}]
 name = "NuzlockeTool"
 readme = "README.md"
 requires-python = ">= 3.13"
-version = "0.5.0"
+version = "0.5.2"
 
 [project.scripts]
 NuzlockeTool = "nuzlocke_tool.__main__:main"

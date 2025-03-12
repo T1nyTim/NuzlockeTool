@@ -421,6 +421,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 mon,
                 self._game_state,
                 self._game_data,
+                self._party_manager,
                 self._active_party_widget,
                 lambda: len(self._party_manager.active) > 1,
             )
@@ -442,6 +443,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 mon,
                 self._game_state,
                 self._game_data,
+                self._party_manager,
                 self._boxed_pokemon_widget,
                 lambda: len(self._party_manager.active) < ACTIVE_PARTY_LIMIT,
             )
@@ -467,6 +469,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 mon,
                 self._game_state,
                 self._game_data,
+                self._party_manager,
                 self._dead_pokemon_widget,
                 lambda: len(self._party_manager.active) < ACTIVE_PARTY_LIMIT,
             )
