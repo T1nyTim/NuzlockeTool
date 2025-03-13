@@ -28,9 +28,10 @@ To install the NuzlockeTool, you need to have Python installed on your system. C
 
 Navigate to the project directory and install the required dependencies:
 
-`cd NuzlockeTool`
-
-`pip install -e .`
+```
+cd NuzlockeTool
+pip install -e .
+```
 
 ## Usage
 To run the application, use the following command in the project directory:

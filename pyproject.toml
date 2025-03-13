@@ -1,20 +1,21 @@
 [project]
+name = "NuzlockeTool"
 authors = [{name = "T1nyTim"}]
+maintainers = [{name = "T1nyTim"}]
+description = "Nuzlocke tracking tool"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">= 3.13"
 classifiers = [
   "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: AGPL-3.0-or-later",
   "Natural Language :: English",
+  "Operating System :: POSIX :: Linux"
   "Programming Language :: Python",
   "Typing :: Typed"
 ]
 dependencies = ["PyQt6 >= 6.8.1", "PyYAML >= 6.0.2", "rich >= 13.9.4"]
-description = "Nuzlocke tracking tool"
 dynamic = ["version"]
 keywords = ["Pokemon", "Nuzlocke"]
-license = {file = "LICENSE"}
-maintainers = [{name = "T1nyTim"}]
-name = "NuzlockeTool"
-readme = "README.md"
-requires-python = ">= 3.13"
 
 [project.scripts]
 NuzlockeTool = "nuzlocke_tool.__main__:main"
