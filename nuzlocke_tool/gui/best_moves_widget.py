@@ -243,7 +243,7 @@ class BestMovesToolWidget(QWidget):
         level: int | None = None,
     ) -> tuple[int, int]:
         base = pokemon_data.get(stat.lower())
-        dv = pokemon.dvs.get(stat, 0)
+        dv = 0 if pokemon else pokemon.dvs.get(stat)
         level = level if level else pokemon.level
         base_stat = math.floor((base + dv) * 2 * level / 100)
         if stat == "hp":

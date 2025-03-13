@@ -4,8 +4,9 @@ from platform import python_version
 
 from PyQt6.QtWidgets import QApplication
 
-from nuzlocke_tool import __version__, setup_logging
+from nuzlocke_tool import __version__
 from nuzlocke_tool.gui.main_window import NuzlockeTrackerMainWindow
+from nuzlocke_tool.logs import setup_logging
 
 LOGGER = logging.getLogger(__name__)
 

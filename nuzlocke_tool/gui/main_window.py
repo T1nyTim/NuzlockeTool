@@ -20,14 +20,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from nuzlocke_tool import (
-    journal_folder,
-    locations_file,
-    resources_folder,
-    rules_file,
-    save_folder,
-    versions_file,
-)
+from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import (
     ACTIVE_PARTY_LIMIT,
     ALIGN_LEFT,
@@ -76,7 +69,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle(MAIN_WINDOW_TITLE)
         self.setStyleSheet(STYLE_SHEET_COMBO_BOX)
-        location_data = load_yaml_file(locations_file())
+        location_data = load_yaml_file(PathConfig.locations_file())
         self._game_data = GameData(location_data, {}, {})
         self._game_state = GameState("", "", False, None, None, [], {})  # noqa: FBT003
         self._party_manager = PartyManager()
@@ -260,7 +253,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         tabs.addTab(self._create_tools_tab(), TAB_TOOLS_NAME)
 
     def _new_file(self) -> None:
-        rulesets = load_yaml_file(rules_file())
+        rulesets = load_yaml_file(PathConfig.rules_file())
         dialog = NewSessionDialog(rulesets, self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
@@ -268,7 +261,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             dialog.selection
         )
         pokemon_data_file = f"gen{generation}_pokemon.yaml"
-        pokemon_yaml_path = resources_folder() / pokemon_data_file
+        pokemon_yaml_path = PathConfig.resources_folder() / pokemon_data_file
         if not pokemon_yaml_path.exists():
             QMessageBox.critical(
                 self,
@@ -278,7 +271,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             return
         self._game_data.pokemon_data = load_yaml_file(pokemon_yaml_path)
         move_data_file = f"gen{generation}_moves.yaml"
-        move_yaml_path = resources_folder() / move_data_file
+        move_yaml_path = PathConfig.resources_folder() / move_data_file
         if not move_yaml_path.exists():
             QMessageBox.critical(
                 self,
@@ -326,7 +319,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
 
     @staticmethod
     def _new_journal_file(game: str, ruleset: str) -> Path:
-        folder = journal_folder()
+        folder = PathConfig.journal_folder()
         base_name = f"{game}_{ruleset}_"
         i = 1
         while True:
@@ -339,7 +332,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
 
     @staticmethod
     def _new_save_file(game: str, ruleset: str) -> Path:
-        folder = save_folder()
+        folder = PathConfig.save_folder()
         base_name = f"{game}_{ruleset}_"
         i = 1
         while True:
@@ -355,16 +348,16 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         if save_file is None:
             return
         self._load_session_data(save_file)
-        versions = load_yaml_file(versions_file())
+        versions = load_yaml_file(PathConfig.versions_file())
         version_info = versions.get(self._game_state.game)
         generation = version_info.get("generation")
         pokemon_data_file = f"gen{generation}_pokemon.yaml"
-        pokemon_yaml_path = resources_folder() / pokemon_data_file
+        pokemon_yaml_path = PathConfig.resources_folder() / pokemon_data_file
         self._game_data.pokemon_data = load_yaml_file(pokemon_yaml_path)
         move_data_file = f"gen{generation}_moves.yaml"
-        move_yaml_path = resources_folder() / move_data_file
+        move_yaml_path = PathConfig.resources_folder() / move_data_file
         self._game_data.move_data = load_yaml_file(move_yaml_path)
-        rulesets = load_yaml_file(rules_file())
+        rulesets = load_yaml_file(PathConfig.rules_file())
         ruleset = rulesets.get(self._game_state.ruleset)
         if ruleset:
             rules_text = f"{self._game_state.ruleset} Rules:\n- " + (
@@ -405,7 +398,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         return status_name.get(status)
 
     def _prompt_for_save_file(self) -> None:
-        folder = save_folder()
+        folder = PathConfig.save_folder()
         file_path, _ = QFileDialog.getOpenFileName(
             self,
             "Select Save File",

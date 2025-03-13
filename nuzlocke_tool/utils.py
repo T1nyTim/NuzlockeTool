@@ -7,7 +7,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QLabel, QLayout, QWidget
 
-from nuzlocke_tool import images_folder
+from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import IMAGE_SIZE_POKEMON
 from nuzlocke_tool.models import GameState, PartyManager
 
@@ -55,7 +55,7 @@ def get_image_filename(species: str) -> str:
 
 def load_pokemon_image(species: str) -> QPixmap:
     filename = get_image_filename(species)
-    image_path = f"{images_folder()!s}/{filename}.png"
+    image_path = f"{PathConfig.images_folder()!s}/{filename}.png"
     return QPixmap(image_path)
 
 

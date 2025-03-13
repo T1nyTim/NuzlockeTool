@@ -3,7 +3,7 @@ import random
 
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
-from nuzlocke_tool import decisions_file
+from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import (
     ALIGN_CENTER,
     LABEL_DECISION_CINNABAR_ENCOUNTER,
@@ -25,7 +25,7 @@ LOGGER = logging.getLogger(__name__)
 class RandomDecisionToolWidget(QWidget):
     def __init__(self, game_state: GameState, party_manager: PartyManager, parent: QWidget) -> None:
         super().__init__(parent)
-        self._decision_data = load_yaml_file(decisions_file())
+        self._decision_data = load_yaml_file(PathConfig.decisions_file())
         self._decisions = {}
         self._game_state = game_state
         self._party_manager = party_manager
@@ -88,7 +88,7 @@ class RandomDecisionToolWidget(QWidget):
         LOGGER.info("Randomly decided: %s, from: %s", outcome, ", ".join(decision))
 
     def set_state(self, game_state: GameState, party_manager: PartyManager) -> None:
-        self._decision_data = load_yaml_file(decisions_file())
+        self._decision_data = load_yaml_file(PathConfig.decisions_file())
         self._game_state = game_state
         self._party_manager = party_manager
         self.init_ui()

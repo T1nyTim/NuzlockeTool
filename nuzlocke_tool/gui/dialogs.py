@@ -16,7 +16,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from nuzlocke_tool import versions_file
+from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import (
     BUTTON_CANCEL,
     BUTTON_OK,
@@ -83,7 +83,7 @@ class NewSessionDialog(BaseDialog):
         self._selected_game = None
         self._selected_generation = None
         self._selected_ruleset_name = None
-        self._versions = load_yaml_file(versions_file())
+        self._versions = load_yaml_file(PathConfig.versions_file())
         self._init_ui()
 
     def _init_ui(self) -> None:
