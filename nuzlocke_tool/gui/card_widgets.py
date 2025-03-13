@@ -42,14 +42,14 @@ from nuzlocke_tool.constants import (
     WIDGET_POKEMON_CARD_WIDTH,
 )
 from nuzlocke_tool.gui.dialogs import PokemonDialog
-from nuzlocke_tool.models import GameData, GameState, PartyManager, Pokemon
+from nuzlocke_tool.models import GameData, GameState, PartyManager, Pokemon, PokemonArea
 from nuzlocke_tool.utils import add_pokemon_image, append_journal_entry, load_pokemon_image, save_session
 
 LOGGER = logging.getLogger(__name__)
 
 
 class BasePokemonCardWidget(QWidget):
-    transfer_requested = pyqtSignal(object, str)
+    transfer_requested = pyqtSignal(object, PokemonArea)
 
     def __init__( # noqa: PLR0913
         self,
@@ -100,7 +100,7 @@ class BasePokemonCardWidget(QWidget):
             )
         LOGGER.info("Edited Pokemon: %s", self._pokemon)
 
-    def _transfer(self, target: str) -> None:
+    def _transfer(self, target: PokemonArea) -> None:
         self.transfer_requested.emit(self._pokemon, target)
 
     def contextMenuEvent(self, event: QContextMenuEvent) -> None:  # noqa: N802
@@ -125,8 +125,8 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
         transfer_options = [
-            (TAB_BOXED_NAME, "boxed", transfer_enabled_callback),
-            (TAB_DEAD_NAME, "dead", None),
+            (TAB_BOXED_NAME, PokemonArea.BOXED, transfer_enabled_callback),
+            (TAB_DEAD_NAME, PokemonArea.DEAD, None),
         ]
         super().__init__(pokemon, game_state, game_data, party_manager, parent, transfer_options)
         self._init_ui()
@@ -351,8 +351,8 @@ class BoxedPokemonCardWidget(StoragePokemonCardWidget):
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
         transfer_options = [
-            (TAB_PARTY_NAME, "active", transfer_enabled_callback),
-            (TAB_DEAD_NAME, "dead", None),
+            (TAB_PARTY_NAME, PokemonArea.ACTIVE, transfer_enabled_callback),
+            (TAB_DEAD_NAME, PokemonArea.DEAD, None),
         ]
         super().__init__(pokemon, game_state, game_data, party_manager, parent, transfer_options)
 
@@ -368,7 +368,7 @@ class DeadPokemonCardWidget(StoragePokemonCardWidget):
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
         transfer_options = [
-            (TAB_PARTY_NAME, "active", transfer_enabled_callback),
-            (TAB_BOXED_NAME, "boxed", None),
+            (TAB_PARTY_NAME, PokemonArea.ACTIVE, transfer_enabled_callback),
+            (TAB_BOXED_NAME, PokemonArea.BOXED, None),
         ]
         super().__init__(pokemon, game_state, game_data, party_manager, parent, transfer_options)

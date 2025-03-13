@@ -1,7 +1,14 @@
 from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
 
 from nuzlocke_tool.constants import TAB_BOXED_NAME, TAB_DEAD_NAME, TAB_PARTY_NAME
+
+
+class PokemonArea(Enum):
+    ACTIVE = "active"
+    BOXED = "boxed"
+    DEAD = "dead"
 
 
 @dataclass
@@ -42,14 +49,6 @@ class PartyManager:
     boxed: list[Pokemon] = field(default_factory=list)
     dead: list[Pokemon] = field(default_factory=list)
 
-    def add_pokemon(self, pokemon: Pokemon, area: str) -> None:
-        if area == "active":
-            self.active.append(pokemon)
-        elif area == "boxed":
-            self.boxed.append(pokemon)
-        elif area == "dead":
-            self.dead.append(pokemon)
-
     @property
     def all_pokemon(self) -> list[Pokemon]:
         return self.active + self.boxed + self.dead
@@ -63,16 +62,16 @@ class PartyManager:
             return TAB_DEAD_NAME
         return "Unknown"
 
-    def transfer(self, pokemon: Pokemon, target: str) -> None:
+    def transfer(self, pokemon: Pokemon, target: PokemonArea) -> None:
         if pokemon in self.active:
             self.active.remove(pokemon)
         elif pokemon in self.boxed:
             self.boxed.remove(pokemon)
         elif pokemon in self.dead:
             self.dead.remove(pokemon)
-        if target == "active":
+        if target == PokemonArea.ACTIVE:
             self.active.append(pokemon)
-        elif target == "boxed":
+        elif target == PokemonArea.BOXED:
             self.boxed.append(pokemon)
-        elif target == "dead":
+        elif target == PokemonArea.DEAD:
             self.dead.append(pokemon)

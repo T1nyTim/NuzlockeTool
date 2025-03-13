@@ -65,7 +65,7 @@ class BestMovesToolWidget(QWidget):
         normal_damage: int,
     ) -> tuple[float, int, int]:
         damage_min = math.floor(normal_damage * 217 / 255)
-        damage_max = math.floor(normal_damage)
+        damage_max = normal_damage
         if move_name in MULTI_HIT_MOVES:
             damage_min *= 2
             damage_max *= 5
@@ -99,7 +99,7 @@ class BestMovesToolWidget(QWidget):
                     attacker_stats,
                     defender_stats,
                 )
-                if move_damage is None:
+                if not move_damage:
                     continue
                 long_term_average, damage_min, damage_max = move_damage
                 move_results.append(
@@ -211,7 +211,7 @@ class BestMovesToolWidget(QWidget):
             party_member,
             defender_stats,
         )
-        if special_damage_result is not None:
+        if special_damage_result:
             return special_damage_result
         move_power = int(move_data.get("power"))
         if move_power == 0:
@@ -234,32 +234,39 @@ class BestMovesToolWidget(QWidget):
         long_term_average = weighted_damage * accuracy_rate
         return self._apply_additional_modifiers(move_name, long_term_average, normal_damage)
 
+    def _compute_stats(
+        self,
+        pokemon_data: dict[str, dict[str, int | list[str]]],
+        stat: str,
+        pokemon: Pokemon | None = None,
+        stat_stage: int | None = None,
+        level: int | None = None,
+    ) -> tuple[int, int]:
+        base = pokemon_data.get(stat.lower())
+        dv = pokemon.dvs.get(stat, 0)
+        level = level if level else pokemon.level
+        base_stat = math.floor((base + dv) * 2 * level / 100)
+        if stat == "hp":
+            base_stat += level + 10
+        else:
+            base_stat += 5
+        modified_stat = math.floor(base_stat * STAT_STAGE_MULTIPLIER.get(stat_stage)) if stat_stage else None
+        return base_stat, modified_stat
+
     def _get_attacker_stats(self, party_member: Pokemon, idx: int) -> dict[str, int | list[str]]:
         party_data = self._game_data.pokemon_data.get(party_member.species)
-        base_atk = party_data.get("atk")
-        base_spe = party_data.get("spe")
-        base_spd = party_data.get("spd")
-        dv_atk = party_member.dvs.get("Atk")
-        dv_spe = party_member.dvs.get("Spe")
-        dv_spd = party_member.dvs.get("Spd")
-        base_atk_stat = math.floor((base_atk + dv_atk) * 2 * party_member.level / 100) + 5
-        base_spe_stat = math.floor((base_spe + dv_spe) * 2 * party_member.level / 100) + 5
-        base_spd_stat = math.floor((base_spd + dv_spd) * 2 * party_member.level / 100) + 5
         _, atk_spin, spe_spin, spd_spin = self._party_stage_spinboxes[idx]
-        atk_stage = atk_spin.value()
-        spe_stage = spe_spin.value()
-        spd_stage = spd_spin.value()
-        attacking_atk = math.floor(base_atk_stat * STAT_STAGE_MULTIPLIER.get(atk_stage))
-        attacking_spe = math.floor(base_spe_stat * STAT_STAGE_MULTIPLIER.get(spe_stage))
-        attacking_spd = math.floor(base_spd_stat * STAT_STAGE_MULTIPLIER.get(spd_stage))
+        base_atk, modified_atk = self._compute_stats(party_data, "Atk", party_member, atk_spin.value())
+        base_spe, modified_spe = self._compute_stats(party_data, "Spe", party_member, spe_spin.value())
+        base_spd, modified_spd = self._compute_stats(party_data, "Spd", party_member, spd_spin.value())
         attacker_types = party_data.get("type")
         return {
-            "base_atk": base_atk_stat,
-            "base_spe": base_spe_stat,
-            "base_spd": base_spd_stat,
-            "atk": attacking_atk,
-            "spe": attacking_spe,
-            "spd": attacking_spd,
+            "base_atk": base_atk,
+            "base_spe": base_spe,
+            "base_spd": base_spd,
+            "atk": modified_atk,
+            "spe": modified_spe,
+            "spd": modified_spd,
             "types": attacker_types,
         }
 
@@ -269,25 +276,30 @@ class BestMovesToolWidget(QWidget):
             return None
         defending_pokemon = self._game_data.pokemon_data.get(defending_species)
         level = self._level_spinner.value()
-        base_hp = defending_pokemon.get("hp")
-        base_def = defending_pokemon.get("def")
-        base_spe = defending_pokemon.get("spe")
-        base_hp_stat = math.floor(base_hp * 2 * level / 100) + level + 10
-        base_def_stat = math.floor(base_def * 2 * level / 100) + 5
-        base_spe_stat = math.floor(base_spe * 2 * level / 100) + 5
         def_stage = self._defense_spinner.value()
         spe_stage = self._special_spinner.value()
-        defending_def = math.floor(base_def_stat * STAT_STAGE_MULTIPLIER.get(def_stage))
-        defending_spe = math.floor(base_spe_stat * STAT_STAGE_MULTIPLIER.get(spe_stage))
+        base_hp, _ = self._compute_stats(defending_pokemon, "hp", level=level)
+        base_def, modified_def = self._compute_stats(
+            defending_pokemon,
+            "def",
+            stat_stage=def_stage,
+            level=level,
+        )
+        base_spe, modified_spe = self._compute_stats(
+            defending_pokemon,
+            "spe",
+            stat_stage=spe_stage,
+            level=level,
+        )
         defending_types = defending_pokemon.get("type")
         return {
             "species": defending_species,
             "level": level,
-            "hp": base_hp_stat,
-            "base_def": base_def_stat,
-            "base_spe": base_spe_stat,
-            "def": defending_def,
-            "spe": defending_spe,
+            "hp": base_hp,
+            "base_def": base_def,
+            "base_spe": base_spe,
+            "def": modified_def,
+            "spe": modified_spe,
             "types": defending_types,
         }
 

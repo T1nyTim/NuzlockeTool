@@ -65,7 +65,7 @@ from nuzlocke_tool.gui.card_widgets import (
 from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
-from nuzlocke_tool.models import GameData, GameState, PartyManager, Pokemon
+from nuzlocke_tool.models import GameData, GameState, PartyManager, Pokemon, PokemonArea
 from nuzlocke_tool.utils import append_journal_entry, clear_layout, load_yaml_file, save_session
 
 LOGGER = logging.getLogger(__name__)
@@ -237,7 +237,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._tools_tab.setLayout(layout)
         return self._tools_tab
 
-    def _handle_transfer(self, pokemon: Pokemon, target: str) -> None:
+    def _handle_transfer(self, pokemon: Pokemon, target: PokemonArea) -> None:
         self._party_manager.transfer(pokemon, target)
         self._update_active_party_display()
         self._update_boxed_pokemon_display()
@@ -387,7 +387,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         )
 
     def _load_session_data(self, filepath: Path) -> tuple[GameState, PartyManager]:
-        with filepath.open("r", encoding="utf-8") as f:
+        with filepath.open("r") as f:
             data = yaml.safe_load(f)
         game_state_data = data["game_state"]
         game_state_data["journal_file"] = Path(game_state_data["journal_file"])

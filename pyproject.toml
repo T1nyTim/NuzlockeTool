@@ -8,6 +8,7 @@ classifiers = [
 ]
 dependencies = ["PyQt6 >= 6.8.1", "PyYAML >= 6.0.2", "rich >= 13.9.4"]
 description = "Nuzlocke tracking tool"
+dynamic = ["version"]
 keywords = ["Pokemon", "Nuzlocke"]
 license = {file = "LICENSE"}
 maintainers = [{name = "T1nyTim"}]
@@ -20,6 +21,9 @@ NuzlockeTool = "nuzlocke_tool.__main__:main"
 
 [tool.setuptools]
 packages = ["nuzlocke_tool"]
+
+[tool.setuptools.dynamic]
+version = {attr = "nuzlocke_tool.__version__"}
 
 [tool.ruff]
 line-length = 110

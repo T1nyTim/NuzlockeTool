@@ -24,7 +24,7 @@ def add_pokemon_image(layout: QLayout, species: str, parent: QWidget) -> QLabel:
 
 
 def append_journal_entry(journal_file: Path, entry: str) -> None:
-    with journal_file.open("a", encoding="utf-8") as f:
+    with journal_file.open("a") as f:
         f.write(f"{entry}\n")
 
 
@@ -35,6 +35,7 @@ def clear_layout(layout: QLayout) -> None:
             child.widget().deleteLater()
         elif child.layout():
             clear_layout(child.layout())
+
 
 def clear_widget(widget: QWidget) -> None:
     layout = widget.layout()
@@ -59,10 +60,11 @@ def load_pokemon_image(species: str) -> QPixmap:
 
 
 def load_yaml_file(file_path: Path) -> dict[str, str | list[str]]:
-    with file_path.open("r", encoding="utf-8") as f:
+    with file_path.open("r") as f:
         data = yaml.safe_load(f)
     LOGGER.info("Loaded YAML file: %s", str(file_path))
     return data
+
 
 def save_session(game_state: GameState, party_manager: PartyManager) -> None:
     game_state_dict = asdict(game_state)
@@ -70,5 +72,5 @@ def save_session(game_state: GameState, party_manager: PartyManager) -> None:
     game_state_dict["save_file"] = str(game_state_dict["save_file"])
     data = {"game_state": game_state_dict, "party_manager": asdict(party_manager)}
     save_path = game_state.save_file
-    with save_path.open("w", encoding="utf-8") as f:
+    with save_path.open("w") as f:
         yaml.dump(data, f)
