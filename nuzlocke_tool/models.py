@@ -12,13 +12,6 @@ class PokemonArea(Enum):
 
 
 @dataclass
-class GameData:
-    location_data: dict[str, dict[str, str | list[str]]]
-    pokemon_data: dict[str, dict[str, int | list[str]]]
-    move_data: dict[str, dict[str, int | str]]
-
-
-@dataclass
 class GameState:
     game: str
     ruleset: str

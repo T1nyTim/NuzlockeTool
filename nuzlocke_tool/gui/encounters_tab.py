@@ -20,7 +20,8 @@ from nuzlocke_tool.constants import (
     TABLE_COLOR_DEAD,
     TABLE_COLOR_PARTY,
 )
-from nuzlocke_tool.models import GameData, GameState, PartyManager
+from nuzlocke_tool.data_loader import GameDataLoader
+from nuzlocke_tool.models import GameState, PartyManager
 
 
 class EncountersTab(QWidget):
@@ -28,12 +29,12 @@ class EncountersTab(QWidget):
         self,
         game_state: GameState,
         party_manager: PartyManager,
-        game_data: GameData,
+        game_data_loader: GameDataLoader,
         parent: QWidget,
     ) -> None:
         super().__init__(parent)
         self._encounter_widgets = {}
-        self._game_data = game_data
+        self._game_data_loader = game_data_loader
         self._game_state = game_state
         self._location_row = {}
         self._party_manager = party_manager
@@ -55,7 +56,7 @@ class EncountersTab(QWidget):
         region_type = "Partial" if self._game_state.sub_region_clause else "Full"
         locations = [
             location
-            for location, info in self._game_data.location_data.items()
+            for location, info in self._game_data_loader.location_data.items()
             if (info.get("type") == region_type or info.get("type") is None)
             and self._game_state.game in info.get("games")
         ]
@@ -71,8 +72,13 @@ class EncountersTab(QWidget):
                 item_location.setText(location)
             self._location_row[location] = row
 
-    def set_state(self, game_state: GameState, party_manager: PartyManager, game_data: GameData) -> None:
-        self._game_data = game_data
+    def set_state(
+        self,
+        game_state: GameState,
+        party_manager: PartyManager,
+        game_data_loader: GameDataLoader,
+    ) -> None:
+        self._game_data_loader = game_data_loader
         self._game_state = game_state
         self._party_manager = party_manager
         self.init_table()

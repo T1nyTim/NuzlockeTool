@@ -48,14 +48,20 @@ from nuzlocke_tool.constants import (
     SWIFT_MOVES,
     TYPE_CHART,
 )
-from nuzlocke_tool.models import GameData, PartyManager, Pokemon
+from nuzlocke_tool.data_loader import GameDataLoader
+from nuzlocke_tool.models import PartyManager, Pokemon
 from nuzlocke_tool.utils import add_pokemon_image, clear_layout, clear_widget, load_pokemon_image
 
 
 class BestMovesToolWidget(QWidget):
-    def __init__(self, game_data: GameData, party_manager: PartyManager, parent: QWidget) -> None:
+    def __init__(
+        self,
+        game_data_loader: GameDataLoader,
+        party_manager: PartyManager,
+        parent: QWidget,
+    ) -> None:
         super().__init__(parent)
-        self._game_data = game_data
+        self._game_data_loader = game_data_loader
         self._party_manager = party_manager
 
     def _apply_additional_modifiers(
@@ -204,7 +210,7 @@ class BestMovesToolWidget(QWidget):
         attacker_stats: dict[str, int | list[str]],
         defender_stats: dict[str, str | int | list[str]],
     ) -> tuple[float, int, int] | None:
-        move_data = self._game_data.move_data.get(move_name)
+        move_data = self._game_data_loader.move_data.get(move_name)
         special_damage_result = self._handle_special_damage_moves(
             move_name,
             move_data,
@@ -243,18 +249,20 @@ class BestMovesToolWidget(QWidget):
         level: int | None = None,
     ) -> tuple[int, int]:
         base = pokemon_data.get(stat.lower())
-        dv = 0 if pokemon else pokemon.dvs.get(stat)
+        dv = pokemon.dvs.get(stat) if pokemon else 0
         level = level if level else pokemon.level
         base_stat = math.floor((base + dv) * 2 * level / 100)
         if stat == "hp":
             base_stat += level + 10
         else:
             base_stat += 5
-        modified_stat = math.floor(base_stat * STAT_STAGE_MULTIPLIER.get(stat_stage)) if stat_stage else None
+        modified_stat = (
+            math.floor(base_stat * STAT_STAGE_MULTIPLIER.get(stat_stage)) if stat_stage is not None else None
+        )
         return base_stat, modified_stat
 
     def _get_attacker_stats(self, party_member: Pokemon, idx: int) -> dict[str, int | list[str]]:
-        party_data = self._game_data.pokemon_data.get(party_member.species)
+        party_data = self._game_data_loader.pokemon_data.get(party_member.species)
         _, atk_spin, spe_spin, spd_spin = self._party_stage_spinboxes[idx]
         base_atk, modified_atk = self._compute_stats(party_data, "Atk", party_member, atk_spin.value())
         base_spe, modified_spe = self._compute_stats(party_data, "Spe", party_member, spe_spin.value())
@@ -274,7 +282,7 @@ class BestMovesToolWidget(QWidget):
         defending_species = self._pokemon_selector.text()
         if not defending_species:
             return None
-        defending_pokemon = self._game_data.pokemon_data.get(defending_species)
+        defending_pokemon = self._game_data_loader.pokemon_data.get(defending_species)
         level = self._level_spinner.value()
         def_stage = self._defense_spinner.value()
         spe_stage = self._special_spinner.value()
@@ -341,7 +349,7 @@ class BestMovesToolWidget(QWidget):
         left_column = QVBoxLayout()
         left_column.addWidget(QLabel(LABEL_DEFENDING_POKEMON, self), alignment=ALIGN_CENTER)
         self._pokemon_selector = QLineEdit(self)
-        pokemon_names = list(self._game_data.pokemon_data.keys())
+        pokemon_names = list(self._game_data_loader.pokemon_data.keys())
         completer = QCompleter(pokemon_names, self)
         self._pokemon_selector.setCompleter(completer)
         self._pokemon_selector.textChanged.connect(self._update_image)
@@ -380,8 +388,8 @@ class BestMovesToolWidget(QWidget):
         results_area.setLayout(self._results_layout)
         layout.addStretch()
 
-    def set_state(self, game_data: GameData, party_manager: PartyManager) -> None:
-        self._game_data = game_data
+    def set_state(self, game_data_loader: GameDataLoader, party_manager: PartyManager) -> None:
+        self._game_data_loader = game_data_loader
         self._party_manager = party_manager
         self.init_ui()
 

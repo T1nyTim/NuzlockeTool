@@ -386,7 +386,7 @@ Psybeam:
   power: 65
   type: Psychic
   accuracy: 100
-Psychic M:
+Psychic:
   power: 90
   type: Psychic
   accuracy: 100

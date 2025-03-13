@@ -55,7 +55,8 @@ from nuzlocke_tool.constants import (
     POKEMON_MOVES_LIMIT,
     TOOLTIP_CHECKBOX_SUBREGIONS,
 )
-from nuzlocke_tool.models import GameData, GameState, Pokemon
+from nuzlocke_tool.data_loader import GameDataLoader
+from nuzlocke_tool.models import GameState, Pokemon
 from nuzlocke_tool.utils import load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
@@ -135,12 +136,12 @@ class PokemonDialog(BaseDialog):
     def __init__(
         self,
         game_state: GameState,
-        game_data: GameData,
+        game_data_loader: GameDataLoader,
         parent: QWidget,
         pokemon: Pokemon | None = None,
     ) -> None:
         super().__init__(DIALOG_ADD_POKEMON_TITLE, parent)
-        self._game_data = game_data
+        self._game_data_loader = game_data_loader
         self._game_state = game_state
         self._moves_by_species = self._extract_moves_mapping()
         self._allowed_species = list(self._moves_by_species.keys())
@@ -149,7 +150,7 @@ class PokemonDialog(BaseDialog):
 
     def _extract_moves_mapping(self) -> dict[str, list[str]]:
         moves_mapping = {}
-        for species, info in self._game_data.pokemon_data.items():
+        for species, info in self._game_data_loader.pokemon_data.items():
             moves_mapping[species] = info["moves"]
         return moves_mapping
 
@@ -190,7 +191,7 @@ class PokemonDialog(BaseDialog):
         region_type = "Partial" if self._game_state.sub_region_clause else "Full"
         valid_locations = [
             location
-            for location, info in self._game_data.location_data.items()
+            for location, info in self._game_data_loader.location_data.items()
             if (info.get("type") == region_type or info.get("type") is None)
             and self._game_state.game in info.get("games", [])
             and location not in self._game_state.encounters
