@@ -19,6 +19,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from nuzlocke_tool.command import AddPokemonCommand, CommandManager, TransferPokemonCommand
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import (
     ACTIVE_PARTY_LIMIT,
@@ -31,6 +32,8 @@ from nuzlocke_tool.constants import (
     MENU_ACTION_EXIT_NAME,
     MENU_ACTION_LOAD_NAME,
     MENU_ACTION_NEW_NAME,
+    MENU_ACTION_UNDO_NAME,
+    MENU_EDIT_NAME,
     MENU_FILE_NAME,
     MSG_BOX_MSG_NO_DATA_FILE,
     MSG_BOX_MSG_PARTY_FULL,
@@ -68,6 +71,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle(MAIN_WINDOW_TITLE)
         self.setStyleSheet(STYLE_SHEET_COMBO_BOX)
+        self.command_manager = CommandManager()
         self._container = container
         self._game_data_loader = self._container.game_data_loader()
         self._game_data_loader.load_location_data()
@@ -84,34 +88,41 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         ):
             QMessageBox.warning(self, MSG_BOX_TITLE_PARTY_FULL, MSG_BOX_MSG_PARTY_FULL)
             return
-        new_pokemon = self._add_pokemon(PokemonStatus.ACTIVE)
-        if new_pokemon is None:
+        dialog = PokemonDialog(self._container, self._game_state, PokemonStatus.ACTIVE, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        self._game_state.pokemon.append(new_pokemon)
-        self._update_active_party_display()
-        self._encounters_tab.update_encounters()
-        self._game_state.encounters.append(new_pokemon.encountered)
-        self._save_service.save_session(self._game_state)
-        self._journal_service.add_capture_entry(new_pokemon)
-        LOGGER.info("Added active Pokemon: %s", new_pokemon)
+        command = AddPokemonCommand(
+            self._container,
+            self._game_state,
+            dialog.pokemon,
+            on_success=self._after_pokemon_added,
+        )
+        self.command_manager.execute(command)
+        LOGGER.info("Added active Pokemon: %s", dialog.pokemon)
 
     def _add_boxed_pokemon(self) -> None:
-        new_pokemon = self._add_pokemon(PokemonStatus.BOXED)
-        if new_pokemon is None:
+        dialog = PokemonDialog(self._container, self._game_state, PokemonStatus.BOXED, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        self._game_state.pokemon.append(new_pokemon)
+        command = AddPokemonCommand(
+            self._container,
+            self._game_state,
+            dialog.pokemon,
+            on_success=self._after_pokemon_added,
+        )
+        self.command_manager.execute(command)
+        LOGGER.info("Added boxed Pokemon: %s", dialog.pokemon)
+
+    def _after_pokemon_added(self) -> None:
+        self._update_active_party_display()
         self._update_boxed_pokemon_display()
         self._encounters_tab.update_encounters()
-        self._game_state.encounters.append(new_pokemon.encountered)
-        self._save_service.save_session(self._game_state)
-        self._journal_service.add_capture_entry(new_pokemon)
-        LOGGER.info("Added boxed Pokemon: %s", new_pokemon)
 
-    def _add_pokemon(self, status: PokemonStatus) -> Pokemon | None:
-        dialog = PokemonDialog(self._container, self._game_state, status, self)
-        if dialog.exec() != QDialog.DialogCode.Accepted:
-            return None
-        return dialog.pokemon
+    def _after_transfer(self) -> None:
+        self._update_active_party_display()
+        self._update_boxed_pokemon_display()
+        self._update_dead_pokemon_display()
+        self._encounters_tab.update_encounters()
 
     def _create_active_party_widget(self) -> QWidget:
         widget = QWidget(self)
@@ -174,15 +185,22 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         menubar = self.menuBar()
         file_menu = menubar.addMenu(MENU_FILE_NAME)
         new_action = QAction(MENU_ACTION_NEW_NAME, self)
+        new_action.setShortcut("Ctrl+N")
         new_action.triggered.connect(self._new_file)
         file_menu.addAction(new_action)
         load_action = QAction(MENU_ACTION_LOAD_NAME, self)
+        load_action.setShortcut("Ctrl+L")
         load_action.triggered.connect(self._load_file)
         file_menu.addAction(load_action)
         file_menu.addSeparator()
         exit_action = QAction(MENU_ACTION_EXIT_NAME, self)
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
+        edit_menu = self.menuBar().addMenu(MENU_EDIT_NAME)
+        undo_action = QAction(MENU_ACTION_UNDO_NAME, self)
+        undo_action.setShortcut("Ctrl+Z")
+        undo_action.triggered.connect(self._undo_action)
+        edit_menu.addAction(undo_action)
 
     def _create_party_tab(self) -> QWidget:
         self._party_tab = QWidget(self)
@@ -233,17 +251,14 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         return self._tools_tab
 
     def _handle_transfer(self, pokemon: Pokemon, target: PokemonStatus) -> None:
-        pokemon.status = target
-        self._update_active_party_display()
-        self._update_boxed_pokemon_display()
-        self._update_dead_pokemon_display()
-        self._encounters_tab.update_encounters()
-        self._save_service.save_session(self._game_state)
-        if target == PokemonStatus.DEAD:
-            self._journal_service.add_dead_entry(pokemon)
-        else:
-            target_name = self._process_storage_status(target)
-            self._journal_service.add_transfer_entry(pokemon, target_name)
+        command = TransferPokemonCommand(
+            self._container,
+            self._game_state,
+            pokemon,
+            target,
+            on_success=self._after_transfer,
+        )
+        self.command_manager.execute(command)
         LOGGER.info("Transfered Pokemon to %s: %s", target, pokemon)
 
     def _init_tabs(self) -> None:
@@ -351,15 +366,6 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             self._game_state.ruleset,
         )
 
-    @staticmethod
-    def _process_storage_status(status: str) -> str:
-        status_map = {
-            PokemonStatus.ACTIVE: TAB_PARTY_NAME,
-            PokemonStatus.BOXED: TAB_BOXED_NAME,
-            PokemonStatus.DEAD: TAB_DEAD_NAME,
-        }
-        return status_map[status]
-
     def _prompt_for_save_file(self) -> None:
         folder = PathConfig.save_folder()
         file_path, _ = QFileDialog.getOpenFileName(
@@ -369,6 +375,13 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             "Save Files (*.sav)",
         )
         return Path(file_path) if file_path else None
+
+    def _undo_action(self) -> None:
+        self.command_manager.undo()
+        self._update_active_party_display()
+        self._update_boxed_pokemon_display()
+        self._update_dead_pokemon_display()
+        self._encounters_tab.update_encounters()
 
     def _update_active_party_display(self) -> None:
         clear_layout(self._active_party_layout)

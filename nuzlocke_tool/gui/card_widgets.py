@@ -19,6 +19,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from nuzlocke_tool.command import EditPokemonCommand, UpdateMoveCommand
 from nuzlocke_tool.constants import (
     ALIGN_CENTER,
     LABEL_DETERMINANT_VALUES_SHORT,
@@ -88,8 +89,6 @@ class BasePokemonCardWidget(QWidget):
         self._context_menu.addAction(edit_action)
 
     def _edit(self) -> None:
-        current_species = self._pokemon.species
-        pokemon_data = self._pokemon_repository.get_by_id(current_species)
         dialog = PokemonDialog(
             self._container,
             self._game_state,
@@ -99,10 +98,14 @@ class BasePokemonCardWidget(QWidget):
         )
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        self._refresh()
-        self._save_service.save_session(self._game_state)
-        if "evolve" in pokemon_data and self._pokemon.species in pokemon_data["evolve"]:
-            self._journal_service.add_evolved_entry(self._pokemon, current_species)
+        command = EditPokemonCommand(
+            self._container,
+            self._game_state,
+            self._pokemon,
+            on_success=self._refresh,
+        )
+        main_window = self.window()
+        main_window.command_manager.execute(command)
         LOGGER.info("Edited Pokemon: %s", self._pokemon)
 
     def _transfer(self, target: PokemonStatus) -> None:
@@ -227,17 +230,16 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         main_layout.addWidget(details_widget)
 
     def _move_learned(self, index: int, new_move: str) -> None:
-        old_move = self._pokemon.moves[index]
-        self._pokemon.moves[index] = new_move
-        if old_move == "":
-            self._journal_service.add_learn_move_entry(self._pokemon.nickname, new_move)
-            LOGGER.info("Pokemon %s learned move: %s", self._pokemon.nickname, new_move)
-        elif new_move == "":
-            self._journal_service.add_delete_move_entry(self._pokemon.nickname, old_move)
-            LOGGER.info("Pokemon %s deleted move: %s", self._pokemon.nickname, old_move)
-        else:
-            self._journal_service.add_learn_move_entry(self._pokemon.nickname, new_move, old_move)
-            LOGGER.info("Pokemon %s learned move: %s (was: %s)", self._pokemon.nickname, new_move, old_move)
+        command = UpdateMoveCommand(
+            self._container,
+            self._game_state,
+            self._pokemon,
+            index,
+            new_move,
+            on_success=self._refresh_moves,
+        )
+        main_window = self.window()
+        main_window.command_manager.execute(command)
 
     def _on_level_changed(self, value: int) -> None:
         self._pokemon.level = value
