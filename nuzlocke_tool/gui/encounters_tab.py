@@ -55,7 +55,7 @@ class EncountersTab(QWidget):
         locations = [
             location
             for location, info in self._game_data_loader.location_data.items()
-            if (info["type"] == region_type or info["type"] is None)
+            if (info.get("type") == region_type or info.get("type") is None)
             and self._game_state.game in info["games"]
         ]
         self.table.setRowCount(len(locations))

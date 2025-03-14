@@ -1,28 +1,10 @@
-from typing import TypedDict
+from typing import TYPE_CHECKING
 
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.utils import load_yaml_file
 
-
-class LocationData(TypedDict):
-    games: list[str]
-
-
-class MoveData(TypedDict):
-    power: int
-    move_type: str
-    accuracy: int
-
-
-class PokemonData(TypedDict):
-    atk: int
-    df: int
-    evolve: list[str]
-    hp: int
-    moves: list[str]
-    spd: int
-    spe: int
-    pokemon_type: list[str]
+if TYPE_CHECKING:
+    from nuzlocke_tool.models import LocationData, MoveData, PokemonData
 
 
 class GameDataLoader:

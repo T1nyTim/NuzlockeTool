@@ -1,12 +1,40 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
+from typing import TypedDict
+
+
+class LocationData(TypedDict):
+    games: list[str]
+
+
+class MoveData(TypedDict):
+    power: int
+    move_type: str
+    accuracy: int
+
+
+class PokemonData(TypedDict):
+    atk: int
+    df: int
+    evolve: list[str]
+    hp: int
+    moves: list[str]
+    spd: int
+    spe: int
+    pokemon_type: list[str]
+
+
+class RulesetData(TypedDict):
+    earliest_gen: int
+    rules: list[str]
 
 
 class PokemonStatus(Enum):
     ACTIVE = auto()
     BOXED = auto()
     DEAD = auto()
+
 
 @dataclass
 class Pokemon:
@@ -21,6 +49,7 @@ class Pokemon:
 
     def __str__(self) -> str:
         return f"{self.nickname} ({self.species}) - Lv {self.level}"
+
 
 @dataclass
 class GameState:

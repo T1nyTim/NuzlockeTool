@@ -243,13 +243,13 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         old_move = self._pokemon.moves[index]
         self._pokemon.moves[index] = new_move
         if old_move == "":
-            self._journal_service.add_learned_move_entry(self._pokemon.nickname, new_move)
+            self._journal_service.add_learn_move_entry(self._pokemon.nickname, new_move)
             LOGGER.info("Pokemon %s learned move: %s", self._pokemon.nickname, new_move)
         elif new_move == "":
-            self._journal_service.add_deleted_move_entry(self._pokemon.nickname, old_move)
+            self._journal_service.add_delete_move_entry(self._pokemon.nickname, old_move)
             LOGGER.info("Pokemon %s deleted move: %s", self._pokemon.nickname, old_move)
         else:
-            self._journal_service.add_learned_move_entry(self._pokemon.nickname, new_move, old_move)
+            self._journal_service.add_learn_move_entry(self._pokemon.nickname, new_move, old_move)
             LOGGER.info("Pokemon %s learned move: %s (was: %s)", self._pokemon.nickname, new_move, old_move)
 
     def _on_level_changed(self, value: int) -> None:

@@ -56,7 +56,7 @@ from nuzlocke_tool.constants import (
     TOOLTIP_CHECKBOX_SUBREGIONS,
 )
 from nuzlocke_tool.data_loader import GameDataLoader
-from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus, RulesetData
 from nuzlocke_tool.utils import load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
@@ -78,7 +78,7 @@ class BaseDialog(QDialog):
 
 
 class NewSessionDialog(BaseDialog):
-    def __init__(self, rulesets: dict[str, dict[str, int | list[str]]], parent: QWidget) -> None:
+    def __init__(self, rulesets: dict[str, RulesetData], parent: QWidget) -> None:
         super().__init__(DIALOG_NEW_SESSION_TITLE, parent)
         self._rulesets = rulesets
         self._selected_game = None
@@ -194,7 +194,7 @@ class PokemonDialog(BaseDialog):
         valid_locations = [
             location
             for location, info in self._game_data_loader.location_data.items()
-            if (info["type"] == region_type or info["type"] is None)
+            if (info.get("type") == region_type or info.get("type") is None)
             and self._game_state.game in info.get("games", [])
             and location not in self._game_state.encounters
         ]

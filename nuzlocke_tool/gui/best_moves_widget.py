@@ -49,7 +49,7 @@ from nuzlocke_tool.constants import (
     TYPE_CHART,
 )
 from nuzlocke_tool.data_loader import GameDataLoader
-from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models import GameState, MoveData, Pokemon, PokemonData, PokemonStatus
 from nuzlocke_tool.utils import add_pokemon_image, clear_layout, clear_widget, load_pokemon_image
 
 
@@ -130,7 +130,7 @@ class BestMovesToolWidget(QWidget):
     def _calculate_damage_components(
         self,
         move_name: str,
-        move_data: dict[str, dict[str, int | str]],
+        move_data: dict[str, MoveData],
         party_member: Pokemon,
         attacker_stats: dict[str, int | list[str]],
         defender_stats: dict[str, str | int | list[str]],
@@ -238,7 +238,7 @@ class BestMovesToolWidget(QWidget):
 
     def _compute_stats(
         self,
-        pokemon_data: dict[str, dict[str, int | list[str]]],
+        pokemon_data: dict[str, PokemonData],
         stat: str,
         pokemon: Pokemon | None = None,
         stat_stage: int | None = None,
@@ -310,7 +310,7 @@ class BestMovesToolWidget(QWidget):
     def _handle_special_damage_moves(
         self,
         move_name: str,
-        move_data: dict[str, dict[str, int | str]],
+        move_data: dict[str, MoveData],
         party_member: Pokemon,
         defender_stats: dict[str, str | int | list[str]],
     ) -> tuple[float, int, int] | None:
