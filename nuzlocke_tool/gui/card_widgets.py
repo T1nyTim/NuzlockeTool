@@ -45,7 +45,8 @@ from nuzlocke_tool.data_loader import GameDataLoader
 from nuzlocke_tool.gui.dialogs import PokemonDialog
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
 from nuzlocke_tool.services.journal_service import JournalService
-from nuzlocke_tool.utils import add_pokemon_image, load_pokemon_image, save_session
+from nuzlocke_tool.services.save_service import SaveService
+from nuzlocke_tool.utils import add_pokemon_image, load_pokemon_image
 
 LOGGER = logging.getLogger(__name__)
 
@@ -59,6 +60,7 @@ class BasePokemonCardWidget(QWidget):
         game_state: GameState,
         game_data_loader: GameDataLoader,
         journal_service: JournalService,
+        save_service: SaveService,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
@@ -67,6 +69,7 @@ class BasePokemonCardWidget(QWidget):
         self._game_state = game_state
         self._journal_service = journal_service
         self._pokemon = pokemon
+        self._save_service = save_service
         self._transfer_options = transfer_options if transfer_options is not None else []
         self.setObjectName(OBJECT_NAME_CARD_WIDGET)
         self.setStyleSheet(STYLE_SHEET_WIDGET_CARD)
@@ -89,7 +92,7 @@ class BasePokemonCardWidget(QWidget):
 
     def _edit(self) -> None:
         current_species = self._pokemon.species
-        pokemon_data = self._game_data_loader.pokemon_data.get(current_species)
+        pokemon_data = self._game_data_loader.pokemon_data[current_species]
         dialog = PokemonDialog(
             self._game_state,
             self._game_data_loader,
@@ -100,8 +103,8 @@ class BasePokemonCardWidget(QWidget):
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         self._refresh()
-        save_session(self._game_state)
-        if "evolve" in pokemon_data and self._pokemon.species in pokemon_data.get("evolve"):
+        self._save_service.save_session(self._game_state)
+        if "evolve" in pokemon_data and self._pokemon.species in pokemon_data["evolve"]:
             self._journal_service.add_evolved_entry(self._pokemon, current_species)
         LOGGER.info("Edited Pokemon: %s", self._pokemon)
 
@@ -126,6 +129,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         game_state: GameState,
         game_data_loader: GameDataLoader,
         journal_service: JournalService,
+        save_service: SaveService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -133,7 +137,15 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             (TAB_BOXED_NAME, PokemonStatus.BOXED, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, journal_service, parent, transfer_options)
+        super().__init__(
+            pokemon,
+            game_state,
+            game_data_loader,
+            journal_service,
+            save_service,
+            parent,
+            transfer_options,
+        )
         self._init_ui()
 
     def _create_dvs_widget(self) -> QWidget:
@@ -164,7 +176,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _create_moves_widget(self) -> QWidget:
         species_key = self._pokemon.species
-        entry = self._game_data_loader.pokemon_data.get(species_key)
+        entry = self._game_data_loader.pokemon_data[species_key]
         moves_entry = entry["moves"] if entry and isinstance(entry, dict) and "moves" in entry else None
         moves_layout = QHBoxLayout()
         moves_layout.setContentsMargins(NO_SPACING, NO_SPACING, NO_SPACING, NO_SPACING)
@@ -189,7 +201,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _create_species_widget(self) -> QWidget:
         species_key = self._pokemon.species
-        entry = self._game_data_loader.pokemon_data.get(species_key)
+        entry = self._game_data_loader.pokemon_data[species_key]
         if entry and isinstance(entry, dict) and "evolve" in entry:
             species_options = [self._pokemon.species, *entry.get("evolve", [])]
             species_combo = QComboBox(self)
@@ -242,7 +254,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _on_level_changed(self, value: int) -> None:
         self._pokemon.level = value
-        save_session(self._game_state)
+        self._save_service.save_session(self._game_state)
 
     def _on_species_changed(self, index: int) -> None:
         new_species = self._species_widget.itemData(index)
@@ -250,7 +262,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             self._journal_service.add_evolved_entry(self._pokemon, self._pokemon.species)
             LOGGER.info("Pokemon evolved from %s to %s", self._pokemon.species, new_species)
             self._pokemon.species = new_species
-            save_session(self._game_state)
+            self._save_service.save_session(self._game_state)
             self._refresh_species()
             self._refresh_moves()
 
@@ -294,10 +306,19 @@ class StoragePokemonCardWidget(BasePokemonCardWidget):
         game_state: str,
         game_data_loader: GameDataLoader,
         journal_service: JournalService,
+        save_service: SaveService,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
-        super().__init__(pokemon, game_state, game_data_loader, journal_service, parent, transfer_options)
+        super().__init__(
+            pokemon,
+            game_state,
+            game_data_loader,
+            journal_service,
+            save_service,
+            parent,
+            transfer_options,
+        )
         self.setFixedSize(WIDGET_POKEMON_CARD_WIDTH, WIDGET_POKEMON_CARD_WIDTH)
         self._init_ui()
 
@@ -340,6 +361,7 @@ class BoxedPokemonCardWidget(StoragePokemonCardWidget):
         game_state: GameState,
         game_data_loader: GameDataLoader,
         journal_service: JournalService,
+        save_service: SaveService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -347,7 +369,15 @@ class BoxedPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, journal_service, parent, transfer_options)
+        super().__init__(
+            pokemon,
+            game_state,
+            game_data_loader,
+            journal_service,
+            save_service,
+            parent,
+            transfer_options,
+        )
 
 
 class DeadPokemonCardWidget(StoragePokemonCardWidget):
@@ -357,6 +387,7 @@ class DeadPokemonCardWidget(StoragePokemonCardWidget):
         game_state: GameState,
         game_data_loader: GameDataLoader,
         journal_service: JournalService,
+        save_service: SaveService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -364,4 +395,12 @@ class DeadPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_BOXED_NAME, PokemonStatus.BOXED, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, journal_service, parent, transfer_options)
+        super().__init__(
+            pokemon,
+            game_state,
+            game_data_loader,
+            journal_service,
+            save_service,
+            parent,
+            transfer_options,
+        )

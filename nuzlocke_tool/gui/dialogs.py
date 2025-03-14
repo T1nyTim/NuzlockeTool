@@ -102,11 +102,11 @@ class NewSessionDialog(BaseDialog):
 
     def _on_game_changed(self, game: str) -> None:
         version_info = self._versions.get(game, {})
-        self._selected_generation = version_info.get("generation")
+        self._selected_generation = version_info["generation"]
         filtered = {
             name: info
             for name, info in self._rulesets.items()
-            if info.get("earliest_gen") <= self._selected_generation
+            if info["earliest_gen"] <= self._selected_generation
         }
         self._rules_combo.clear()
         self._rules_combo.addItems(list(filtered.keys()))
@@ -194,7 +194,7 @@ class PokemonDialog(BaseDialog):
         valid_locations = [
             location
             for location, info in self._game_data_loader.location_data.items()
-            if (info.get("type") == region_type or info.get("type") is None)
+            if (info["type"] == region_type or info["type"] is None)
             and self._game_state.game in info.get("games", [])
             and location not in self._game_state.encounters
         ]
@@ -299,7 +299,7 @@ class PokemonDialog(BaseDialog):
             error = MSG_BOX_MSG_INVALID_SPECIES
         elif not moves[0]:
             error = MSG_BOX_MSG_NO_MOVE_FIRST_ONLY
-        elif moves[0] not in self._moves_by_species.get(species):
+        elif moves[0] not in self._moves_by_species[species]:
             error = MSG_BOX_MSG_INVALID_MOVE
         elif not encountered:
             error = MSG_BOX_MSG_NO_ENCOUNTER

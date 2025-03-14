@@ -55,8 +55,8 @@ class EncountersTab(QWidget):
         locations = [
             location
             for location, info in self._game_data_loader.location_data.items()
-            if (info.get("type") == region_type or info.get("type") is None)
-            and self._game_state.game in info.get("games")
+            if (info["type"] == region_type or info["type"] is None)
+            and self._game_state.game in info["games"]
         ]
         self.table.setRowCount(len(locations))
         self._location_row.clear()
@@ -91,7 +91,7 @@ class EncountersTab(QWidget):
                     PokemonStatus.BOXED: TAB_BOXED_NAME,
                     PokemonStatus.DEAD: TAB_DEAD_NAME,
                 }
-                status = status_map.get(pokemon.status)
+                status = status_map[pokemon.status]
                 item_details = QTableWidgetItem(details)
                 item_status = QTableWidgetItem(status)
                 if pokemon.status == PokemonStatus.ACTIVE:

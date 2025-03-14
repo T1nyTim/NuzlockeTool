@@ -135,9 +135,9 @@ class BestMovesToolWidget(QWidget):
         attacker_stats: dict[str, int | list[str]],
         defender_stats: dict[str, str | int | list[str]],
     ) -> tuple[int, int]:
-        move_type = move_data.get("type")
+        move_type = move_data["type"]
         is_special = move_type in SPECIAL_TYPES
-        move_power = int(move_data.get("power"))
+        move_power = int(move_data["power"])
         if is_special:
             noncrit_attack = attacker_stats["spe"]
             noncrit_defense = defender_stats["spe"]
@@ -159,7 +159,7 @@ class BestMovesToolWidget(QWidget):
             noncrit_attack = math.floor(noncrit_attack / 4)
             noncrit_defense = math.floor(noncrit_defense / 4)
         stab = 1.5 if move_type in attacker_stats["types"] else 1.0
-        type_chart_for_move = TYPE_CHART.get(move_type)
+        type_chart_for_move = TYPE_CHART[move_type]
         defender_types = defender_stats["types"]
         type1_multi = type_chart_for_move.get(defender_types[0], 1)
         type2_multi = type_chart_for_move.get(defender_types[1], 1) if len(defender_types) > 1 else 1
@@ -206,7 +206,7 @@ class BestMovesToolWidget(QWidget):
         attacker_stats: dict[str, int | list[str]],
         defender_stats: dict[str, str | int | list[str]],
     ) -> tuple[float, int, int] | None:
-        move_data = self._game_data_loader.move_data.get(move_name)
+        move_data = self._game_data_loader.move_data[move_name]
         special_damage_result = self._handle_special_damage_moves(
             move_name,
             move_data,
@@ -215,7 +215,7 @@ class BestMovesToolWidget(QWidget):
         )
         if special_damage_result:
             return special_damage_result
-        move_power = int(move_data.get("power"))
+        move_power = int(move_data["power"])
         if move_power == 0:
             return None
         normal_damage, crit_damage = self._calculate_damage_components(
@@ -231,7 +231,7 @@ class BestMovesToolWidget(QWidget):
             else math.floor(attacker_stats["spd"] / 2) / 256
         )
         weighted_damage = (normal_damage * (1 - crit_chance) + crit_damage * crit_chance) * 235 / 255
-        move_accuracy = float(move_data.get("accuracy"))
+        move_accuracy = float(move_data["accuracy"])
         accuracy_rate = 1 if move_name in SWIFT_MOVES else move_accuracy * 255 / 25600
         long_term_average = weighted_damage * accuracy_rate
         return self._apply_additional_modifiers(move_name, long_term_average, normal_damage)
@@ -244,8 +244,8 @@ class BestMovesToolWidget(QWidget):
         stat_stage: int | None = None,
         level: int | None = None,
     ) -> tuple[int, int]:
-        base = pokemon_data.get(stat.lower())
-        dv = pokemon.dvs.get(stat) if pokemon else 0
+        base = pokemon_data[stat.lower()]
+        dv = pokemon.dvs[stat] if pokemon else 0
         level = level if level else pokemon.level
         base_stat = math.floor((base + dv) * 2 * level / 100)
         if stat == "hp":
@@ -253,17 +253,17 @@ class BestMovesToolWidget(QWidget):
         else:
             base_stat += 5
         modified_stat = (
-            math.floor(base_stat * STAT_STAGE_MULTIPLIER.get(stat_stage)) if stat_stage is not None else None
+            math.floor(base_stat * STAT_STAGE_MULTIPLIER[stat_stage]) if stat_stage is not None else None
         )
         return base_stat, modified_stat
 
     def _get_attacker_stats(self, party_member: Pokemon, idx: int) -> dict[str, int | list[str]]:
-        party_data = self._game_data_loader.pokemon_data.get(party_member.species)
+        party_data = self._game_data_loader.pokemon_data[party_member.species]
         _, atk_spin, spe_spin, spd_spin = self._party_stage_spinboxes[idx]
         base_atk, modified_atk = self._compute_stats(party_data, "Atk", party_member, atk_spin.value())
         base_spe, modified_spe = self._compute_stats(party_data, "Spe", party_member, spe_spin.value())
         base_spd, modified_spd = self._compute_stats(party_data, "Spd", party_member, spd_spin.value())
-        attacker_types = party_data.get("type")
+        attacker_types = party_data["type"]
         return {
             "base_atk": base_atk,
             "base_spe": base_spe,
@@ -278,7 +278,7 @@ class BestMovesToolWidget(QWidget):
         defending_species = self._pokemon_selector.text()
         if not defending_species:
             return None
-        defending_pokemon = self._game_data_loader.pokemon_data.get(defending_species)
+        defending_pokemon = self._game_data_loader.pokemon_data[defending_species]
         level = self._level_spinner.value()
         def_stage = self._defense_spinner.value()
         spe_stage = self._special_spinner.value()
@@ -295,7 +295,7 @@ class BestMovesToolWidget(QWidget):
             stat_stage=spe_stage,
             level=level,
         )
-        defending_types = defending_pokemon.get("type")
+        defending_types = defending_pokemon["type"]
         return {
             "species": defending_species,
             "level": level,
@@ -315,7 +315,7 @@ class BestMovesToolWidget(QWidget):
         defender_stats: dict[str, str | int | list[str]],
     ) -> tuple[float, int, int] | None:
         if move_name in OHKO_MOVES:
-            move_accuracy = float(move_data.get("accuracy"))
+            move_accuracy = float(move_data["accuracy"])
             accuracy_rate = move_accuracy * 255 / 25600
             return (defender_stats["hp"] * accuracy_rate, 0, defender_stats["hp"])
         if move_name in STATIC_DAMAGE_MOVES:
@@ -329,7 +329,7 @@ class BestMovesToolWidget(QWidget):
                 damage_min = 1
                 damage_max = math.floor(party_member.level * 1.5)
                 static_val = (damage_min + damage_max) / 2
-            move_accuracy = float(move_data.get("accuracy"))
+            move_accuracy = float(move_data["accuracy"])
             accuracy_rate = move_accuracy * 255 / 25600
             return (static_val * accuracy_rate, damage_min, damage_max)
         return None

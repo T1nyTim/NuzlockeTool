@@ -1,6 +1,6 @@
 import logging
-from dataclasses import asdict
 from pathlib import Path
+from typing import Any
 
 import yaml
 from PyQt6.QtCore import Qt
@@ -9,7 +9,6 @@ from PyQt6.QtWidgets import QLabel, QLayout, QWidget
 
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import IMAGE_SIZE_POKEMON
-from nuzlocke_tool.models import GameState
 
 LOGGER = logging.getLogger(__name__)
 
@@ -54,22 +53,8 @@ def load_pokemon_image(species: str) -> QPixmap:
     return QPixmap(image_path)
 
 
-def load_yaml_file(file_path: Path) -> dict[str, str | list[str]]:
+def load_yaml_file(file_path: Path) -> dict[str, Any]:
     with file_path.open("r") as f:
         data = yaml.safe_load(f)
     LOGGER.info("Loaded YAML file: %s", str(file_path))
     return data
-
-
-def save_session(game_state: GameState) -> None:
-    game_state_dict = asdict(game_state)
-    game_state_dict["journal_file"] = str(game_state_dict["journal_file"])
-    game_state_dict["save_file"] = str(game_state_dict["save_file"])
-    pokemon_list = []
-    for pokemon in game_state_dict["pokemon"]:
-        pokemon_dict = pokemon.copy()
-        pokemon_dict["status"] = pokemon["status"].name
-        pokemon_list.append(pokemon_dict)
-    game_state_dict["pokemon"] = pokemon_list
-    with game_state.save_file.open("w") as f:
-        yaml.dump(game_state_dict, f)

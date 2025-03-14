@@ -7,7 +7,7 @@ class JournalService:
 
     def add_capture_entry(self, pokemon: Pokemon) -> None:
         status_map = {PokemonStatus.ACTIVE: "Party", PokemonStatus.BOXED: "Box"}
-        entry = f"Caught {pokemon} in {pokemon.encountered}. Added to {status_map.get(pokemon.status)}."
+        entry = f"Caught {pokemon} in {pokemon.encountered}. Added to {status_map[pokemon.status]}."
         self._append_entry(entry)
 
     def add_clause_entry(self, clause: str) -> None:

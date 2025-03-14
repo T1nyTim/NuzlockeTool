@@ -18,7 +18,8 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.models import GameState
 from nuzlocke_tool.services.journal_service import JournalService
-from nuzlocke_tool.utils import clear_widget, load_yaml_file, save_session
+from nuzlocke_tool.services.save_service import SaveService
+from nuzlocke_tool.utils import clear_widget, load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ class RandomDecisionToolWidget(QWidget):
         self,
         game_state: GameState,
         journal_service: JournalService | None,
+        save_service: SaveService | None,
         parent: QWidget,
     ) -> None:
         super().__init__(parent)
@@ -35,6 +37,7 @@ class RandomDecisionToolWidget(QWidget):
         self._decisions = {}
         self._game_state = game_state
         self._journal_service = journal_service
+        self._save_service = save_service
 
     def _extract_decision_mapping(self) -> dict[str, list[str]]:
         decisions_mapping = {}
@@ -79,19 +82,25 @@ class RandomDecisionToolWidget(QWidget):
             "Eeveelution": LABEL_DECISION_EEVEELUTION,
             "CinnabarEncounter": LABEL_DECISION_CINNABAR_ENCOUNTER,
         }
-        return statements.get(decision_key)
+        return statements[decision_key]
 
     def _randomize_decision(self, decision_key: str) -> None:
         decision, outcome_label = self._decisions.get(decision_key, (None, None))
         outcome = random.choice(decision)
         outcome_label.setText(outcome)
         self._game_state.decisions[decision_key] = outcome
-        save_session(self._game_state)
+        self._save_service.save_session(self._game_state)
         self._journal_service.add_decision_entry(self._generate_decision_name(decision_key), outcome)
         LOGGER.info("Randomly decided: %s, from: %s", outcome, ", ".join(decision))
 
-    def set_state(self, game_state: GameState, journal_service: JournalService) -> None:
+    def set_state(
+        self,
+        game_state: GameState,
+        journal_service: JournalService,
+        save_service: SaveService,
+    ) -> None:
         self._decision_data = load_yaml_file(PathConfig.decisions_file())
         self._game_state = game_state
         self._journal_service = journal_service
+        self._save_service = save_service
         self.init_ui()
