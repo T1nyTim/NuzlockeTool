@@ -16,28 +16,22 @@ from nuzlocke_tool.constants import (
     OBJECT_NAME_LABEL_OUTCOME,
     STYLE_SHEET_LABEL_OUTCOME,
 )
+from nuzlocke_tool.container import Container
 from nuzlocke_tool.models import GameState
-from nuzlocke_tool.services.journal_service import JournalService
-from nuzlocke_tool.services.save_service import SaveService
 from nuzlocke_tool.utils import clear_widget, load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
 
 
 class RandomDecisionToolWidget(QWidget):
-    def __init__(
-        self,
-        game_state: GameState,
-        journal_service: JournalService | None,
-        save_service: SaveService | None,
-        parent: QWidget,
-    ) -> None:
+    def __init__(self, container: Container, game_state: GameState, parent: QWidget) -> None:
         super().__init__(parent)
+        self._container = container
         self._decision_data = load_yaml_file(PathConfig.decisions_file())
         self._decisions = {}
         self._game_state = game_state
-        self._journal_service = journal_service
-        self._save_service = save_service
+        self._journal_service = self._container.journal_service_factory(self._game_state)
+        self._save_service = self._container.save_service()
 
     def _extract_decision_mapping(self) -> dict[str, list[str]]:
         decisions_mapping = {}
@@ -93,14 +87,8 @@ class RandomDecisionToolWidget(QWidget):
         self._journal_service.add_decision_entry(self._generate_decision_name(decision_key), outcome)
         LOGGER.info("Randomly decided: %s, from: %s", outcome, ", ".join(decision))
 
-    def set_state(
-        self,
-        game_state: GameState,
-        journal_service: JournalService,
-        save_service: SaveService,
-    ) -> None:
+    def set_state(self, game_state: GameState) -> None:
         self._decision_data = load_yaml_file(PathConfig.decisions_file())
         self._game_state = game_state
-        self._journal_service = journal_service
-        self._save_service = save_service
+        self._journal_service = self._container.journal_service_factory(game_state)
         self.init_ui()

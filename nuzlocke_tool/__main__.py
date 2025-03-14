@@ -5,6 +5,7 @@ from platform import python_version
 from PyQt6.QtWidgets import QApplication
 
 from nuzlocke_tool import __version__
+from nuzlocke_tool.container import Container
 from nuzlocke_tool.gui.main_window import NuzlockeTrackerMainWindow
 from nuzlocke_tool.logs import setup_logging
 
@@ -15,8 +16,9 @@ def main() -> None:
     setup_logging(logging.WARNING)
     LOGGER.info("Python v%s", python_version())
     LOGGER.info("Nuzlocke Tool v%s", __version__)
+    container = Container()
     app = QApplication(sys.argv)
-    window = NuzlockeTrackerMainWindow()
+    window = NuzlockeTrackerMainWindow(container)
     window.showMaximized()
     app.exec()
 

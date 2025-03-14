@@ -55,7 +55,7 @@ from nuzlocke_tool.constants import (
     POKEMON_MOVES_LIMIT,
     TOOLTIP_CHECKBOX_SUBREGIONS,
 )
-from nuzlocke_tool.data_loader import GameDataLoader
+from nuzlocke_tool.container import Container
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus, RulesetData
 from nuzlocke_tool.utils import load_yaml_file
 
@@ -135,14 +135,15 @@ class NewSessionDialog(BaseDialog):
 class PokemonDialog(BaseDialog):
     def __init__(
         self,
+        container: Container,
         game_state: GameState,
-        game_data_loader: GameDataLoader,
         status: PokemonStatus,
         parent: QWidget,
         pokemon: Pokemon | None = None,
     ) -> None:
         super().__init__(DIALOG_ADD_POKEMON_TITLE, parent)
-        self._game_data_loader = game_data_loader
+        self._container = container
+        self._game_data_loader = self._container.game_data_loader()
         self._game_state = game_state
         self._moves_by_species = self._extract_moves_mapping()
         self._allowed_species = list(self._moves_by_species.keys())

@@ -41,11 +41,9 @@ from nuzlocke_tool.constants import (
     TAB_PARTY_NAME,
     WIDGET_POKEMON_CARD_WIDTH,
 )
-from nuzlocke_tool.data_loader import GameDataLoader
+from nuzlocke_tool.container import Container
 from nuzlocke_tool.gui.dialogs import PokemonDialog
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
-from nuzlocke_tool.services.journal_service import JournalService
-from nuzlocke_tool.services.save_service import SaveService
 from nuzlocke_tool.utils import add_pokemon_image, load_pokemon_image
 
 LOGGER = logging.getLogger(__name__)
@@ -54,22 +52,21 @@ LOGGER = logging.getLogger(__name__)
 class BasePokemonCardWidget(QWidget):
     transfer_requested = pyqtSignal(object, PokemonStatus)
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
+        container: Container,
         pokemon: Pokemon,
         game_state: GameState,
-        game_data_loader: GameDataLoader,
-        journal_service: JournalService,
-        save_service: SaveService,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
         super().__init__(parent)
-        self._game_data_loader = game_data_loader
+        self._container = container
+        self._game_data_loader = self._container.game_data_loader()
         self._game_state = game_state
-        self._journal_service = journal_service
+        self._journal_service = self._container.journal_service_factory(self._game_state)
         self._pokemon = pokemon
-        self._save_service = save_service
+        self._save_service = self._container.save_service()
         self._transfer_options = transfer_options if transfer_options is not None else []
         self.setObjectName(OBJECT_NAME_CARD_WIDGET)
         self.setStyleSheet(STYLE_SHEET_WIDGET_CARD)
@@ -94,8 +91,8 @@ class BasePokemonCardWidget(QWidget):
         current_species = self._pokemon.species
         pokemon_data = self._game_data_loader.pokemon_data[current_species]
         dialog = PokemonDialog(
+            self._container,
             self._game_state,
-            self._game_data_loader,
             self._pokemon.status,
             self,
             self._pokemon,
@@ -123,13 +120,11 @@ class BasePokemonCardWidget(QWidget):
 
 
 class ActivePokemonCardWidget(BasePokemonCardWidget):
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
+        container: Container,
         pokemon: Pokemon,
         game_state: GameState,
-        game_data_loader: GameDataLoader,
-        journal_service: JournalService,
-        save_service: SaveService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -137,15 +132,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             (TAB_BOXED_NAME, PokemonStatus.BOXED, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(
-            pokemon,
-            game_state,
-            game_data_loader,
-            journal_service,
-            save_service,
-            parent,
-            transfer_options,
-        )
+        super().__init__(container, pokemon, game_state, parent, transfer_options)
         self._init_ui()
 
     def _create_dvs_widget(self) -> QWidget:
@@ -300,25 +287,15 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
 
 class StoragePokemonCardWidget(BasePokemonCardWidget):
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
+        container: Container,
         pokemon: Pokemon,
         game_state: str,
-        game_data_loader: GameDataLoader,
-        journal_service: JournalService,
-        save_service: SaveService,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
-        super().__init__(
-            pokemon,
-            game_state,
-            game_data_loader,
-            journal_service,
-            save_service,
-            parent,
-            transfer_options,
-        )
+        super().__init__(container, pokemon, game_state, parent, transfer_options)
         self.setFixedSize(WIDGET_POKEMON_CARD_WIDTH, WIDGET_POKEMON_CARD_WIDTH)
         self._init_ui()
 
@@ -355,13 +332,11 @@ class StoragePokemonCardWidget(BasePokemonCardWidget):
 
 
 class BoxedPokemonCardWidget(StoragePokemonCardWidget):
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
+        container: Container,
         pokemon: Pokemon,
         game_state: GameState,
-        game_data_loader: GameDataLoader,
-        journal_service: JournalService,
-        save_service: SaveService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -369,25 +344,15 @@ class BoxedPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(
-            pokemon,
-            game_state,
-            game_data_loader,
-            journal_service,
-            save_service,
-            parent,
-            transfer_options,
-        )
+        super().__init__(container, pokemon, game_state, parent, transfer_options)
 
 
 class DeadPokemonCardWidget(StoragePokemonCardWidget):
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
+        container: Container,
         pokemon: Pokemon,
         game_state: GameState,
-        game_data_loader: GameDataLoader,
-        journal_service: JournalService,
-        save_service: SaveService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -395,12 +360,4 @@ class DeadPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_BOXED_NAME, PokemonStatus.BOXED, None),
         ]
-        super().__init__(
-            pokemon,
-            game_state,
-            game_data_loader,
-            journal_service,
-            save_service,
-            parent,
-            transfer_options,
-        )
+        super().__init__(container, pokemon, game_state, parent, transfer_options)

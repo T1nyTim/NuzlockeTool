@@ -20,20 +20,16 @@ from nuzlocke_tool.constants import (
     TABLE_COLOR_DEAD,
     TABLE_COLOR_PARTY,
 )
-from nuzlocke_tool.data_loader import GameDataLoader
+from nuzlocke_tool.container import Container
 from nuzlocke_tool.models import GameState, PokemonStatus
 
 
 class EncountersTab(QWidget):
-    def __init__(
-        self,
-        game_state: GameState,
-        game_data_loader: GameDataLoader,
-        parent: QWidget,
-    ) -> None:
+    def __init__(self, container: Container, game_state: GameState, parent: QWidget) -> None:
         super().__init__(parent)
+        self._container = container
         self._encounter_widgets = {}
-        self._game_data_loader = game_data_loader
+        self._game_data_loader = self._container.game_data_loader()
         self._game_state = game_state
         self._location_row = {}
         self._init_ui()
@@ -70,8 +66,7 @@ class EncountersTab(QWidget):
                 item_location.setText(location)
             self._location_row[location] = row
 
-    def set_state(self, game_state: GameState, game_data_loader: GameDataLoader) -> None:
-        self._game_data_loader = game_data_loader
+    def set_state(self, game_state: GameState) -> None:
         self._game_state = game_state
         self.init_table()
         self.update_encounters()

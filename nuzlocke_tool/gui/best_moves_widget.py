@@ -48,15 +48,16 @@ from nuzlocke_tool.constants import (
     SWIFT_MOVES,
     TYPE_CHART,
 )
-from nuzlocke_tool.data_loader import GameDataLoader
+from nuzlocke_tool.container import Container
 from nuzlocke_tool.models import GameState, MoveData, Pokemon, PokemonData, PokemonStatus
 from nuzlocke_tool.utils import add_pokemon_image, clear_layout, clear_widget, load_pokemon_image
 
 
 class BestMovesToolWidget(QWidget):
-    def __init__(self, game_state: GameState, game_data_loader: GameDataLoader, parent: QWidget) -> None:
+    def __init__(self, container: Container, game_state: GameState, parent: QWidget) -> None:
         super().__init__(parent)
-        self._game_data_loader = game_data_loader
+        self._container = container
+        self._game_data_loader = self._container.game_data_loader()
         self._game_state = game_state
 
     def _apply_additional_modifiers(
@@ -384,8 +385,7 @@ class BestMovesToolWidget(QWidget):
         results_area.setLayout(self._results_layout)
         layout.addStretch()
 
-    def set_state(self, game_state: GameState, game_data_loader: GameDataLoader) -> None:
-        self._game_data_loader = game_data_loader
+    def set_state(self, game_state: GameState) -> None:
         self._game_state = game_state
         self.init_ui()
 
