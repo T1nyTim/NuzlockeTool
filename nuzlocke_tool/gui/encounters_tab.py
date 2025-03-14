@@ -21,14 +21,13 @@ from nuzlocke_tool.constants import (
     TABLE_COLOR_PARTY,
 )
 from nuzlocke_tool.data_loader import GameDataLoader
-from nuzlocke_tool.models import GameState, PartyManager
+from nuzlocke_tool.models import GameState, PokemonStatus
 
 
 class EncountersTab(QWidget):
     def __init__(
         self,
         game_state: GameState,
-        party_manager: PartyManager,
         game_data_loader: GameDataLoader,
         parent: QWidget,
     ) -> None:
@@ -37,7 +36,6 @@ class EncountersTab(QWidget):
         self._game_data_loader = game_data_loader
         self._game_state = game_state
         self._location_row = {}
-        self._party_manager = party_manager
         self._init_ui()
 
     def _init_ui(self) -> None:
@@ -72,15 +70,9 @@ class EncountersTab(QWidget):
                 item_location.setText(location)
             self._location_row[location] = row
 
-    def set_state(
-        self,
-        game_state: GameState,
-        party_manager: PartyManager,
-        game_data_loader: GameDataLoader,
-    ) -> None:
+    def set_state(self, game_state: GameState, game_data_loader: GameDataLoader) -> None:
         self._game_data_loader = game_data_loader
         self._game_state = game_state
-        self._party_manager = party_manager
         self.init_table()
         self.update_encounters()
 
@@ -89,19 +81,24 @@ class EncountersTab(QWidget):
             self.table.setItem(row, 1, QTableWidgetItem("None"))
             self.table.setItem(row, 2, QTableWidgetItem("None"))
             self.table.item(row, 0).setData(Qt.ItemDataRole.ForegroundRole, None)
-        for pokemon in self._party_manager.all_pokemon:
+        for pokemon in self._game_state.pokemon:
             location = pokemon.encountered
             if location in self._location_row:
                 row = self._location_row[location]
                 details = f"{pokemon.nickname} ({pokemon.species}) - Caught Lv{pokemon.caught_level}"
-                status = self._party_manager.get_status(pokemon)
+                status_map = {
+                    PokemonStatus.ACTIVE: TAB_PARTY_NAME,
+                    PokemonStatus.BOXED: TAB_BOXED_NAME,
+                    PokemonStatus.DEAD: TAB_DEAD_NAME,
+                }
+                status = status_map.get(pokemon.status)
                 item_details = QTableWidgetItem(details)
                 item_status = QTableWidgetItem(status)
-                if status == TAB_PARTY_NAME:
+                if pokemon.status == PokemonStatus.ACTIVE:
                     color = QColor(TABLE_COLOR_PARTY)
-                elif status == TAB_BOXED_NAME:
+                elif pokemon.status == PokemonStatus.BOXED:
                     color = QColor(TABLE_COLOR_BOXED)
-                elif status == TAB_DEAD_NAME:
+                elif pokemon.status == PokemonStatus.DEAD:
                     color = QColor(TABLE_COLOR_DEAD)
                 else:
                     color = None

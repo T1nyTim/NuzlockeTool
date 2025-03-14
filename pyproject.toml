@@ -25,16 +25,3 @@ packages = ["nuzlocke_tool"]
 
 [tool.setuptools.dynamic]
 version = {attr = "nuzlocke_tool.__version__"}
-
-[tool.ruff]
-line-length = 110
-output-format = "grouped"
-show-fixes = true
-target-version = "py313"
-
-[tool.ruff.lint]
-ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D107", "S311"]
-unfixable = ["F841"]
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"

@@ -58,7 +58,7 @@ from nuzlocke_tool.gui.card_widgets import (
 from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
-from nuzlocke_tool.models import GameState, PartyManager, Pokemon, PokemonArea
+from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
 from nuzlocke_tool.utils import append_journal_entry, clear_layout, load_yaml_file, save_session
 
 LOGGER = logging.getLogger(__name__)
@@ -71,23 +71,25 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self.setStyleSheet(STYLE_SHEET_COMBO_BOX)
         self._game_data_loader = GameDataLoader()
         self._game_data_loader.load_location_data()
-        self._game_state = GameState("", "", False, None, None, [], {})  # noqa: FBT003
-        self._party_manager = PartyManager()
+        self._game_state = GameState("", "", False, None, None, [], [], {})  # noqa: FBT003
         self._create_menu()
         self._init_tabs()
 
     def _add_active_pokemon(self) -> None:
-        if len(self._party_manager.active) >= ACTIVE_PARTY_LIMIT:
+        if (
+            len([p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE])
+            >= ACTIVE_PARTY_LIMIT
+        ):
             QMessageBox.warning(self, MSG_BOX_TITLE_PARTY_FULL, MSG_BOX_MSG_PARTY_FULL)
             return
-        new_pokemon = self._add_pokemon()
+        new_pokemon = self._add_pokemon(PokemonStatus.ACTIVE)
         if new_pokemon is None:
             return
-        self._party_manager.active.append(new_pokemon)
+        self._game_state.pokemon.append(new_pokemon)
         self._update_active_party_display()
         self._encounters_tab.update_encounters()
         self._game_state.encounters.append(new_pokemon.encountered)
-        save_session(self._game_state, self._party_manager)
+        save_session(self._game_state)
         append_journal_entry(
             self._game_state.journal_file,
             f"Caught {new_pokemon} @ {new_pokemon.encountered}. Added to the Party.",
@@ -95,22 +97,22 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         LOGGER.info("Added active Pokemon: %s", new_pokemon)
 
     def _add_boxed_pokemon(self) -> None:
-        new_pokemon = self._add_pokemon()
+        new_pokemon = self._add_pokemon(PokemonStatus.BOXED)
         if new_pokemon is None:
             return
-        self._party_manager.boxed.append(new_pokemon)
+        self._game_state.pokemon.append(new_pokemon)
         self._update_boxed_pokemon_display()
         self._encounters_tab.update_encounters()
         self._game_state.encounters.append(new_pokemon.encountered)
-        save_session(self._game_state, self._party_manager)
+        save_session(self._game_state)
         append_journal_entry(
             self._game_state.journal_file,
             f"Caught {new_pokemon} @ {new_pokemon.encountered}. Added to the Box.",
         )
         LOGGER.info("Added boxed Pokemon: %s", new_pokemon)
 
-    def _add_pokemon(self) -> Pokemon | None:
-        dialog = PokemonDialog(self._game_state, self._game_data_loader, self)
+    def _add_pokemon(self, status: PokemonStatus) -> Pokemon | None:
+        dialog = PokemonDialog(self._game_state, self._game_data_loader, status, self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         return dialog.pokemon
@@ -168,12 +170,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         return widget
 
     def _create_encounters_tab(self) -> QWidget:
-        self._encounters_tab = EncountersTab(
-            self._game_state,
-            self._party_manager,
-            self._game_data_loader,
-            self,
-        )
+        self._encounters_tab = EncountersTab(self._game_state, self._game_data_loader, self)
         self._encounters_tab.setEnabled(False)
         return self._encounters_tab
 
@@ -222,15 +219,11 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         tool_selector.addItems([LABEL_TOOL_RANDOM_DECISION, LABEL_TOOL_BEST_MOVE])
         layout.addWidget(tool_selector)
         tool_stack = QStackedWidget(self._tools_tab)
-        self._random_decision_widget = RandomDecisionToolWidget(
-            self._game_state,
-            self._party_manager,
-            self._tools_tab,
-        )
+        self._random_decision_widget = RandomDecisionToolWidget(self._game_state, self._tools_tab)
         tool_stack.addWidget(self._random_decision_widget)
         self._best_moves_widget = BestMovesToolWidget(
+            self._game_state,
             self._game_data_loader,
-            self._party_manager,
             self._tools_tab,
         )
         tool_stack.addWidget(self._best_moves_widget)
@@ -239,15 +232,15 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._tools_tab.setLayout(layout)
         return self._tools_tab
 
-    def _handle_transfer(self, pokemon: Pokemon, target: PokemonArea) -> None:
-        self._party_manager.transfer(pokemon, target)
+    def _handle_transfer(self, pokemon: Pokemon, target: PokemonStatus) -> None:
+        pokemon.status = target
         self._update_active_party_display()
         self._update_boxed_pokemon_display()
         self._update_dead_pokemon_display()
         self._encounters_tab.update_encounters()
-        save_session(self._game_state, self._party_manager)
+        save_session(self._game_state)
         target_name = self._process_storage_status(target)
-        if target_name == TAB_DEAD_NAME:
+        if target == PokemonStatus.DEAD:
             append_journal_entry(self._game_state.journal_file, f"{pokemon} has Died.")
         else:
             append_journal_entry(self._game_state.journal_file, f"Transfered {pokemon} to {target_name}.")
@@ -281,13 +274,12 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 "\n- ".join(ruleset["rules"]) if isinstance(ruleset["rules"], list) else ruleset["rules"]
             )
             self._rules_text.setPlainText(rules_text)
-        self._party_manager.active.clear()
-        self._party_manager.boxed.clear()
+        self._game_state.pokemon.clear()
         self._update_active_party_display()
         self._update_boxed_pokemon_display()
-        self._encounters_tab.set_state(self._game_state, self._party_manager, self._game_data_loader)
-        self._random_decision_widget.set_state(self._game_state, self._party_manager)
-        self._best_moves_widget.set_state(self._game_data_loader, self._party_manager)
+        self._encounters_tab.set_state(self._game_state, self._game_data_loader)
+        self._random_decision_widget.set_state(self._game_state)
+        self._best_moves_widget.set_state(self._game_state, self._game_data_loader)
         self._party_tab.setEnabled(True)
         self._encounters_tab.setEnabled(True)
         self._tools_tab.setEnabled(True)
@@ -346,12 +338,12 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         versions = load_yaml_file(PathConfig.versions_file())
         version_info = versions.get(self._game_state.game)
         generation = version_info.get("generation")
-        pokemon_data_file = f"gen{generation}_pokemon.yaml"
-        pokemon_yaml_path = PathConfig.resources_folder() / pokemon_data_file
-        self._game_data_loader.pokemon_data = load_yaml_file(pokemon_yaml_path)
-        move_data_file = f"gen{generation}_moves.yaml"
-        move_yaml_path = PathConfig.resources_folder() / move_data_file
-        self._game_data_loader.move_data = load_yaml_file(move_yaml_path)
+        try:
+            self._game_data_loader.load_pokemon_data(generation)
+            self._game_data_loader.load_move_data(generation)
+        except FileNotFoundError as e:
+            QMessageBox.critical(self, MSG_BOX_TITLE_NO_FILE, f"{MSG_BOX_MSG_NO_DATA_FILE}{e}")
+            return
         rulesets = load_yaml_file(PathConfig.rules_file())
         ruleset = rulesets.get(self._game_state.ruleset)
         if ruleset:
@@ -362,9 +354,9 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._update_active_party_display()
         self._update_boxed_pokemon_display()
         self._update_dead_pokemon_display()
-        self._encounters_tab.set_state(self._game_state, self._party_manager, self._game_data_loader)
-        self._random_decision_widget.set_state(self._game_state, self._party_manager)
-        self._best_moves_widget.set_state(self._game_data_loader, self._party_manager)
+        self._encounters_tab.set_state(self._game_state, self._game_data_loader)
+        self._random_decision_widget.set_state(self._game_state)
+        self._best_moves_widget.set_state(self._game_state, self._game_data_loader)
         self._party_tab.setEnabled(True)
         self._encounters_tab.setEnabled(True)
         self._tools_tab.setEnabled(True)
@@ -374,23 +366,24 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             self._game_state.ruleset,
         )
 
-    def _load_session_data(self, filepath: Path) -> tuple[GameState, PartyManager]:
+    def _load_session_data(self, filepath: Path) -> GameState:
         with filepath.open("r") as f:
             data = yaml.safe_load(f)
-        game_state_data = data["game_state"]
-        game_state_data["journal_file"] = Path(game_state_data["journal_file"])
-        game_state_data["save_file"] = Path(game_state_data["save_file"])
-        self._game_state = GameState(**game_state_data)
-        party_data = data["party_manager"]
-        party_data["active"] = [Pokemon(**p) for p in party_data.get("active")]
-        party_data["boxed"] = [Pokemon(**p) for p in party_data.get("boxed")]
-        party_data["dead"] = [Pokemon(**p) for p in party_data.get("dead")]
-        self._party_manager = PartyManager(**party_data)
+        data["journal_file"] = Path(data["journal_file"])
+        data["save_file"] = Path(data["save_file"])
+        data["active"] = [Pokemon(**p) for p in data.get("active", [])]
+        data["boxed"] = [Pokemon(**p) for p in data.get("boxed", [])]
+        data["dead"] = [Pokemon(**p) for p in data.get("dead", [])]
+        self._game_state = GameState(**data)
 
     @staticmethod
     def _process_storage_status(status: str) -> str:
-        status_name = {"active": TAB_PARTY_NAME, "boxed": TAB_BOXED_NAME, "dead": TAB_DEAD_NAME}
-        return status_name.get(status)
+        status_map = {
+            PokemonStatus.ACTIVE: TAB_PARTY_NAME,
+            PokemonStatus.BOXED: TAB_BOXED_NAME,
+            PokemonStatus.DEAD: TAB_DEAD_NAME,
+        }
+        return status_map.get(status)
 
     def _prompt_for_save_file(self) -> None:
         folder = PathConfig.save_folder()
@@ -404,18 +397,18 @@ class NuzlockeTrackerMainWindow(QMainWindow):
 
     def _update_active_party_display(self) -> None:
         clear_layout(self._active_party_layout)
-        for mon in self._party_manager.active:
+        active_pokemon = [p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE]
+        for mon in active_pokemon:
             card = ActivePokemonCardWidget(
                 mon,
                 self._game_state,
                 self._game_data_loader,
-                self._party_manager,
                 self._active_party_widget,
-                lambda: len(self._party_manager.active) > 1,
+                lambda: len([p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE]) > 1,
             )
             card.transfer_requested.connect(self._handle_transfer)
             self._active_party_layout.addWidget(card)
-        if len(self._party_manager.active) < ACTIVE_PARTY_LIMIT:
+        if len(active_pokemon) < ACTIVE_PARTY_LIMIT:
             add_button = QPushButton(BUTTON_ADD_POKEMON, self._active_party_widget)
             add_button.clicked.connect(self._add_active_pokemon)
             self._active_party_layout.addWidget(add_button)
@@ -423,17 +416,18 @@ class NuzlockeTrackerMainWindow(QMainWindow):
 
     def _update_boxed_pokemon_display(self) -> None:
         clear_layout(self._boxed_pokemon_layout)
+        boxed_pokemon = [p for p in self._game_state.pokemon if p.status == PokemonStatus.BOXED]
         available_width = self._boxed_scroll_area.viewport().width()
         card_total_width = WIDGET_POKEMON_CARD_WIDTH + SPACING
         columns = max(1, available_width // card_total_width)
-        for idx, mon in enumerate(self._party_manager.boxed):
+        for idx, mon in enumerate(boxed_pokemon):
             card = BoxedPokemonCardWidget(
                 mon,
                 self._game_state,
                 self._game_data_loader,
-                self._party_manager,
                 self._boxed_pokemon_widget,
-                lambda: len(self._party_manager.active) < ACTIVE_PARTY_LIMIT,
+                lambda: len([p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE])
+                < ACTIVE_PARTY_LIMIT,
             )
             card.transfer_requested.connect(self._handle_transfer)
             row = idx // columns
@@ -442,24 +436,25 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         add_button = QPushButton(BUTTON_ADD_POKEMON, self._boxed_pokemon_widget)
         add_button.setFixedSize(WIDGET_POKEMON_CARD_WIDTH, WIDGET_POKEMON_CARD_WIDTH)
         add_button.clicked.connect(self._add_boxed_pokemon)
-        next_idx = len(self._party_manager.boxed)
+        next_idx = len(boxed_pokemon)
         row = next_idx // columns
         col = next_idx % columns
         self._boxed_pokemon_layout.addWidget(add_button, row, col)
 
     def _update_dead_pokemon_display(self) -> None:
         clear_layout(self._dead_pokemon_layout)
+        dead_pokemon = [p for p in self._game_state.pokemon if p.status == PokemonStatus.DEAD]
         available_width = self._dead_scroll_area.viewport().width()
         card_total_width = WIDGET_POKEMON_CARD_WIDTH + SPACING
         columns = max(1, available_width // card_total_width)
-        for idx, mon in enumerate(self._party_manager.dead):
+        for idx, mon in enumerate(dead_pokemon):
             card = DeadPokemonCardWidget(
                 mon,
                 self._game_state,
                 self._game_data_loader,
-                self._party_manager,
                 self._dead_pokemon_widget,
-                lambda: len(self._party_manager.active) < ACTIVE_PARTY_LIMIT,
+                lambda: len([p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE])
+                < ACTIVE_PARTY_LIMIT,
             )
             card.transfer_requested.connect(self._handle_transfer)
             row = idx // columns

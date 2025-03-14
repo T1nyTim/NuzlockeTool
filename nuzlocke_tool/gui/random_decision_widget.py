@@ -16,19 +16,18 @@ from nuzlocke_tool.constants import (
     OBJECT_NAME_LABEL_OUTCOME,
     STYLE_SHEET_LABEL_OUTCOME,
 )
-from nuzlocke_tool.models import GameState, PartyManager
+from nuzlocke_tool.models import GameState
 from nuzlocke_tool.utils import append_journal_entry, clear_widget, load_yaml_file, save_session
 
 LOGGER = logging.getLogger(__name__)
 
 
 class RandomDecisionToolWidget(QWidget):
-    def __init__(self, game_state: GameState, party_manager: PartyManager, parent: QWidget) -> None:
+    def __init__(self, game_state: GameState, parent: QWidget) -> None:
         super().__init__(parent)
         self._decision_data = load_yaml_file(PathConfig.decisions_file())
         self._decisions = {}
         self._game_state = game_state
-        self._party_manager = party_manager
 
     def _extract_decision_mapping(self) -> dict[str, list[str]]:
         decisions_mapping = {}
@@ -80,15 +79,14 @@ class RandomDecisionToolWidget(QWidget):
         outcome = random.choice(decision)
         outcome_label.setText(outcome)
         self._game_state.decisions[decision_key] = outcome
-        save_session(self._game_state, self._party_manager)
+        save_session(self._game_state)
         append_journal_entry(
             self._game_state.journal_file,
             f"Randomly pick {self._generate_decision_name(decision_key)}: {outcome}",
         )
         LOGGER.info("Randomly decided: %s, from: %s", outcome, ", ".join(decision))
 
-    def set_state(self, game_state: GameState, party_manager: PartyManager) -> None:
+    def set_state(self, game_state: GameState) -> None:
         self._decision_data = load_yaml_file(PathConfig.decisions_file())
         self._game_state = game_state
-        self._party_manager = party_manager
         self.init_ui()

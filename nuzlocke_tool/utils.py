@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import QLabel, QLayout, QWidget
 
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import IMAGE_SIZE_POKEMON
-from nuzlocke_tool.models import GameState, PartyManager
+from nuzlocke_tool.models import GameState
 
 LOGGER = logging.getLogger(__name__)
 
@@ -66,11 +66,9 @@ def load_yaml_file(file_path: Path) -> dict[str, str | list[str]]:
     return data
 
 
-def save_session(game_state: GameState, party_manager: PartyManager) -> None:
+def save_session(game_state: GameState) -> None:
     game_state_dict = asdict(game_state)
     game_state_dict["journal_file"] = str(game_state_dict["journal_file"])
     game_state_dict["save_file"] = str(game_state_dict["save_file"])
-    data = {"game_state": game_state_dict, "party_manager": asdict(party_manager)}
-    save_path = game_state.save_file
-    with save_path.open("w") as f:
-        yaml.dump(data, f)
+    with game_state.save_file.open("w") as f:
+        yaml.dump(game_state_dict, f)

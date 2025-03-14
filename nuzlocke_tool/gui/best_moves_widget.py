@@ -49,20 +49,15 @@ from nuzlocke_tool.constants import (
     TYPE_CHART,
 )
 from nuzlocke_tool.data_loader import GameDataLoader
-from nuzlocke_tool.models import PartyManager, Pokemon
+from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
 from nuzlocke_tool.utils import add_pokemon_image, clear_layout, clear_widget, load_pokemon_image
 
 
 class BestMovesToolWidget(QWidget):
-    def __init__(
-        self,
-        game_data_loader: GameDataLoader,
-        party_manager: PartyManager,
-        parent: QWidget,
-    ) -> None:
+    def __init__(self, game_state: GameState, game_data_loader: GameDataLoader, parent: QWidget) -> None:
         super().__init__(parent)
         self._game_data_loader = game_data_loader
-        self._party_manager = party_manager
+        self._game_state = game_state
 
     def _apply_additional_modifiers(
         self,
@@ -94,7 +89,8 @@ class BestMovesToolWidget(QWidget):
             return
         defender_stats = self._get_defender_stats()
         move_results = []
-        for idx, party_member in enumerate(self._party_manager.active):
+        active_pokemon = [p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE]
+        for idx, party_member in enumerate(active_pokemon):
             attacker_stats = self._get_attacker_stats(party_member, idx)
             for move_name in party_member.moves:
                 if not move_name:
@@ -388,9 +384,9 @@ class BestMovesToolWidget(QWidget):
         results_area.setLayout(self._results_layout)
         layout.addStretch()
 
-    def set_state(self, game_data_loader: GameDataLoader, party_manager: PartyManager) -> None:
+    def set_state(self, game_state: GameState, game_data_loader: GameDataLoader) -> None:
         self._game_data_loader = game_data_loader
-        self._party_manager = party_manager
+        self._game_state = game_state
         self.init_ui()
 
     def _update_image(self, selected_pokemon: str) -> None:
@@ -408,7 +404,8 @@ class BestMovesToolWidget(QWidget):
         header_layout.addWidget(QLabel(LABEL_SPECIAL, self), alignment=ALIGN_CENTER)
         header_layout.addWidget(QLabel(LABEL_SPEED, self), alignment=ALIGN_CENTER)
         self._party_stage_layout.addLayout(header_layout)
-        for party_member in self._party_manager.active:
+        active_pokemon = [p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE]
+        for party_member in active_pokemon:
             row_layout = QHBoxLayout()
             member_label = QLabel(str(party_member), self)
             atk_stage_spin = QSpinBox(self)

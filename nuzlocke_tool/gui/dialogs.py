@@ -56,7 +56,7 @@ from nuzlocke_tool.constants import (
     TOOLTIP_CHECKBOX_SUBREGIONS,
 )
 from nuzlocke_tool.data_loader import GameDataLoader
-from nuzlocke_tool.models import GameState, Pokemon
+from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
 from nuzlocke_tool.utils import load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
@@ -137,6 +137,7 @@ class PokemonDialog(BaseDialog):
         self,
         game_state: GameState,
         game_data_loader: GameDataLoader,
+        status: PokemonStatus,
         parent: QWidget,
         pokemon: Pokemon | None = None,
     ) -> None:
@@ -145,6 +146,7 @@ class PokemonDialog(BaseDialog):
         self._game_state = game_state
         self._moves_by_species = self._extract_moves_mapping()
         self._allowed_species = list(self._moves_by_species.keys())
+        self._status = status
         self.pokemon = pokemon
         self._init_ui()
 
@@ -271,7 +273,7 @@ class PokemonDialog(BaseDialog):
         dvs = {stat: spin.value() for stat, spin in self._dv_spins.items()}
         encountered = self._encounter_edit.text().strip()
         if self.pokemon is None:
-            self.pokemon = Pokemon(nickname, species, level, level, moves, dvs, encountered)
+            self.pokemon = Pokemon(nickname, species, level, level, moves, dvs, encountered, self._status)
         else:
             self.pokemon.nickname = nickname
             self.pokemon.species = species

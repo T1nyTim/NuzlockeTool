@@ -43,28 +43,26 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.data_loader import GameDataLoader
 from nuzlocke_tool.gui.dialogs import PokemonDialog
-from nuzlocke_tool.models import GameState, PartyManager, Pokemon, PokemonArea
+from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
 from nuzlocke_tool.utils import add_pokemon_image, append_journal_entry, load_pokemon_image, save_session
 
 LOGGER = logging.getLogger(__name__)
 
 
 class BasePokemonCardWidget(QWidget):
-    transfer_requested = pyqtSignal(object, PokemonArea)
+    transfer_requested = pyqtSignal(object, PokemonStatus)
 
-    def __init__( # noqa: PLR0913
+    def __init__(
         self,
         pokemon: Pokemon,
         game_state: GameState,
         game_data_loader: GameDataLoader,
-        party_manager: PartyManager,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
         super().__init__(parent)
         self._game_data_loader = game_data_loader
         self._game_state = game_state
-        self._party_manager = party_manager
         self._pokemon = pokemon
         self._transfer_options = transfer_options if transfer_options is not None else []
         self.setObjectName(OBJECT_NAME_CARD_WIDGET)
@@ -89,11 +87,17 @@ class BasePokemonCardWidget(QWidget):
     def _edit(self) -> None:
         current_species = self._pokemon.species
         pokemon_data = self._game_data_loader.pokemon_data.get(current_species)
-        dialog = PokemonDialog(self._game_state, self._game_data_loader, self, self._pokemon)
+        dialog = PokemonDialog(
+            self._game_state,
+            self._game_data_loader,
+            self._pokemon.status,
+            self,
+            self._pokemon,
+        )
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         self._refresh()
-        save_session(self._game_state, self._party_manager)
+        save_session(self._game_state)
         if "evolve" in pokemon_data and self._pokemon.species in pokemon_data.get("evolve"):
             append_journal_entry(
                 self._game_state.journal_file,
@@ -101,7 +105,7 @@ class BasePokemonCardWidget(QWidget):
             )
         LOGGER.info("Edited Pokemon: %s", self._pokemon)
 
-    def _transfer(self, target: PokemonArea) -> None:
+    def _transfer(self, target: PokemonStatus) -> None:
         self.transfer_requested.emit(self._pokemon, target)
 
     def contextMenuEvent(self, event: QContextMenuEvent) -> None:  # noqa: N802
@@ -116,20 +120,19 @@ class BasePokemonCardWidget(QWidget):
 
 
 class ActivePokemonCardWidget(BasePokemonCardWidget):
-    def __init__( # noqa: PLR0913
+    def __init__(
         self,
         pokemon: Pokemon,
         game_state: GameState,
         game_data_loader: GameDataLoader,
-        party_manager: PartyManager,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
         transfer_options = [
-            (TAB_BOXED_NAME, PokemonArea.BOXED, transfer_enabled_callback),
-            (TAB_DEAD_NAME, PokemonArea.DEAD, None),
+            (TAB_BOXED_NAME, PokemonStatus.BOXED, transfer_enabled_callback),
+            (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, party_manager, parent, transfer_options)
+        super().__init__(pokemon, game_state, game_data_loader, parent, transfer_options)
         self._init_ui()
 
     def _create_dvs_widget(self) -> QWidget:
@@ -247,7 +250,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _on_level_changed(self, value: int) -> None:
         self._pokemon.level = value
-        save_session(self._game_state, self._party_manager)
+        save_session(self._game_state)
 
     def _on_species_changed(self, index: int) -> None:
         new_species = self._species_widget.itemData(index)
@@ -258,7 +261,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             )
             LOGGER.info("Pokemon evolved from %s to %s", self._pokemon.species, new_species)
             self._pokemon.species = new_species
-            save_session(self._game_state, self._party_manager)
+            save_session(self._game_state)
             self._refresh_species()
             self._refresh_moves()
 
@@ -296,16 +299,15 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
 
 class StoragePokemonCardWidget(BasePokemonCardWidget):
-    def __init__( # noqa: PLR0913
+    def __init__(
         self,
         pokemon: Pokemon,
         game_state: str,
         game_data_loader: GameDataLoader,
-        party_manager: PartyManager,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
-        super().__init__(pokemon, game_state, game_data_loader, party_manager, parent, transfer_options)
+        super().__init__(pokemon, game_state, game_data_loader, parent, transfer_options)
         self.setFixedSize(WIDGET_POKEMON_CARD_WIDTH, WIDGET_POKEMON_CARD_WIDTH)
         self._init_ui()
 
@@ -342,34 +344,32 @@ class StoragePokemonCardWidget(BasePokemonCardWidget):
 
 
 class BoxedPokemonCardWidget(StoragePokemonCardWidget):
-    def __init__( # noqa: PLR0913
+    def __init__(
         self,
         pokemon: Pokemon,
         game_state: GameState,
         game_data_loader: GameDataLoader,
-        party_manager: PartyManager,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
         transfer_options = [
-            (TAB_PARTY_NAME, PokemonArea.ACTIVE, transfer_enabled_callback),
-            (TAB_DEAD_NAME, PokemonArea.DEAD, None),
+            (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
+            (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, party_manager, parent, transfer_options)
+        super().__init__(pokemon, game_state, game_data_loader, parent, transfer_options)
 
 
 class DeadPokemonCardWidget(StoragePokemonCardWidget):
-    def __init__( # noqa: PLR0913
+    def __init__(
         self,
         pokemon: Pokemon,
         game_state: GameState,
         game_data_loader: GameDataLoader,
-        party_manager: PartyManager,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
         transfer_options = [
-            (TAB_PARTY_NAME, PokemonArea.ACTIVE, transfer_enabled_callback),
-            (TAB_BOXED_NAME, PokemonArea.BOXED, None),
+            (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
+            (TAB_BOXED_NAME, PokemonStatus.BOXED, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, party_manager, parent, transfer_options)
+        super().__init__(pokemon, game_state, game_data_loader, parent, transfer_options)
