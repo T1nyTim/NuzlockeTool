@@ -1,3 +1,4 @@
+import copy
 import logging
 from collections.abc import Callable
 
@@ -45,6 +46,7 @@ from nuzlocke_tool.constants import (
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.gui.dialogs import PokemonDialog
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.services import GameService, PokemonService
 from nuzlocke_tool.utils import add_pokemon_image, load_pokemon_image
 
 LOGGER = logging.getLogger(__name__)
@@ -63,10 +65,12 @@ class BasePokemonCardWidget(QWidget):
     ) -> None:
         super().__init__(parent)
         self._container = container
+        self._game_service = GameService(self._container)
         self._game_state = game_state
         self._journal_service = self._container.journal_service_factory(self._game_state)
         self._pokemon = pokemon
         self._pokemon_repository = self._container.pokemon_repository()
+        self._pokemon_service = PokemonService(container, game_state)
         self._save_service = self._container.save_service()
         self._transfer_options = transfer_options if transfer_options is not None else []
         self.setObjectName(OBJECT_NAME_CARD_WIDGET)
@@ -89,6 +93,7 @@ class BasePokemonCardWidget(QWidget):
         self._context_menu.addAction(edit_action)
 
     def _edit(self) -> None:
+        original_species = copy.deepcopy(self._pokemon)
         dialog = PokemonDialog(
             self._container,
             self._game_state,
@@ -102,6 +107,8 @@ class BasePokemonCardWidget(QWidget):
             self._container,
             self._game_state,
             self._pokemon,
+            original_species,
+            self._pokemon_service,
             on_success=self._refresh,
         )
         main_window = self.window()
@@ -236,6 +243,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             self._pokemon,
             index,
             new_move,
+            self._pokemon_service,
             on_success=self._refresh_moves,
         )
         main_window = self.window()
@@ -243,15 +251,16 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _on_level_changed(self, value: int) -> None:
         self._pokemon.level = value
-        self._save_service.save_session(self._game_state)
+        self._game_service.save_game(self._game_state)
 
     def _on_species_changed(self, index: int) -> None:
         new_species = self._species_widget.itemData(index)
         if new_species != self._pokemon.species:
-            self._journal_service.add_evolved_entry(self._pokemon, self._pokemon.species)
-            LOGGER.info("Pokemon evolved from %s to %s", self._pokemon.species, new_species)
+            current_species = self._pokemon.species
             self._pokemon.species = new_species
-            self._save_service.save_session(self._game_state)
+            self._journal_service.add_evolved_entry(self._pokemon, current_species)
+            LOGGER.info("Pokemon evolved from %s to %s", current_species, self._pokemon.species)
+            self._game_service.save_game(self._game_state)
             self._refresh_species()
             self._refresh_moves()
 

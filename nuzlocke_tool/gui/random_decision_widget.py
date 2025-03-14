@@ -1,5 +1,4 @@
 import logging
-import random
 
 from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
@@ -18,6 +17,7 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.models import GameState
+from nuzlocke_tool.services import RandomDecisionService
 from nuzlocke_tool.utils import clear_widget, load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
@@ -80,15 +80,17 @@ class RandomDecisionToolWidget(QWidget):
 
     def _randomize_decision(self, decision_key: str) -> None:
         decision, outcome_label = self._decisions.get(decision_key, (None, None))
-        outcome = random.choice(decision)
+        outcome = self._decision_service.make_decision(
+            decision_key,
+            decision,
+            self._generate_decision_name(decision_key),
+        )
         outcome_label.setText(outcome)
-        self._game_state.decisions[decision_key] = outcome
-        self._save_service.save_session(self._game_state)
-        self._journal_service.add_decision_entry(self._generate_decision_name(decision_key), outcome)
         LOGGER.info("Randomly decided: %s, from: %s", outcome, ", ".join(decision))
 
     def set_state(self, game_state: GameState) -> None:
         self._decision_data = load_yaml_file(PathConfig.decisions_file())
+        self._decision_service = RandomDecisionService(self._container, game_state)
         self._game_state = game_state
         self._journal_service = self._container.journal_service_factory(game_state)
         self.init_ui()

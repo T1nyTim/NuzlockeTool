@@ -61,6 +61,7 @@ from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.services import GameService, PokemonService, RandomDecisionService
 from nuzlocke_tool.utils import clear_layout, load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
@@ -75,17 +76,16 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._container = container
         self._game_data_loader = self._container.game_data_loader()
         self._game_data_loader.load_location_data()
+        self._game_service = GameService(container)
         self._game_state = GameState("", "", False, None, None, [], [], {})  # noqa: FBT003
         self._journal_service = None
+        self._pokemon_service = None
         self._save_service = self._container.save_service()
         self._create_menu()
         self._init_tabs()
 
     def _add_active_pokemon(self) -> None:
-        if (
-            len([p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE])
-            >= ACTIVE_PARTY_LIMIT
-        ):
+        if self._pokemon_service.party_full:
             QMessageBox.warning(self, MSG_BOX_TITLE_PARTY_FULL, MSG_BOX_MSG_PARTY_FULL)
             return
         dialog = PokemonDialog(self._container, self._game_state, PokemonStatus.ACTIVE, self)
@@ -93,8 +93,8 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             return
         command = AddPokemonCommand(
             self._container,
-            self._game_state,
             dialog.pokemon,
+            self._pokemon_service,
             on_success=self._after_pokemon_added,
         )
         self.command_manager.execute(command)
@@ -106,8 +106,8 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             return
         command = AddPokemonCommand(
             self._container,
-            self._game_state,
             dialog.pokemon,
+            self._pokemon_service,
             on_success=self._after_pokemon_added,
         )
         self.command_manager.execute(command)
@@ -256,6 +256,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             self._game_state,
             pokemon,
             target,
+            self._pokemon_service,
             on_success=self._after_transfer,
         )
         self.command_manager.execute(command)
@@ -274,34 +275,20 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         dialog = NewSessionDialog(rulesets, self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
-        self._game_state.game, self._game_state.ruleset, generation, self._game_state.sub_region_clause = (
-            dialog.selection
-        )
+        game, ruleset, generation, sub_region_clause = dialog.selection
         try:
-            self._game_data_loader.load_pokemon_data(generation)
-            self._game_data_loader.load_move_data(generation)
+            self._game_state = self._game_service.new_game(game, ruleset, generation, sub_region_clause)
         except FileNotFoundError as e:
             QMessageBox.critical(self, MSG_BOX_TITLE_NO_FILE, f"{MSG_BOX_MSG_NO_DATA_FILE}{e}")
             return
+        self._pokemon_service = PokemonService(self._container, self._game_state)
+        self._decision_service = RandomDecisionService(self._container, self._game_state)
         ruleset = rulesets[self._game_state.ruleset]
         if ruleset:
             rules_text = f"{self._game_state.ruleset} Rules:\n- " + (
                 "\n- ".join(ruleset["rules"]) if isinstance(ruleset["rules"], list) else ruleset["rules"]
             )
             self._rules_text.setPlainText(rules_text)
-        self._game_state.journal_file = self._new_journal_file(
-            self._game_state.game,
-            self._game_state.ruleset,
-        )
-        self._game_state.save_file = self._save_service.create_save_file(
-            self._game_state.game,
-            self._game_state.ruleset,
-        )
-        self._journal_service = self._container.journal_service_factory(self._game_state)
-        self._journal_service.add_new_session_entry(self._game_state.game, self._game_state.ruleset)
-        if self._game_state.sub_region_clause:
-            self._journal_service.add_clause_entry("Sub-Region")
-        self._game_state.pokemon.clear()
         self._update_active_party_display()
         self._update_boxed_pokemon_display()
         self._encounters_tab.set_state(self._game_state)
@@ -316,34 +303,17 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             self._game_state.ruleset,
         )
 
-    @staticmethod
-    def _new_journal_file(game: str, ruleset: str) -> Path:
-        folder = PathConfig.journal_folder()
-        base_name = f"{game}_{ruleset}_"
-        i = 1
-        while True:
-            journal_file = folder / f"{base_name}{i}.journal"
-            if not journal_file.exists():
-                break
-            i += 1
-        journal_file.touch(exist_ok=False)
-        return journal_file
-
     def _load_file(self) -> None:
         save_file = self._prompt_for_save_file()
         if save_file is None:
             return
-        self._game_state = self._save_service.load_session(save_file)
-        self._journal_service = self._container.journal_service_factory(self._game_state)
-        versions = load_yaml_file(PathConfig.versions_file())
-        version_info = versions[self._game_state.game]
-        generation = version_info["generation"]
         try:
-            self._game_data_loader.load_pokemon_data(generation)
-            self._game_data_loader.load_move_data(generation)
+            self._game_state = self._game_service.load_game(save_file)
         except FileNotFoundError as e:
             QMessageBox.critical(self, MSG_BOX_TITLE_NO_FILE, f"{MSG_BOX_MSG_NO_DATA_FILE}{e}")
             return
+        self._pokemon_service = PokemonService(self._container, self._game_state)
+        self._decision_service = RandomDecisionService(self._container, self._game_state)
         rulesets = load_yaml_file(PathConfig.rules_file())
         ruleset = rulesets[self._game_state.ruleset]
         if ruleset:

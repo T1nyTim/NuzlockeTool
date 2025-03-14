@@ -87,6 +87,15 @@ class NewSessionDialog(BaseDialog):
         self._versions = load_yaml_file(PathConfig.versions_file())
         self._init_ui()
 
+    @property
+    def selection(self) -> tuple[str, str, str, bool]:
+        return (
+            self._selected_game,
+            self._selected_ruleset_name,
+            self._selected_generation,
+            self._sub_region_checkbox.isChecked(),
+        )
+
     def _init_ui(self) -> None:
         self._game_combo = QComboBox(self)
         self._game_combo.addItems(list(self._versions.keys()))
@@ -121,15 +130,6 @@ class NewSessionDialog(BaseDialog):
             QMessageBox.warning(self, MSG_BOX_TITLE_INPUT_ERR, MSG_BOX_MSG_NO_RULESET)
             return
         self.accept()
-
-    @property
-    def selection(self) -> tuple[str, str, str, bool]:
-        return (
-            self._selected_game,
-            self._selected_ruleset_name,
-            self._selected_generation,
-            self._sub_region_checkbox.isChecked(),
-        )
 
 
 class PokemonDialog(BaseDialog):
