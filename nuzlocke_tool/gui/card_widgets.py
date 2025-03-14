@@ -44,7 +44,8 @@ from nuzlocke_tool.constants import (
 from nuzlocke_tool.data_loader import GameDataLoader
 from nuzlocke_tool.gui.dialogs import PokemonDialog
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
-from nuzlocke_tool.utils import add_pokemon_image, append_journal_entry, load_pokemon_image, save_session
+from nuzlocke_tool.services.journal_service import JournalService
+from nuzlocke_tool.utils import add_pokemon_image, load_pokemon_image, save_session
 
 LOGGER = logging.getLogger(__name__)
 
@@ -52,17 +53,19 @@ LOGGER = logging.getLogger(__name__)
 class BasePokemonCardWidget(QWidget):
     transfer_requested = pyqtSignal(object, PokemonStatus)
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         pokemon: Pokemon,
         game_state: GameState,
         game_data_loader: GameDataLoader,
+        journal_service: JournalService,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
         super().__init__(parent)
         self._game_data_loader = game_data_loader
         self._game_state = game_state
+        self._journal_service = journal_service
         self._pokemon = pokemon
         self._transfer_options = transfer_options if transfer_options is not None else []
         self.setObjectName(OBJECT_NAME_CARD_WIDGET)
@@ -99,10 +102,7 @@ class BasePokemonCardWidget(QWidget):
         self._refresh()
         save_session(self._game_state)
         if "evolve" in pokemon_data and self._pokemon.species in pokemon_data.get("evolve"):
-            append_journal_entry(
-                self._game_state.journal_file,
-                f"{self._pokemon.nickname} evolved from {current_species} to {self._pokemon.species}",
-            )
+            self._journal_service.add_evolved_entry(self._pokemon, current_species)
         LOGGER.info("Edited Pokemon: %s", self._pokemon)
 
     def _transfer(self, target: PokemonStatus) -> None:
@@ -120,11 +120,12 @@ class BasePokemonCardWidget(QWidget):
 
 
 class ActivePokemonCardWidget(BasePokemonCardWidget):
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         pokemon: Pokemon,
         game_state: GameState,
         game_data_loader: GameDataLoader,
+        journal_service: JournalService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -132,7 +133,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             (TAB_BOXED_NAME, PokemonStatus.BOXED, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, parent, transfer_options)
+        super().__init__(pokemon, game_state, game_data_loader, journal_service, parent, transfer_options)
         self._init_ui()
 
     def _create_dvs_widget(self) -> QWidget:
@@ -230,22 +231,13 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         old_move = self._pokemon.moves[index]
         self._pokemon.moves[index] = new_move
         if old_move == "":
-            append_journal_entry(
-                self._game_state.journal_file,
-                f"{self._pokemon.nickname} learned move: {new_move}",
-            )
+            self._journal_service.add_learned_move_entry(self._pokemon.nickname, new_move)
             LOGGER.info("Pokemon %s learned move: %s", self._pokemon.nickname, new_move)
         elif new_move == "":
-            append_journal_entry(
-                self._game_state.journal_file,
-                f"{self._pokemon.nickname} deleted move: {old_move}",
-            )
+            self._journal_service.add_deleted_move_entry(self._pokemon.nickname, old_move)
             LOGGER.info("Pokemon %s deleted move: %s", self._pokemon.nickname, old_move)
         else:
-            append_journal_entry(
-                self._game_state.journal_file,
-                f"{self._pokemon.nickname} learned move: {new_move} (replacing: {old_move})",
-            )
+            self._journal_service.add_learned_move_entry(self._pokemon.nickname, new_move, old_move)
             LOGGER.info("Pokemon %s learned move: %s (was: %s)", self._pokemon.nickname, new_move, old_move)
 
     def _on_level_changed(self, value: int) -> None:
@@ -255,10 +247,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
     def _on_species_changed(self, index: int) -> None:
         new_species = self._species_widget.itemData(index)
         if new_species != self._pokemon.species:
-            append_journal_entry(
-                self._game_state.journal_file,
-                f"{self._pokemon.nickname} evolved from {self._pokemon.species} to {new_species}",
-            )
+            self._journal_service.add_evolved_entry(self._pokemon, self._pokemon.species)
             LOGGER.info("Pokemon evolved from %s to %s", self._pokemon.species, new_species)
             self._pokemon.species = new_species
             save_session(self._game_state)
@@ -299,15 +288,16 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
 
 class StoragePokemonCardWidget(BasePokemonCardWidget):
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         pokemon: Pokemon,
         game_state: str,
         game_data_loader: GameDataLoader,
+        journal_service: JournalService,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
-        super().__init__(pokemon, game_state, game_data_loader, parent, transfer_options)
+        super().__init__(pokemon, game_state, game_data_loader, journal_service, parent, transfer_options)
         self.setFixedSize(WIDGET_POKEMON_CARD_WIDTH, WIDGET_POKEMON_CARD_WIDTH)
         self._init_ui()
 
@@ -344,11 +334,12 @@ class StoragePokemonCardWidget(BasePokemonCardWidget):
 
 
 class BoxedPokemonCardWidget(StoragePokemonCardWidget):
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         pokemon: Pokemon,
         game_state: GameState,
         game_data_loader: GameDataLoader,
+        journal_service: JournalService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -356,15 +347,16 @@ class BoxedPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, parent, transfer_options)
+        super().__init__(pokemon, game_state, game_data_loader, journal_service, parent, transfer_options)
 
 
 class DeadPokemonCardWidget(StoragePokemonCardWidget):
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         pokemon: Pokemon,
         game_state: GameState,
         game_data_loader: GameDataLoader,
+        journal_service: JournalService,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -372,4 +364,4 @@ class DeadPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_BOXED_NAME, PokemonStatus.BOXED, None),
         ]
-        super().__init__(pokemon, game_state, game_data_loader, parent, transfer_options)
+        super().__init__(pokemon, game_state, game_data_loader, journal_service, parent, transfer_options)

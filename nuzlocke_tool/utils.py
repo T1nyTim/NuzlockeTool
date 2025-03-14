@@ -23,11 +23,6 @@ def add_pokemon_image(layout: QLayout, species: str, parent: QWidget) -> QLabel:
     return label
 
 
-def append_journal_entry(journal_file: Path, entry: str) -> None:
-    with journal_file.open("a") as f:
-        f.write(f"{entry}\n")
-
-
 def clear_layout(layout: QLayout) -> None:
     while layout.count():
         child = layout.takeAt(0)
@@ -70,5 +65,11 @@ def save_session(game_state: GameState) -> None:
     game_state_dict = asdict(game_state)
     game_state_dict["journal_file"] = str(game_state_dict["journal_file"])
     game_state_dict["save_file"] = str(game_state_dict["save_file"])
+    pokemon_list = []
+    for pokemon in game_state_dict["pokemon"]:
+        pokemon_dict = pokemon.copy()
+        pokemon_dict["status"] = pokemon["status"].name
+        pokemon_list.append(pokemon_dict)
+    game_state_dict["pokemon"] = pokemon_list
     with game_state.save_file.open("w") as f:
         yaml.dump(game_state_dict, f)

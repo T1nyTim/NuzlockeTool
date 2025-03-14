@@ -59,7 +59,8 @@ from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
-from nuzlocke_tool.utils import append_journal_entry, clear_layout, load_yaml_file, save_session
+from nuzlocke_tool.services.journal_service import JournalService
+from nuzlocke_tool.utils import clear_layout, load_yaml_file, save_session
 
 LOGGER = logging.getLogger(__name__)
 
@@ -72,6 +73,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._game_data_loader = GameDataLoader()
         self._game_data_loader.load_location_data()
         self._game_state = GameState("", "", False, None, None, [], [], {})  # noqa: FBT003
+        self._journal_service = None
         self._create_menu()
         self._init_tabs()
 
@@ -90,10 +92,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._encounters_tab.update_encounters()
         self._game_state.encounters.append(new_pokemon.encountered)
         save_session(self._game_state)
-        append_journal_entry(
-            self._game_state.journal_file,
-            f"Caught {new_pokemon} @ {new_pokemon.encountered}. Added to the Party.",
-        )
+        self._journal_service.add_capture_entry(new_pokemon)
         LOGGER.info("Added active Pokemon: %s", new_pokemon)
 
     def _add_boxed_pokemon(self) -> None:
@@ -105,10 +104,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._encounters_tab.update_encounters()
         self._game_state.encounters.append(new_pokemon.encountered)
         save_session(self._game_state)
-        append_journal_entry(
-            self._game_state.journal_file,
-            f"Caught {new_pokemon} @ {new_pokemon.encountered}. Added to the Box.",
-        )
+        self._journal_service.add_capture_entry(new_pokemon)
         LOGGER.info("Added boxed Pokemon: %s", new_pokemon)
 
     def _add_pokemon(self, status: PokemonStatus) -> Pokemon | None:
@@ -219,7 +215,11 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         tool_selector.addItems([LABEL_TOOL_RANDOM_DECISION, LABEL_TOOL_BEST_MOVE])
         layout.addWidget(tool_selector)
         tool_stack = QStackedWidget(self._tools_tab)
-        self._random_decision_widget = RandomDecisionToolWidget(self._game_state, self._tools_tab)
+        self._random_decision_widget = RandomDecisionToolWidget(
+            self._game_state,
+            self._journal_service,
+            self._tools_tab,
+        )
         tool_stack.addWidget(self._random_decision_widget)
         self._best_moves_widget = BestMovesToolWidget(
             self._game_state,
@@ -239,11 +239,11 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._update_dead_pokemon_display()
         self._encounters_tab.update_encounters()
         save_session(self._game_state)
-        target_name = self._process_storage_status(target)
         if target == PokemonStatus.DEAD:
-            append_journal_entry(self._game_state.journal_file, f"{pokemon} has Died.")
+            self._journal_service.add_dead_entry(pokemon)
         else:
-            append_journal_entry(self._game_state.journal_file, f"Transfered {pokemon} to {target_name}.")
+            target_name = self._process_storage_status(target)
+            self._journal_service.add_transfer_entry(pokemon, target_name)
         LOGGER.info("Transfered Pokemon to %s: %s", target, pokemon)
 
     def _init_tabs(self) -> None:
@@ -274,30 +274,24 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 "\n- ".join(ruleset["rules"]) if isinstance(ruleset["rules"], list) else ruleset["rules"]
             )
             self._rules_text.setPlainText(rules_text)
-        self._game_state.pokemon.clear()
-        self._update_active_party_display()
-        self._update_boxed_pokemon_display()
-        self._encounters_tab.set_state(self._game_state, self._game_data_loader)
-        self._random_decision_widget.set_state(self._game_state)
-        self._best_moves_widget.set_state(self._game_state, self._game_data_loader)
-        self._party_tab.setEnabled(True)
-        self._encounters_tab.setEnabled(True)
-        self._tools_tab.setEnabled(True)
         self._game_state.journal_file = self._new_journal_file(
             self._game_state.game,
             self._game_state.ruleset,
         )
         self._game_state.save_file = self._new_save_file(self._game_state.game, self._game_state.ruleset)
-        append_journal_entry(
-            self._game_state.journal_file,
-            f"Started new session in {self._game_state.game}.",
-        )
-        append_journal_entry(
-            self._game_state.journal_file,
-            f"New session is utilising the {self._game_state.ruleset} ruleset.",
-        )
+        self._journal_service = JournalService(self._game_state)
+        self._journal_service.add_new_session_entry(self._game_state.game, self._game_state.ruleset)
         if self._game_state.sub_region_clause:
-            append_journal_entry(self._game_state.journal_file, "New session is using the Sub-Region Clause.")
+            self._journal_service.add_clause_entry("Sub-Region")
+        self._game_state.pokemon.clear()
+        self._update_active_party_display()
+        self._update_boxed_pokemon_display()
+        self._encounters_tab.set_state(self._game_state, self._game_data_loader)
+        self._random_decision_widget.set_state(self._game_state, self._journal_service)
+        self._best_moves_widget.set_state(self._game_state, self._game_data_loader)
+        self._party_tab.setEnabled(True)
+        self._encounters_tab.setEnabled(True)
+        self._tools_tab.setEnabled(True)
         LOGGER.info(
             "Started new session for game|rules: %s|%s",
             self._game_state.game,
@@ -335,6 +329,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         if save_file is None:
             return
         self._load_session_data(save_file)
+        self._journal_service = JournalService(self._game_state)
         versions = load_yaml_file(PathConfig.versions_file())
         version_info = versions.get(self._game_state.game)
         generation = version_info.get("generation")
@@ -355,7 +350,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._update_boxed_pokemon_display()
         self._update_dead_pokemon_display()
         self._encounters_tab.set_state(self._game_state, self._game_data_loader)
-        self._random_decision_widget.set_state(self._game_state)
+        self._random_decision_widget.set_state(self._game_state, self._journal_service)
         self._best_moves_widget.set_state(self._game_state, self._game_data_loader)
         self._party_tab.setEnabled(True)
         self._encounters_tab.setEnabled(True)
@@ -371,9 +366,12 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             data = yaml.safe_load(f)
         data["journal_file"] = Path(data["journal_file"])
         data["save_file"] = Path(data["save_file"])
-        data["active"] = [Pokemon(**p) for p in data.get("active", [])]
-        data["boxed"] = [Pokemon(**p) for p in data.get("boxed", [])]
-        data["dead"] = [Pokemon(**p) for p in data.get("dead", [])]
+        pokemon_list = []
+        for pokemon_dict in data.get("pokemon", []):
+            status_str = pokemon_dict.pop("status")
+            pokemon = Pokemon(**pokemon_dict, status=PokemonStatus[status_str])
+            pokemon_list.append(pokemon)
+        data["pokemon"] = pokemon_list
         self._game_state = GameState(**data)
 
     @staticmethod
@@ -403,6 +401,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 mon,
                 self._game_state,
                 self._game_data_loader,
+                self._journal_service,
                 self._active_party_widget,
                 lambda: len([p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE]) > 1,
             )
@@ -425,6 +424,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 mon,
                 self._game_state,
                 self._game_data_loader,
+                self._journal_service,
                 self._boxed_pokemon_widget,
                 lambda: len([p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE])
                 < ACTIVE_PARTY_LIMIT,
@@ -452,6 +452,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 mon,
                 self._game_state,
                 self._game_data_loader,
+                self._journal_service,
                 self._dead_pokemon_widget,
                 lambda: len([p for p in self._game_state.pokemon if p.status == PokemonStatus.ACTIVE])
                 < ACTIVE_PARTY_LIMIT,
