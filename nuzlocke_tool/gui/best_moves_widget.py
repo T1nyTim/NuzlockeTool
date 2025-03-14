@@ -57,8 +57,9 @@ class BestMovesToolWidget(QWidget):
     def __init__(self, container: Container, game_state: GameState, parent: QWidget) -> None:
         super().__init__(parent)
         self._container = container
-        self._game_data_loader = self._container.game_data_loader()
         self._game_state = game_state
+        self._move_repository = self._container.move_repository()
+        self._pokemon_repository = self._container.pokemon_repository()
 
     def _apply_additional_modifiers(
         self,
@@ -131,7 +132,7 @@ class BestMovesToolWidget(QWidget):
     def _calculate_damage_components(
         self,
         move_name: str,
-        move_data: dict[str, MoveData],
+        move_data: MoveData,
         party_member: Pokemon,
         attacker_stats: dict[str, int | list[str]],
         defender_stats: dict[str, str | int | list[str]],
@@ -207,7 +208,7 @@ class BestMovesToolWidget(QWidget):
         attacker_stats: dict[str, int | list[str]],
         defender_stats: dict[str, str | int | list[str]],
     ) -> tuple[float, int, int] | None:
-        move_data = self._game_data_loader.move_data[move_name]
+        move_data = self._move_repository.get_by_id(move_name)
         special_damage_result = self._handle_special_damage_moves(
             move_name,
             move_data,
@@ -239,7 +240,7 @@ class BestMovesToolWidget(QWidget):
 
     def _compute_stats(
         self,
-        pokemon_data: dict[str, PokemonData],
+        pokemon_data: PokemonData,
         stat: str,
         pokemon: Pokemon | None = None,
         stat_stage: int | None = None,
@@ -259,7 +260,7 @@ class BestMovesToolWidget(QWidget):
         return base_stat, modified_stat
 
     def _get_attacker_stats(self, party_member: Pokemon, idx: int) -> dict[str, int | list[str]]:
-        party_data = self._game_data_loader.pokemon_data[party_member.species]
+        party_data = self._pokemon_repository.get_by_id(party_member.species)
         _, atk_spin, spe_spin, spd_spin = self._party_stage_spinboxes[idx]
         base_atk, modified_atk = self._compute_stats(party_data, "Atk", party_member, atk_spin.value())
         base_spe, modified_spe = self._compute_stats(party_data, "Spe", party_member, spe_spin.value())
@@ -279,7 +280,7 @@ class BestMovesToolWidget(QWidget):
         defending_species = self._pokemon_selector.text()
         if not defending_species:
             return None
-        defending_pokemon = self._game_data_loader.pokemon_data[defending_species]
+        defending_pokemon = self._pokemon_repository.get_by_id(defending_species)
         level = self._level_spinner.value()
         def_stage = self._defense_spinner.value()
         spe_stage = self._special_spinner.value()
@@ -311,7 +312,7 @@ class BestMovesToolWidget(QWidget):
     def _handle_special_damage_moves(
         self,
         move_name: str,
-        move_data: dict[str, MoveData],
+        move_data: MoveData,
         party_member: Pokemon,
         defender_stats: dict[str, str | int | list[str]],
     ) -> tuple[float, int, int] | None:
@@ -346,7 +347,7 @@ class BestMovesToolWidget(QWidget):
         left_column = QVBoxLayout()
         left_column.addWidget(QLabel(LABEL_DEFENDING_POKEMON, self), alignment=ALIGN_CENTER)
         self._pokemon_selector = QLineEdit(self)
-        pokemon_names = list(self._game_data_loader.pokemon_data.keys())
+        pokemon_names = self._pokemon_repository.get_all_species()
         completer = QCompleter(pokemon_names, self)
         self._pokemon_selector.setCompleter(completer)
         self._pokemon_selector.textChanged.connect(self._update_image)

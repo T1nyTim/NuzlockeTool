@@ -62,10 +62,10 @@ class BasePokemonCardWidget(QWidget):
     ) -> None:
         super().__init__(parent)
         self._container = container
-        self._game_data_loader = self._container.game_data_loader()
         self._game_state = game_state
         self._journal_service = self._container.journal_service_factory(self._game_state)
         self._pokemon = pokemon
+        self._pokemon_repository = self._container.pokemon_repository()
         self._save_service = self._container.save_service()
         self._transfer_options = transfer_options if transfer_options is not None else []
         self.setObjectName(OBJECT_NAME_CARD_WIDGET)
@@ -89,7 +89,7 @@ class BasePokemonCardWidget(QWidget):
 
     def _edit(self) -> None:
         current_species = self._pokemon.species
-        pokemon_data = self._game_data_loader.pokemon_data[current_species]
+        pokemon_data = self._pokemon_repository.get_by_id(current_species)
         dialog = PokemonDialog(
             self._container,
             self._game_state,
@@ -163,7 +163,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _create_moves_widget(self) -> QWidget:
         species_key = self._pokemon.species
-        entry = self._game_data_loader.pokemon_data[species_key]
+        entry = self._pokemon_repository.get_by_id(species_key)
         moves_entry = entry["moves"] if entry and isinstance(entry, dict) and "moves" in entry else None
         moves_layout = QHBoxLayout()
         moves_layout.setContentsMargins(NO_SPACING, NO_SPACING, NO_SPACING, NO_SPACING)
@@ -188,7 +188,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _create_species_widget(self) -> QWidget:
         species_key = self._pokemon.species
-        entry = self._game_data_loader.pokemon_data[species_key]
+        entry = self._pokemon_repository.get_by_id(species_key)
         if entry and isinstance(entry, dict) and "evolve" in entry:
             species_options = [self._pokemon.species, *entry.get("evolve", [])]
             species_combo = QComboBox(self)

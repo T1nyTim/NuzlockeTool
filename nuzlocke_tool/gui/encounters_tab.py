@@ -29,8 +29,8 @@ class EncountersTab(QWidget):
         super().__init__(parent)
         self._container = container
         self._encounter_widgets = {}
-        self._game_data_loader = self._container.game_data_loader()
         self._game_state = game_state
+        self._location_repository = self._container.location_repository()
         self._location_row = {}
         self._init_ui()
 
@@ -47,13 +47,10 @@ class EncountersTab(QWidget):
         layout.addWidget(self.table)
 
     def init_table(self) -> None:
-        region_type = "Partial" if self._game_state.sub_region_clause else "Full"
-        locations = [
-            location
-            for location, info in self._game_data_loader.location_data.items()
-            if (info.get("type") == region_type or info.get("type") is None)
-            and self._game_state.game in info["games"]
-        ]
+        locations = self._location_repository.get_for_game(
+            self._game_state.game,
+            self._game_state.sub_region_clause,
+        )
         self.table.setRowCount(len(locations))
         self._location_row.clear()
         for row, location in enumerate(locations):

@@ -143,19 +143,12 @@ class PokemonDialog(BaseDialog):
     ) -> None:
         super().__init__(DIALOG_ADD_POKEMON_TITLE, parent)
         self._container = container
-        self._game_data_loader = self._container.game_data_loader()
         self._game_state = game_state
-        self._moves_by_species = self._extract_moves_mapping()
-        self._allowed_species = list(self._moves_by_species.keys())
+        self._location_repository = self._container.location_repository()
         self._status = status
         self.pokemon = pokemon
+        self._pokemon_repository = self._container.pokemon_repository()
         self._init_ui()
-
-    def _extract_moves_mapping(self) -> dict[str, list[str]]:
-        moves_mapping = {}
-        for species, info in self._game_data_loader.pokemon_data.items():
-            moves_mapping[species] = info["moves"]
-        return moves_mapping
 
     def _init_ui(self) -> None:
         self._setup_nickname_section()
@@ -191,15 +184,11 @@ class PokemonDialog(BaseDialog):
         self._form_layout.addRow(LABEL_DETERMINANT_VALUES_SHORT, dv_widget)
 
     def _setup_encounter_section(self) -> None:
-        region_type = "Partial" if self._game_state.sub_region_clause else "Full"
-        valid_locations = [
-            location
-            for location, info in self._game_data_loader.location_data.items()
-            if (info.get("type") == region_type or info.get("type") is None)
-            and self._game_state.game in info.get("games", [])
-            and location not in self._game_state.encounters
-        ]
-        valid_locations.sort()
+        valid_locations = self._location_repository.get_available(
+            self._game_state.game,
+            self._game_state.sub_region_clause,
+            self._game_state.encounters,
+        )
         self._encounter_edit = QLineEdit(self)
         if self.pokemon is not None:
             self._encounter_edit.setText(self.pokemon.encountered)
@@ -242,7 +231,8 @@ class PokemonDialog(BaseDialog):
 
     def _setup_species_section(self) -> None:
         self._species_edit = QLineEdit(self)
-        species_completer = QCompleter(self._allowed_species)
+        species_list = self._pokemon_repository.get_all_species()
+        species_completer = QCompleter(species_list)
         species_completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self._species_edit.setCompleter(species_completer)
         if self.pokemon is not None:
@@ -252,14 +242,18 @@ class PokemonDialog(BaseDialog):
 
     def _update_moves_completer(self, species_text: str) -> None:
         species = species_text.strip()
-        allowed_moves = self._moves_by_species.get(species, [])
+        allowed_moves = self._pokemon_repository.get_moves_for_species(species)
         for move_edit in self._moves_edits:
             completer = QCompleter(allowed_moves)
             completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
             move_edit.setCompleter(completer)
             move_edit.setEnabled(True)
             current_move = move_edit.text().strip()
-            if species in self._allowed_species and current_move and current_move not in allowed_moves:
+            if (
+                species in self._pokemon_repository.get_all_species()
+                and current_move
+                and current_move not in allowed_moves
+            ):
                 move_edit.clear()
 
     def _validate_and_accept(self) -> None:
@@ -296,11 +290,11 @@ class PokemonDialog(BaseDialog):
             error = MSG_BOX_MSG_INVALID_NICKNAME
         elif not species:
             error = MSG_BOX_MSG_NO_SPECIES
-        elif species not in self._allowed_species:
+        elif species not in self._pokemon_repository.get_all_species():
             error = MSG_BOX_MSG_INVALID_SPECIES
         elif not moves[0]:
             error = MSG_BOX_MSG_NO_MOVE_FIRST_ONLY
-        elif moves[0] not in self._moves_by_species[species]:
+        elif moves[0] not in self._pokemon_repository.get_moves_for_species(species):
             error = MSG_BOX_MSG_INVALID_MOVE
         elif not encountered:
             error = MSG_BOX_MSG_NO_ENCOUNTER
