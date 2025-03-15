@@ -2,7 +2,7 @@ from pathlib import Path
 
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models.models import GameState
+from nuzlocke_tool.models.models import EventType, GameState
 from nuzlocke_tool.rules import RuleStrategyFactory
 from nuzlocke_tool.utils import load_yaml_file
 
@@ -27,7 +27,7 @@ class GameService:
         journal_file.touch(exist_ok=False)
         return journal_file
 
-    def new_game(self, game: str, ruleset: str, generation: str, sub_region_clause: bool) -> GameState:
+    def new_game(self, game: str, ruleset: str, generation: str, sub_region_clause: bool) -> None:
         game_data_loader = self._container.game_data_loader()
         game_data_loader.load_pokemon_data(generation)
         game_data_loader.load_move_data(generation)
@@ -40,9 +40,9 @@ class GameService:
         journal_service.add_new_session_entry(game, ruleset)
         if sub_region_clause:
             journal_service.add_clause_entry("Sub-Region")
-        return game_state
+        self._container.event_manager().publish(EventType.SESSION_CREATED, {"game_state": game_state})
 
-    def load_game(self, save_path: Path) -> GameState:
+    def load_game(self, save_path: Path) -> None:
         game_state = self._save_service.load_session(save_path)
         versions = load_yaml_file(PathConfig.versions_file())
         version_info = versions[game_state.game]
@@ -52,7 +52,7 @@ class GameService:
         game_data_loader.load_move_data(generation)
         rule_strategy = RuleStrategyFactory.create_strategy(game_state.ruleset)
         game_state.rule_strategy = rule_strategy
-        return game_state
+        self._container.event_manager().publish(EventType.SESSION_LOADED, {"game_state": game_state})
 
     def save_game(self, game_state: GameState) -> None:
         self._save_service.save_session(game_state)

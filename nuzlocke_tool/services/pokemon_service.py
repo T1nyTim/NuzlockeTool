@@ -3,7 +3,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from nuzlocke_tool.constants import ACTIVE_PARTY_LIMIT, TAB_BOXED_NAME, TAB_DEAD_NAME, TAB_PARTY_NAME
-from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import EventType, GameState, Pokemon, PokemonStatus
 
 if TYPE_CHECKING:
     from nuzlocke_tool.container import Container
@@ -14,6 +14,7 @@ LOGGER = logging.getLogger(__name__)
 class PokemonService:
     def __init__(self, container: "Container", game_state: GameState) -> None:
         self._container = container
+        self._event_manager = self._container.event_manager()
         self._game_state = game_state
         self._journal_service = self._container.journal_service_factory(self._game_state)
         self._pokemon_repository = self._container.pokemon_repository()
@@ -54,6 +55,7 @@ class PokemonService:
         self._game_state.encounters.append(pokemon.encountered)
         self._save_service.save_session(self._game_state)
         self._journal_service.add_capture_entry(pokemon)
+        self._event_manager.publish(EventType.POKEMON_ADDED, {"pokemon": pokemon})
         return True
 
     def edit_pokemon(self, pokemon: Pokemon, current_species: str) -> bool:
@@ -61,6 +63,7 @@ class PokemonService:
         self._save_service.save_session(self._game_state)
         if "evolve" in pokemon_data and pokemon.species in pokemon_data["evolve"]:
             self._journal_service.add_evolved_entry(pokemon, current_species)
+        self._event_manager.publish(EventType.POKEMON_EDITED, {"pokemon": pokemon})
         return True
 
     def learn_move(self, pokemon: Pokemon, index: int, new_move: str) -> bool:
@@ -76,13 +79,16 @@ class PokemonService:
         else:
             self._journal_service.add_learn_move_entry(pokemon.nickname, new_move, old_move)
             LOGGER.info("Pokemon %s learned move: %s (was: %s)", pokemon.nickname, new_move, old_move)
+        self._event_manager.publish(EventType.MOVE_UPDATED, {"pokemon": pokemon})
         return True
 
-    def remove_pokemon(self, pokemon: Pokemon) -> None:
+    def remove_pokemon(self, pokemon: Pokemon) -> bool:
         self._game_state.pokemon.remove(pokemon)
         if not any(p.encountered == pokemon.encountered for p in self._game_state.pokemon):
             self._game_state.encounters.remove(pokemon.encountered)
         self._save_service.save_session(self._game_state)
+        self._event_manager.publish(EventType.POKEMON_REMOVED, {"pokemon": pokemon})
+        return True
 
     def transfer_pokemon(self, pokemon: Pokemon, target_status: PokemonStatus) -> bool:
         if target_status == PokemonStatus.ACTIVE and len(self.active_pokemon) >= ACTIVE_PARTY_LIMIT:
@@ -95,6 +101,7 @@ class PokemonService:
                     break
             if not self._game_state.rule_strategy.validate_party(test_state):
                 return False
+        original_status = pokemon.status
         pokemon.status = target_status
         self._save_service.save_session(self._game_state)
         if target_status == PokemonStatus.DEAD:
@@ -102,4 +109,8 @@ class PokemonService:
         else:
             status_name = self._process_storage_status(target_status)
             self._journal_service.add_transfer_entry(pokemon, status_name)
+        self._event_manager.publish(
+            EventType.POKEMON_TRANSFERRED,
+            {"previous_status": original_status, "new_status": target_status},
+        )
         return True

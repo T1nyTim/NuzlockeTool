@@ -1,46 +1,33 @@
 import copy
 from abc import ABC, abstractmethod
-from collections.abc import Callable
 
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import EventType, GameState, Pokemon, PokemonStatus
 from nuzlocke_tool.models.view_models import PokemonCardViewModel
 from nuzlocke_tool.services.pokemon_service import PokemonService
 
 
 class Command(ABC):
     @abstractmethod
-    def execute(self) -> None:
+    def execute(self) -> bool:
         pass
 
     @abstractmethod
-    def undo(self) -> None:
+    def undo(self) -> bool:
         pass
 
 
 class AddPokemonCommand(Command):
-    def __init__(
-        self,
-        container: Container,
-        pokemon: Pokemon,
-        pokemon_service: PokemonService,
-        on_success: Callable | None = None,
-    ) -> None:
+    def __init__(self, container: Container, pokemon: Pokemon, pokemon_service: PokemonService) -> None:
         self._container = container
-        self._on_success = on_success
         self._pokemon = pokemon
         self._pokemon_service = pokemon_service
 
     def execute(self) -> bool:
-        success = self._pokemon_service.add_pokemon(self._pokemon)
-        if success and self._on_success:
-            self._on_success()
-        return success
+        return self._pokemon_service.add_pokemon(self._pokemon)
 
-    def undo(self) -> None:
-        self._pokemon_service.remove_pokemon(self._pokemon)
-        if self._on_success:
-            self._on_success()
+    def undo(self) -> bool:
+        return self._pokemon_service.remove_pokemon(self._pokemon)
 
 
 class EditPokemonCommand(Command):
@@ -52,11 +39,9 @@ class EditPokemonCommand(Command):
         original_pokemon: Pokemon,
         pokemon_service: PokemonService,
         view_model: PokemonCardViewModel,
-        on_success: Callable | None = None,
     ) -> None:
         self._container = container
         self._game_state = game_state
-        self._on_success = on_success
         self._original_pokemon = original_pokemon
         self._pokemon = pokemon
         self._pokemon_service = pokemon_service
@@ -89,11 +74,9 @@ class EditPokemonCommand(Command):
                 self._view_model.evolution_options = new_view_model.evolution_options.copy()
                 self._view_model.available_moves = new_view_model.available_moves.copy()
                 self._view_model.image_path = new_view_model.image_path
-        if success and self._on_success:
-            self._on_success()
         return success
 
-    def undo(self) -> None:
+    def undo(self) -> bool:
         self._pokemon.nickname = self._original_pokemon.nickname
         self._pokemon.species = self._original_pokemon.species
         self._pokemon.level = self._original_pokemon.level
@@ -116,8 +99,8 @@ class EditPokemonCommand(Command):
             self._view_model.available_moves = original_view_model.available_moves.copy()
             self._view_model.image_path = original_view_model.image_path
         self._save_service.save_session(self._game_state)
-        if self._on_success:
-            self._on_success()
+        self._container.event_manager().publish(EventType.POKEMON_EDITED, {"pokemon": self._pokemon})
+        return True
 
 
 class TransferPokemonCommand(Command):
@@ -128,11 +111,9 @@ class TransferPokemonCommand(Command):
         pokemon: Pokemon,
         target_status: PokemonStatus,
         pokemon_service: PokemonService,
-        on_success: Callable | None = None,
     ) -> None:
         self._container = container
         self._game_state = game_state
-        self._on_success = on_success
         self._original_status = pokemon.status
         self._pokemon = pokemon
         self._pokemon_service = pokemon_service
@@ -141,16 +122,17 @@ class TransferPokemonCommand(Command):
 
     def execute(self) -> bool:
         self._original_status = self._pokemon.status
-        success = self._pokemon_service.transfer_pokemon(self._pokemon, self._target_status)
-        if success and self._on_success:
-            self._on_success()
-        return success
+        return self._pokemon_service.transfer_pokemon(self._pokemon, self._target_status)
 
-    def undo(self) -> None:
+    def undo(self) -> bool:
+        previous_status = self._pokemon.status
         self._pokemon.status = self._original_status
         self._save_service.save_session(self._game_state)
-        if self._on_success:
-            self._on_success()
+        self._container.event_manager().publish(
+            EventType.POKEMON_TRANSFERRED,
+            {"previous_status": previous_status, "new_status": self._original_status},
+        )
+        return True
 
 
 class UpdateMoveCommand(Command):
@@ -163,14 +145,12 @@ class UpdateMoveCommand(Command):
         new_move: str,
         pokemon_service: PokemonService,
         view_model: PokemonCardViewModel,
-        on_success: Callable | None = None,
     ) -> None:
         self._container = container
         self._game_state = game_state
         self._move_index = move_index
         self._new_move = new_move
         self._old_move = pokemon.moves[move_index] if move_index < len(pokemon.moves) else ""
-        self._on_success = on_success
         self._pokemon = pokemon
         self._pokemon_service = pokemon_service
         self._save_service = self._container.save_service()
@@ -185,16 +165,14 @@ class UpdateMoveCommand(Command):
                 while len(self._view_model.moves) <= self._move_index:
                     self._view_model.moves.append("")
                 self._view_model.moves[self._move_index] = self._new_move
-        if success and self._on_success:
-            self._on_success()
         return success
 
-    def undo(self) -> None:
+    def undo(self) -> bool:
         self._pokemon.moves[self._move_index] = self._old_move
         self._view_model.moves[self._move_index] = self._old_move
         self._save_service.save_session(self._game_state)
-        if self._on_success:
-            self._on_success()
+        self._container.event_manager().publish(EventType.MOVE_UPDATED, {"pokemon": self._pokemon})
+        return True
 
 
 class CommandManager:
@@ -210,7 +188,7 @@ class CommandManager:
                 self._history = self._history[-self.max_history :]
         return success
 
-    def undo(self) -> None:
+    def undo(self) -> bool:
         if not self._history:
             return
         command = self._history.pop()

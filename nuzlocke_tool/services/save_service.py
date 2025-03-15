@@ -1,3 +1,4 @@
+import datetime
 import logging
 from dataclasses import asdict
 from pathlib import Path
@@ -44,8 +45,7 @@ class SaveService:
         LOGGER.info("Game loaded from %s", filepath)
         return GameState(**data)
 
-    @staticmethod
-    def save_session(game_state: GameState) -> None:
+    def save_session(self, game_state: GameState) -> None:
         game_state_dict = asdict(game_state)
         del game_state_dict["rule_strategy"]
         game_state_dict["journal_file"] = str(game_state_dict["journal_file"])

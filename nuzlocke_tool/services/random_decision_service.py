@@ -1,12 +1,13 @@
 import random
 
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models.models import GameState
+from nuzlocke_tool.models.models import EventType, GameState
 
 
 class RandomDecisionService:
     def __init__(self, container: Container, game_state: GameState) -> None:
         self._container = container
+        self._event_manager = container.event_manager()
         self._game_state = game_state
         self._journal_service = self._container.journal_service_factory(game_state)
         self._save_service = self._container.save_service()
@@ -16,4 +17,8 @@ class RandomDecisionService:
         self._game_state.decisions[decision_key] = outcome
         self._save_service.save_session(self._game_state)
         self._journal_service.add_decision_entry(display_name, outcome)
+        self._event_manager.publish(
+            EventType.DECISION_MADE,
+            {"decision_key": decision_key, "outcome": outcome},
+        )
         return outcome

@@ -33,6 +33,18 @@ class RulesetData(TypedDict):
     rules: list[str]
 
 
+class EventType(Enum):
+    POKEMON_ADDED = auto()
+    POKEMON_EDITED = auto()
+    POKEMON_TRANSFERRED = auto()
+    POKEMON_REMOVED = auto()
+    MOVE_UPDATED = auto()
+    SESSION_LOADED = auto()
+    SESSION_CREATED = auto()
+    SESSION_SAVED = auto()
+    DECISION_MADE = auto()
+
+
 class PokemonCardType(Enum):
     ACTIVE = "active"
     BOXED = "boxed"

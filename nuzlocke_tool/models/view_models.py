@@ -1,6 +1,6 @@
 import copy
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Self
+from typing import Self
 
 from PyQt6.QtGui import QColor
 
@@ -18,9 +18,6 @@ from nuzlocke_tool.models.models import GameState, Pokemon, PokemonCardType, Pok
 from nuzlocke_tool.repositories import PokemonRepository
 from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.utils import get_image_filename
-
-if TYPE_CHECKING:
-    from nuzlocke_tool.container import Container
 
 
 @dataclass

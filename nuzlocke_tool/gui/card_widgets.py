@@ -45,7 +45,7 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.gui.dialogs import PokemonDialog
-from nuzlocke_tool.models.models import GameState, Pokemon, PokemonCardType, PokemonStatus
+from nuzlocke_tool.models.models import EventType, GameState, Pokemon, PokemonCardType, PokemonStatus
 from nuzlocke_tool.models.view_models import PokemonCardViewModel
 from nuzlocke_tool.services.game_service import GameService
 from nuzlocke_tool.services.pokemon_service import PokemonService
@@ -114,7 +114,6 @@ class BasePokemonCardWidget(QWidget):
             original_species,
             self._pokemon_service,
             self._view_model,
-            on_success=self._refresh,
         )
         main_window = self.window()
         main_window.command_manager.execute(command)
@@ -149,6 +148,8 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
         super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
+        self._event_manager = self._container.event_manager()
+        self._event_manager.subscribe(EventType.MOVE_UPDATED, self._refresh_moves)
         self._init_ui()
 
     def _create_dvs_widget(self) -> QWidget:
@@ -247,7 +248,6 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             new_move,
             self._pokemon_service,
             self._view_model,
-            on_success=self._refresh_moves,
         )
         main_window = self.window()
         main_window.command_manager.execute(command)
