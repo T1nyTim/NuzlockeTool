@@ -80,9 +80,9 @@ class EditPokemonCommand(Command):
             self._view_model.moves = self._pokemon.moves.copy()
             self._view_model.dvs = self._pokemon.dvs.copy()
             if self._original_pokemon.species != self._pokemon.species:
-                view_model_factory = self._container.view_model_factory()
-                new_view_model = view_model_factory.create_pokemon_card_viewmodel(
+                new_view_model = PokemonCardViewModel.from_pokemon(
                     self._pokemon,
+                    self._container.pokemon_repository(),
                     self._view_model.card_type,
                 )
                 self._view_model.can_evolve = new_view_model.can_evolve
@@ -106,9 +106,9 @@ class EditPokemonCommand(Command):
         self._view_model.moves = self._original_view_model_state["moves"].copy()
         self._view_model.dvs = self._original_view_model_state["dvs"].copy()
         if self._pokemon.species != self._original_pokemon.species:
-            view_model_factory = self._container.view_model_factory()
-            original_view_model = view_model_factory.create_pokemon_card_viewmodel(
+            original_view_model = PokemonCardViewModel.from_pokemon(
                 self._original_pokemon,
+                self._container.pokemon_repository(),
                 self._view_model.card_type,
             )
             self._view_model.can_evolve = original_view_model.can_evolve

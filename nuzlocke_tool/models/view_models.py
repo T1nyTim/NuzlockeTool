@@ -69,7 +69,7 @@ class DecisionViewModel:
     key: str
     display_name: str
     options: list[str]
-    current_outcome: str | None = None
+    current_outcome: str | None
 
     @property
     def button_text(self) -> str:
@@ -82,6 +82,16 @@ class DecisionViewModel:
     @property
     def outcome_text(self) -> str:
         return self.current_outcome if self.has_outcome else ""
+
+    @classmethod
+    def create_from_data(
+        cls,
+        key: str,
+        display_name: str,
+        options: list[str],
+        current_outcome: str | None,
+    ) -> Self:
+        return cls(key, display_name, options, current_outcome)
 
 
 @dataclass
@@ -109,15 +119,18 @@ class EncounterViewModel:
     def has_encounter(self) -> bool:
         return self.pokemon is not None
 
+    @classmethod
+    def _create_from_location(cls, location: str, row_index: int) -> Self:
+        return cls(location, row_index)
 
-class EncounterViewModelFactory:
-    @staticmethod
+    @classmethod
     def create_view_models(
+        cls,
         locations: list[str],
         pokemon: list[Pokemon],
         location_row_map: dict[str, int],
-    ) -> list[EncounterViewModel]:
-        view_models = [EncounterViewModel(location=loc, row_index=location_row_map[loc]) for loc in locations]
+    ) -> list[Self]:
+        view_models = [cls._create_from_location(loc, location_row_map[loc]) for loc in locations]
         status_map = {
             PokemonStatus.ACTIVE: TAB_PARTY_NAME,
             PokemonStatus.BOXED: TAB_BOXED_NAME,
@@ -220,26 +233,16 @@ class PokemonCardViewModel:
             pokemon_data["moves"],
         )
 
-
-class PokemonCardViewModelFactory:
-    def __init__(self, container: "Container", pokemon_repository: PokemonRepository) -> None:
-        self._container = container
-        self._pokemon_repository = pokemon_repository
-
+    @classmethod
     def create_pokemon_viewmodels(
-        self,
+        cls,
         game_state: GameState,
+        pokemon_repository: PokemonRepository,
         status: PokemonStatus,
         card_type: PokemonCardType,
-    ) -> list[tuple[PokemonCardViewModel, Pokemon]]:
+    ) -> list[tuple[Self, Pokemon]]:
         filtered_pokemon = [p for p in game_state.pokemon if p.status == status]
         return [
-            (self.create_pokemon_card_viewmodel(pokemon, card_type), pokemon) for pokemon in filtered_pokemon
+            (cls.from_pokemon(pokemon, pokemon_repository, card_type), pokemon)
+            for pokemon in filtered_pokemon
         ]
-
-    def create_pokemon_card_viewmodel(
-        self,
-        pokemon: Pokemon,
-        card_type: PokemonCardType,
-    ) -> PokemonCardViewModel:
-        return PokemonCardViewModel.from_pokemon(pokemon, self._pokemon_repository, card_type)

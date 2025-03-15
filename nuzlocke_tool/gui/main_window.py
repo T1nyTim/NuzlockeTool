@@ -61,7 +61,7 @@ from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
 from nuzlocke_tool.models.models import GameState, Pokemon, PokemonCardType, PokemonStatus
-from nuzlocke_tool.models.view_models import GameStateViewModel
+from nuzlocke_tool.models.view_models import GameStateViewModel, PokemonCardViewModel
 from nuzlocke_tool.services.game_service import GameService
 from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.services.random_decision_service import RandomDecisionService
@@ -347,9 +347,9 @@ class NuzlockeTrackerMainWindow(QMainWindow):
 
     def _update_active_party_display(self) -> None:
         clear_layout(self._active_party_layout)
-        view_model_factory = self._container.view_model_factory()
-        active_view_model_pairs = view_model_factory.create_pokemon_viewmodels(
+        active_view_model_pairs = PokemonCardViewModel.create_pokemon_viewmodels(
             self._game_state,
+            self._container.pokemon_repository(),
             PokemonStatus.ACTIVE,
             PokemonCardType.ACTIVE,
         )
@@ -376,9 +376,9 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         available_width = self._boxed_scroll_area.viewport().width()
         card_total_width = WIDGET_POKEMON_CARD_WIDTH + SPACING
         columns = max(1, available_width // card_total_width)
-        view_model_factory = self._container.view_model_factory()
-        boxed_view_model_pairs = view_model_factory.create_pokemon_viewmodels(
+        boxed_view_model_pairs = PokemonCardViewModel.create_pokemon_viewmodels(
             self._game_state,
+            self._container.pokemon_repository(),
             PokemonStatus.BOXED,
             PokemonCardType.BOXED,
         )
@@ -408,9 +408,9 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         available_width = self._dead_scroll_area.viewport().width()
         card_total_width = WIDGET_POKEMON_CARD_WIDTH + SPACING
         columns = max(1, available_width // card_total_width)
-        view_model_factory = self._container.view_model_factory()
-        dead_view_model_pairs = view_model_factory.create_pokemon_viewmodels(
+        dead_view_model_pairs = PokemonCardViewModel.create_pokemon_viewmodels(
             self._game_state,
+            self._container.pokemon_repository(),
             PokemonStatus.DEAD,
             PokemonCardType.DEAD,
         )

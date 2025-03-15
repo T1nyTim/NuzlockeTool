@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import (
 from nuzlocke_tool.constants import LABEL_LOCATION, LABEL_POKEMON, LABEL_STATUS
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.models.models import GameState
-from nuzlocke_tool.models.view_models import EncounterViewModelFactory
+from nuzlocke_tool.models.view_models import EncounterViewModel
 
 
 class EncountersTab(QWidget):
@@ -54,7 +54,7 @@ class EncountersTab(QWidget):
             else:
                 item_location.setText(location)
             self._location_row[location] = row
-        self._view_models = EncounterViewModelFactory.create_view_models(
+        self._view_models = EncounterViewModel.create_view_models(
             locations,
             self._game_state.pokemon,
             self._location_row,
@@ -70,7 +70,7 @@ class EncountersTab(QWidget):
             self.table.setItem(row, 1, QTableWidgetItem("None"))
             self.table.setItem(row, 2, QTableWidgetItem("None"))
             self.table.item(row, 0).setData(Qt.ItemDataRole.ForegroundRole, None)
-        self._view_models = EncounterViewModelFactory.create_view_models(
+        self._view_models = EncounterViewModel.create_view_models(
             list(self._location_row.keys()),
             self._game_state.pokemon,
             self._location_row,

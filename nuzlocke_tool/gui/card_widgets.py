@@ -278,9 +278,9 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         return name
 
     def _refresh(self) -> None:
-        view_model_factory = self._container.view_model_factory()
-        self._view_model = view_model_factory.create_pokemon_card_viewmodel(
+        self._view_model = PokemonCardViewModel.from_pokemon(
             self._pokemon,
+            self._container.pokemon_repository(),
             PokemonCardType.ACTIVE,
         )
         self._refresh_species()
@@ -346,9 +346,9 @@ class StoragePokemonCardWidget(BasePokemonCardWidget):
         self._add_level(layout)
 
     def _refresh(self) -> None:
-        view_model_factory = self._container.view_model_factory()
-        self._view_model = view_model_factory.create_pokemon_card_viewmodel(
+        self._view_model = PokemonCardViewModel.from_pokemon(
             self._pokemon,
+            self._container.pokemon_repository(),
             PokemonCardType.BOXED if isinstance(self, BoxedPokemonCardWidget) else PokemonCardType.DEAD,
         )
         pixmap = load_pokemon_image(self._view_model.species)

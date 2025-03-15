@@ -50,7 +50,9 @@ class RandomDecisionToolWidget(QWidget):
         for key, options in decision_mapping.items():
             display_name = self._generate_decision_name(key)
             current_outcome = self._game_state.decisions.get(key)
-            view_models.append(DecisionViewModel(key, display_name, options, current_outcome))
+            view_models.append(
+                DecisionViewModel.create_from_data(key, display_name, options, current_outcome),
+            )
         return view_models
 
     @staticmethod
