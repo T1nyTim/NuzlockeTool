@@ -79,6 +79,10 @@ class BestMovesToolWidget(QWidget):
         for result_text in self._view_model.formatted_results:
             self._results_layout.addWidget(QLabel(result_text, self))
 
+    def _update_image(self, selected_pokemon: str) -> None:
+        pixmap = load_pokemon_image(selected_pokemon)
+        self._pokemon_image.setPixmap(pixmap)
+
     def init_ui(self) -> None:
         clear_widget(self)
         if self.layout() is None:
@@ -134,10 +138,6 @@ class BestMovesToolWidget(QWidget):
         self._pokemon_service = PokemonService(self._container, game_state)
         self._view_model = BestMoveViewModel()
         self.init_ui()
-
-    def _update_image(self, selected_pokemon: str) -> None:
-        pixmap = load_pokemon_image(selected_pokemon)
-        self._pokemon_image.setPixmap(pixmap)
 
     def update_party_stage_section(self) -> None:
         if not hasattr(self, "_party_stage_layout"):

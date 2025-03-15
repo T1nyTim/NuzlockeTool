@@ -1,15 +1,18 @@
 import copy
 import logging
+from typing import TYPE_CHECKING
 
 from nuzlocke_tool.constants import ACTIVE_PARTY_LIMIT, TAB_BOXED_NAME, TAB_DEAD_NAME, TAB_PARTY_NAME
-from nuzlocke_tool.container import Container
 from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus
+
+if TYPE_CHECKING:
+    from nuzlocke_tool.container import Container
 
 LOGGER = logging.getLogger(__name__)
 
 
 class PokemonService:
-    def __init__(self, container: Container, game_state: GameState) -> None:
+    def __init__(self, container: "Container", game_state: GameState) -> None:
         self._container = container
         self._game_state = game_state
         self._journal_service = self._container.journal_service_factory(self._game_state)
@@ -31,6 +34,15 @@ class PokemonService:
     @property
     def party_full(self) -> bool:
         return len(self.active_pokemon) >= ACTIVE_PARTY_LIMIT
+
+    @staticmethod
+    def _process_storage_status(status: PokemonStatus) -> str:
+        status_map = {
+            PokemonStatus.ACTIVE: TAB_PARTY_NAME,
+            PokemonStatus.BOXED: TAB_BOXED_NAME,
+            PokemonStatus.DEAD: TAB_DEAD_NAME,
+        }
+        return status_map[status]
 
     def add_pokemon(self, pokemon: Pokemon) -> bool:
         if pokemon.status == PokemonStatus.ACTIVE:
@@ -65,15 +77,6 @@ class PokemonService:
             self._journal_service.add_learn_move_entry(pokemon.nickname, new_move, old_move)
             LOGGER.info("Pokemon %s learned move: %s (was: %s)", pokemon.nickname, new_move, old_move)
         return True
-
-    @staticmethod
-    def _process_storage_status(status: PokemonStatus) -> str:
-        status_map = {
-            PokemonStatus.ACTIVE: TAB_PARTY_NAME,
-            PokemonStatus.BOXED: TAB_BOXED_NAME,
-            PokemonStatus.DEAD: TAB_DEAD_NAME,
-        }
-        return status_map[status]
 
     def remove_pokemon(self, pokemon: Pokemon) -> None:
         self._game_state.pokemon.remove(pokemon)

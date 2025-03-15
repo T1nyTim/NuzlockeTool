@@ -1,4 +1,3 @@
-import copy
 import logging
 from pathlib import Path
 
@@ -62,6 +61,7 @@ from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
 from nuzlocke_tool.models.models import GameState, Pokemon, PokemonCardType, PokemonStatus
+from nuzlocke_tool.models.view_models import GameStateViewModel
 from nuzlocke_tool.services.game_service import GameService
 from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.services.random_decision_service import RandomDecisionService
@@ -80,12 +80,14 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._game_data_loader = self._container.game_data_loader()
         self._game_data_loader.load_location_data()
         self._game_service = GameService(container)
-        self._game_state = GameState("", "", False, None, None, None, [], [], {})  # noqa: FBT003
+        self._game_state = GameState("", "", False, None, None, None, [], [], {})
+        self._game_state_view_model = GameStateViewModel(is_game_active=False)
         self._journal_service = None
         self._pokemon_service = None
         self._save_service = self._container.save_service()
         self._create_menu()
         self._init_tabs()
+        self._update_ui_from_viewmodel()
 
     def _add_active_pokemon(self) -> None:
         if self._pokemon_service.party_full:
@@ -266,6 +268,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         if not success:
             QMessageBox.warning(self, MSG_BOX_TITLE_PARTY_FULL, MSG_BOX_MSG_PARTY_FULL)
             return
+        self._update_game_state_viewmodel()
         LOGGER.info("Transfered Pokemon to %s: %s", target, pokemon)
 
     def _init_tabs(self) -> None:
@@ -289,20 +292,12 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             return
         self._pokemon_service = PokemonService(self._container, self._game_state)
         self._decision_service = RandomDecisionService(self._container, self._game_state)
-        ruleset = rulesets[self._game_state.ruleset]
-        if ruleset:
-            rules_text = f"{self._game_state.ruleset} Rules:\n- " + (
-                "\n- ".join(ruleset["rules"]) if isinstance(ruleset["rules"], list) else ruleset["rules"]
-            )
-            self._rules_text.setPlainText(rules_text)
+        self._update_game_state_viewmodel()
         self._update_active_party_display()
         self._update_boxed_pokemon_display()
         self._encounters_tab.set_state(self._game_state)
         self._random_decision_widget.set_state(self._game_state)
         self._best_moves_widget.set_state(self._game_state)
-        self._party_tab.setEnabled(True)
-        self._encounters_tab.setEnabled(True)
-        self._tools_tab.setEnabled(True)
         LOGGER.info(
             "Started new session for game|rules: %s|%s",
             self._game_state.game,
@@ -320,22 +315,13 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             return
         self._pokemon_service = PokemonService(self._container, self._game_state)
         self._decision_service = RandomDecisionService(self._container, self._game_state)
-        rulesets = load_yaml_file(PathConfig.rules_file())
-        ruleset = rulesets[self._game_state.ruleset]
-        if ruleset:
-            rules_text = f"{self._game_state.ruleset} Rules:\n- " + (
-                "\n- ".join(ruleset["rules"]) if isinstance(ruleset["rules"], list) else ruleset["rules"]
-            )
-            self._rules_text.setPlainText(rules_text)
+        self._update_game_state_viewmodel()
         self._update_active_party_display()
         self._update_boxed_pokemon_display()
         self._update_dead_pokemon_display()
         self._encounters_tab.set_state(self._game_state)
         self._random_decision_widget.set_state(self._game_state)
         self._best_moves_widget.set_state(self._game_state)
-        self._party_tab.setEnabled(True)
-        self._encounters_tab.setEnabled(True)
-        self._tools_tab.setEnabled(True)
         LOGGER.info(
             "Resumed previous session for game|rules: %s|%s",
             self._game_state.game,
@@ -378,25 +364,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             )
             card.transfer_requested.connect(self._handle_transfer)
             self._active_party_layout.addWidget(card)
-        can_add_more = True
-        if self._pokemon_service.party_full:
-            can_add_more = False
-        else:
-            test_state = copy.deepcopy(self._game_state)
-            dummy_pokemon = Pokemon(
-                nickname="A",
-                species="Bulbasaur",
-                level=5,
-                caught_level=5,
-                moves=["Tackle"],
-                dvs={"HP": 0, "Atk": 0, "Def": 0, "Spd": 0, "Spe": 0},
-                encountered="Pallet Town",
-                status=PokemonStatus.ACTIVE,
-            )
-            test_state.pokemon.append(dummy_pokemon)
-            if not self._game_state.rule_strategy.validate_party(test_state):
-                can_add_more = False
-        if can_add_more:
+        if self._game_state_view_model.can_add_to_party:
             add_button = QPushButton(BUTTON_ADD_POKEMON, self._active_party_widget)
             add_button.clicked.connect(self._add_active_pokemon)
             self._active_party_layout.addWidget(add_button)
@@ -459,6 +427,26 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             row = idx // columns
             col = idx % columns
             self._dead_pokemon_layout.addWidget(card, row, col)
+
+    def _update_game_state_viewmodel(self) -> None:
+        self._game_state_view_model = GameStateViewModel.from_game_state(
+            self._game_state,
+            self._pokemon_service,
+        )
+        self._update_ui_from_viewmodel()
+
+    def _update_ui_from_viewmodel(self) -> None:
+        self._party_tab.setEnabled(self._game_state_view_model.is_game_active)
+        self._encounters_tab.setEnabled(self._game_state_view_model.is_game_active)
+        self._tools_tab.setEnabled(self._game_state_view_model.is_game_active)
+        if self._game_state_view_model.is_game_active and self._game_state_view_model.ruleset_description:
+            rules_text = (
+                f"{self._game_state_view_model.ruleset_name} Rules:\n- "
+                f"{'\n- '.join(self._game_state_view_model.ruleset_description)}"
+            )
+            self._rules_text.setPlainText(rules_text)
+        else:
+            self._rules_text.clear()
 
     def eventFilter(self, obj: QObject, event: QEvent) -> bool:  # noqa: N802
         if (

@@ -53,29 +53,6 @@ class RandomDecisionToolWidget(QWidget):
             view_models.append(DecisionViewModel(key, display_name, options, current_outcome))
         return view_models
 
-    def init_ui(self) -> None:
-        clear_widget(self)
-        if self.layout() is None:
-            layout = QVBoxLayout(self)
-            self.setLayout(layout)
-        else:
-            layout = self.layout()
-        self._view_models = self._generate_view_models()
-        self._outcome_labels = {}
-        for view_model in self._view_models:
-            row_layout = QHBoxLayout()
-            button = QPushButton(view_model.button_text, self)
-            button.clicked.connect(lambda _, vm=view_model: self._randomize_decision(vm))
-            row_layout.addWidget(button)
-            outcome_label = QLabel(view_model.outcome_text, self)
-            outcome_label.setAlignment(ALIGN_CENTER)
-            outcome_label.setObjectName(OBJECT_NAME_LABEL_OUTCOME)
-            outcome_label.setStyleSheet(STYLE_SHEET_LABEL_OUTCOME)
-            row_layout.addWidget(outcome_label)
-            self._outcome_labels[view_model.key] = outcome_label
-            layout.addLayout(row_layout)
-        layout.addStretch()
-
     @staticmethod
     def _generate_decision_name(decision_key: str) -> str:
         statements = {
@@ -99,6 +76,29 @@ class RandomDecisionToolWidget(QWidget):
         outcome_label = self._outcome_labels[view_model.key]
         outcome_label.setText(outcome)
         LOGGER.info("Randomly decided: %s, from: %s", outcome, ", ".join(view_model.options))
+
+    def init_ui(self) -> None:
+        clear_widget(self)
+        if self.layout() is None:
+            layout = QVBoxLayout(self)
+            self.setLayout(layout)
+        else:
+            layout = self.layout()
+        self._view_models = self._generate_view_models()
+        self._outcome_labels = {}
+        for view_model in self._view_models:
+            row_layout = QHBoxLayout()
+            button = QPushButton(view_model.button_text, self)
+            button.clicked.connect(lambda _, vm=view_model: self._randomize_decision(vm))
+            row_layout.addWidget(button)
+            outcome_label = QLabel(view_model.outcome_text, self)
+            outcome_label.setAlignment(ALIGN_CENTER)
+            outcome_label.setObjectName(OBJECT_NAME_LABEL_OUTCOME)
+            outcome_label.setStyleSheet(STYLE_SHEET_LABEL_OUTCOME)
+            row_layout.addWidget(outcome_label)
+            self._outcome_labels[view_model.key] = outcome_label
+            layout.addLayout(row_layout)
+        layout.addStretch()
 
     def set_state(self, game_state: GameState) -> None:
         self._decision_data = load_yaml_file(PathConfig.decisions_file())

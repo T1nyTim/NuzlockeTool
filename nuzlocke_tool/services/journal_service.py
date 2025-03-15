@@ -5,6 +5,10 @@ class JournalService:
     def __init__(self, game_state: GameState) -> None:
         self._journal_file = game_state.journal_file
 
+    def _append_entry(self, entry: str) -> None:
+        with self._journal_file.open("a") as f:
+            f.write(f"{entry}\n")
+
     def add_capture_entry(self, pokemon: Pokemon) -> None:
         status_map = {PokemonStatus.ACTIVE: "Party", PokemonStatus.BOXED: "Box"}
         entry = f"Caught {pokemon} in {pokemon.encountered}. Added to {status_map[pokemon.status]}."
@@ -45,7 +49,3 @@ class JournalService:
     def add_transfer_entry(self, pokemon: Pokemon, target: str) -> None:
         entry = f"Transferred {pokemon} to {target}."
         self._append_entry(entry)
-
-    def _append_entry(self, entry: str) -> None:
-        with self._journal_file.open("a") as f:
-            f.write(f"{entry}\n")

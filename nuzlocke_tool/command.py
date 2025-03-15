@@ -215,7 +215,3 @@ class CommandManager:
             return
         command = self._history.pop()
         command.undo()
-
-    def undo_all(self) -> None:
-        while self.history:
-            self.undo()

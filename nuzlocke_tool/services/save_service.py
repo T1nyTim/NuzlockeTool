@@ -11,6 +11,10 @@ LOGGER = logging.getLogger(__name__)
 
 
 class SaveService:
+    def _append_entry(self, entry: str) -> None:
+        with self._journal_file.open("a") as f:
+            f.write(f"{entry}\n")
+
     @staticmethod
     def create_save_file(game: str, ruleset: str) -> Path:
         folder = PathConfig.save_folder()
@@ -55,7 +59,3 @@ class SaveService:
         with game_state.save_file.open("w") as f:
             yaml.dump(game_state_dict, f)
         LOGGER.info("Game saved to %s", game_state.save_file)
-
-    def _append_entry(self, entry: str) -> None:
-        with self._journal_file.open("a") as f:
-            f.write(f"{entry}\n")

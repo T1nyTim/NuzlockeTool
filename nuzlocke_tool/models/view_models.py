@@ -1,3 +1,4 @@
+import copy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Self
 
@@ -15,6 +16,7 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.models.models import GameState, Pokemon, PokemonCardType, PokemonStatus
 from nuzlocke_tool.repositories import PokemonRepository
+from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.utils import get_image_filename
 
 if TYPE_CHECKING:
@@ -138,6 +140,42 @@ class EncounterViewModelFactory:
                 elif mon.status == PokemonStatus.DEAD:
                     view_model.status_color = QColor(TABLE_COLOR_DEAD)
         return view_models
+
+
+@dataclass
+class GameStateViewModel:
+    is_game_active: bool
+    game_name: str | None = None
+    ruleset_name: str | None = None
+    ruleset_description: list[str] | None = None
+    can_add_to_party: bool = False
+
+    @classmethod
+    def from_game_state(cls, game_state: GameState, pokemon_service: PokemonService) -> Self:
+        if not game_state:
+            return cls(is_game_active=False)
+        can_add = False
+        if pokemon_service:
+            test_state = copy.deepcopy(game_state)
+            dummy_pokemon = Pokemon(
+                nickname="A",
+                species="Bulbasaur",
+                level=5,
+                caught_level=5,
+                moves=["Tackle", "Growl"],
+                dvs={"HP": 0, "Atk": 0, "Def": 0, "Spd": 0, "Spe": 0},
+                encountered="Pallet Town",
+                status=PokemonStatus.ACTIVE,
+            )
+            test_state.pokemon.append(dummy_pokemon)
+            can_add = not pokemon_service.party_full and game_state.rule_strategy.validate_party(game_state)
+        return cls(
+            True,
+            game_state.game,
+            game_state.ruleset,
+            game_state.rule_strategy.rules_description if game_state.rule_strategy else None,
+            can_add,
+        )
 
 
 @dataclass

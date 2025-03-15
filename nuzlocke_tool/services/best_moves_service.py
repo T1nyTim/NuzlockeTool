@@ -53,39 +53,6 @@ class BestMovesService:
             return base_stat
         return math.floor(base_stat * STAT_STAGE_MULTIPLIER[stat_stage])
 
-    def calculate_best_moves_for_target(
-        self,
-        species: str,
-        level: int,
-        stat_stages: tuple[int, int],
-        effects: tuple[bool, bool],
-        attackers: list[tuple[Pokemon, int, int, int]],
-    ) -> tuple[dict[str, str | int | list[str]], list[tuple[float, str, str, int, int]]]:
-        if not species:
-            return {}, []
-        defender_stats = self._get_defender_stats(species, level, stat_stages)
-        if not defender_stats:
-            return {}, []
-        move_results = []
-        for pokemon, atk_stage, spe_stage, spd_stage in attackers:
-            attacker_stats = self._get_attacker_stats(pokemon, (atk_stage, spe_stage, spd_stage))
-            for move_name in pokemon.moves:
-                if not move_name:
-                    continue
-                move_damage = self._calculate_move_damage(
-                    pokemon,
-                    move_name,
-                    attacker_stats,
-                    defender_stats,
-                    effects,
-                )
-                if not move_damage:
-                    continue
-                long_term_avg, dmg_min, dmg_max = move_damage
-                move_results.append((long_term_avg, pokemon.nickname, move_name, dmg_min, dmg_max))
-        move_results.sort(key=lambda x: x[0], reverse=True)
-        return defender_stats, move_results
-
     def _calculate_damage_components(
         self,
         move_name: str,
@@ -288,3 +255,36 @@ class BestMovesService:
             accuracy_rate = move_accuracy * 255 / 25600
             return (static_val * accuracy_rate, damage_min, damage_max)
         return None
+
+    def calculate_best_moves_for_target(
+        self,
+        species: str,
+        level: int,
+        stat_stages: tuple[int, int],
+        effects: tuple[bool, bool],
+        attackers: list[tuple[Pokemon, int, int, int]],
+    ) -> tuple[dict[str, str | int | list[str]], list[tuple[float, str, str, int, int]]]:
+        if not species:
+            return {}, []
+        defender_stats = self._get_defender_stats(species, level, stat_stages)
+        if not defender_stats:
+            return {}, []
+        move_results = []
+        for pokemon, atk_stage, spe_stage, spd_stage in attackers:
+            attacker_stats = self._get_attacker_stats(pokemon, (atk_stage, spe_stage, spd_stage))
+            for move_name in pokemon.moves:
+                if not move_name:
+                    continue
+                move_damage = self._calculate_move_damage(
+                    pokemon,
+                    move_name,
+                    attacker_stats,
+                    defender_stats,
+                    effects,
+                )
+                if not move_damage:
+                    continue
+                long_term_avg, dmg_min, dmg_max = move_damage
+                move_results.append((long_term_avg, pokemon.nickname, move_name, dmg_min, dmg_max))
+        move_results.sort(key=lambda x: x[0], reverse=True)
+        return defender_stats, move_results

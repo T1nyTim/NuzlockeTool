@@ -4,7 +4,7 @@ show-fixes = true
 target-version = "py313"
 
 [lint]
-ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D107", "FBT001", "PLR0913", "S311"]
+ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D107", "FBT001", "FBT003", "PLR0913", "S311"]
 unfixable = ["F841"]
 
 [lint.pydocstyle]
