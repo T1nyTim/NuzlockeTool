@@ -211,7 +211,7 @@ MSG_BOX_MSG_NO_NICKNAME = "A Nickname is required."
 MSG_BOX_MSG_NO_SPECIES = "A Species is required."
 MSG_BOX_MSG_NO_RULESET = "A Ruleset is required."
 MSG_BOX_MSG_NO_VERSION = "A Game Version is required."
-MSG_BOX_MSG_PARTY_FULL = "Your active party can only have 6 Pokemon."
+MSG_BOX_MSG_PARTY_FULL = "Your active party can not have only more Pokemon."
 
 TOOLTIP_CHECKBOX_SUBREGIONS = (
     "When enabled, each sub-region (for example, each floor in Mt. Moon) counts as its own catching region."

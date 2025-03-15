@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 from pathlib import Path
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
+
+if TYPE_CHECKING:
+    from nuzlocke_tool.rules import RuleStrategy
 
 
 class LocationData(TypedDict):
@@ -61,3 +64,4 @@ class GameState:
     pokemon: list[Pokemon]
     encounters: list[str]
     decisions: dict[str, str]
+    rule_strategy: "RuleStrategy" = None

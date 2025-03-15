@@ -43,6 +43,7 @@ class SaveService:
     @staticmethod
     def save_session(game_state: GameState) -> None:
         game_state_dict = asdict(game_state)
+        del game_state_dict["rule_strategy"]
         game_state_dict["journal_file"] = str(game_state_dict["journal_file"])
         game_state_dict["save_file"] = str(game_state_dict["save_file"])
         pokemon_list = []

@@ -30,10 +30,11 @@ class AddPokemonCommand(Command):
         self._pokemon = pokemon
         self._pokemon_service = pokemon_service
 
-    def execute(self) -> None:
-        self._pokemon_service.add_pokemon(self._pokemon)
-        if self._on_success:
+    def execute(self) -> bool:
+        success = self._pokemon_service.add_pokemon(self._pokemon)
+        if success and self._on_success:
             self._on_success()
+        return success
 
     def undo(self) -> None:
         self._pokemon_service.remove_pokemon(self._pokemon)
@@ -59,10 +60,11 @@ class EditPokemonCommand(Command):
         self._pokemon_service = pokemon_service
         self._save_service = self._container.save_service()
 
-    def execute(self) -> None:
-        self._pokemon_service.edit_pokemon(self._pokemon, self._original_pokemon.species)
-        if self._on_success:
+    def execute(self) -> bool:
+        success = self._pokemon_service.edit_pokemon(self._pokemon, self._original_pokemon.species)
+        if success and self._on_success:
             self._on_success()
+        return success
 
     def undo(self) -> None:
         self._pokemon.nickname = self._original_pokemon.nickname
@@ -95,11 +97,12 @@ class TransferPokemonCommand(Command):
         self._save_service = self._container.save_service()
         self._target_status = target_status
 
-    def execute(self) -> None:
+    def execute(self) -> bool:
         self._original_status = self._pokemon.status
-        self._pokemon_service.transfer_pokemon(self._pokemon, self._target_status)
-        if self._on_success:
+        success = self._pokemon_service.transfer_pokemon(self._pokemon, self._target_status)
+        if success and self._on_success:
             self._on_success()
+        return success
 
     def undo(self) -> None:
         self._pokemon.status = self._original_status
@@ -129,10 +132,11 @@ class UpdateMoveCommand(Command):
         self._pokemon_service = pokemon_service
         self._save_service = self._container.save_service()
 
-    def execute(self) -> None:
-        self._pokemon_service.learn_move(self._pokemon, self._move_index, self._new_move)
-        if self._on_success:
+    def execute(self) -> bool:
+        success = self._pokemon_service.learn_move(self._pokemon, self._move_index, self._new_move)
+        if success and self._on_success:
             self._on_success()
+        return success
 
     def undo(self) -> None:
         self._pokemon.moves[self._move_index] = self._old_move
@@ -146,11 +150,13 @@ class CommandManager:
         self._history = []
         self._max_history = max_history
 
-    def execute(self, command: Command) -> None:
-        command.execute()
-        self._history.append(command)
-        if len(self._history) > self._max_history:
-            self._history = self._history[-self.max_history :]
+    def execute(self, command: Command) -> bool:
+        success = command.execute()
+        if success:
+            self._history.append(command)
+            if len(self._history) > self._max_history:
+                self._history = self._history[-self.max_history :]
+        return success
 
     def undo(self) -> None:
         if not self._history:

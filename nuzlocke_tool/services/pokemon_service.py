@@ -1,3 +1,4 @@
+import copy
 import logging
 
 from nuzlocke_tool.constants import ACTIVE_PARTY_LIMIT, TAB_BOXED_NAME, TAB_DEAD_NAME, TAB_PARTY_NAME
@@ -31,19 +32,26 @@ class PokemonService:
     def party_full(self) -> bool:
         return len(self.active_pokemon) >= ACTIVE_PARTY_LIMIT
 
-    def add_pokemon(self, pokemon: Pokemon) -> None:
+    def add_pokemon(self, pokemon: Pokemon) -> bool:
+        if pokemon.status == PokemonStatus.ACTIVE:
+            test_state = copy.deepcopy(self._game_state)
+            test_state.pokemon.append(pokemon)
+            if not self._game_state.rule_strategy.validate_party(test_state):
+                return False
         self._game_state.pokemon.append(pokemon)
         self._game_state.encounters.append(pokemon.encountered)
         self._save_service.save_session(self._game_state)
         self._journal_service.add_capture_entry(pokemon)
+        return True
 
-    def edit_pokemon(self, pokemon: Pokemon, current_species: str) -> None:
+    def edit_pokemon(self, pokemon: Pokemon, current_species: str) -> bool:
         pokemon_data = self._pokemon_repository.get_by_id(current_species)
         self._save_service.save_session(self._game_state)
         if "evolve" in pokemon_data and pokemon.species in pokemon_data["evolve"]:
             self._journal_service.add_evolved_entry(pokemon, current_species)
+        return True
 
-    def learn_move(self, pokemon: Pokemon, index: int, new_move: str) -> None:
+    def learn_move(self, pokemon: Pokemon, index: int, new_move: str) -> bool:
         old_move = pokemon.moves[index] if index < len(pokemon.moves) else ""
         pokemon.moves[index] = new_move
         self._save_service.save_session(self._game_state)
@@ -56,6 +64,7 @@ class PokemonService:
         else:
             self._journal_service.add_learn_move_entry(pokemon.nickname, new_move, old_move)
             LOGGER.info("Pokemon %s learned move: %s (was: %s)", pokemon.nickname, new_move, old_move)
+        return True
 
     @staticmethod
     def _process_storage_status(status: PokemonStatus) -> str:
@@ -72,7 +81,17 @@ class PokemonService:
             self._game_state.encounters.remove(pokemon.encountered)
         self._save_service.save_session(self._game_state)
 
-    def transfer_pokemon(self, pokemon: Pokemon, target_status: PokemonStatus) -> None:
+    def transfer_pokemon(self, pokemon: Pokemon, target_status: PokemonStatus) -> bool:
+        if target_status == PokemonStatus.ACTIVE and len(self.active_pokemon) >= ACTIVE_PARTY_LIMIT:
+            return False
+        if target_status == PokemonStatus.ACTIVE:
+            test_state = copy.deepcopy(self._game_state)
+            for p in test_state.pokemon:
+                if p.nickname == pokemon.nickname:
+                    p.status = PokemonStatus.ACTIVE
+                    break
+            if not self._game_state.rule_strategy.validate_party(test_state):
+                return False
         pokemon.status = target_status
         self._save_service.save_session(self._game_state)
         if target_status == PokemonStatus.DEAD:
@@ -80,3 +99,4 @@ class PokemonService:
         else:
             status_name = self._process_storage_status(target_status)
             self._journal_service.add_transfer_entry(pokemon, status_name)
+        return True

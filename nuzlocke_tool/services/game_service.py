@@ -3,6 +3,7 @@ from pathlib import Path
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.models import GameState
+from nuzlocke_tool.rules import RuleStrategyFactory
 from nuzlocke_tool.utils import load_yaml_file
 
 
@@ -10,6 +11,8 @@ class GameService:
     def __init__(self, container: Container) -> None:
         self._container = container
         self._save_service = self._container.save_service()
+        rulesets = load_yaml_file(PathConfig.rules_file())
+        RuleStrategyFactory.initialize(rulesets)
 
     @staticmethod
     def _create_journal_file(game: str, ruleset: str) -> Path:
@@ -31,6 +34,8 @@ class GameService:
         journal_file = self._create_journal_file(game, ruleset)
         save_file = self._save_service.create_save_file(game, ruleset)
         game_state = GameState(game, ruleset, sub_region_clause, journal_file, save_file, [], [], {})
+        rule_strategy = RuleStrategyFactory.create_strategy(ruleset)
+        game_state.rule_strategy = rule_strategy
         journal_service = self._container.journal_service_factory(game_state)
         journal_service.add_new_session_entry(game, ruleset)
         if sub_region_clause:
@@ -45,6 +50,8 @@ class GameService:
         game_data_loader = self._container.game_data_loader()
         game_data_loader.load_pokemon_data(generation)
         game_data_loader.load_move_data(generation)
+        rule_strategy = RuleStrategyFactory.create_strategy(game_state.ruleset)
+        game_state.rule_strategy = rule_strategy
         return game_state
 
     def save_game(self, game_state: GameState) -> None:
