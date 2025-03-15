@@ -45,7 +45,8 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.gui.dialogs import PokemonDialog
-from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import GameState, Pokemon, PokemonCardType, PokemonStatus
+from nuzlocke_tool.models.view_models import PokemonCardViewModel
 from nuzlocke_tool.services.game_service import GameService
 from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.utils import add_pokemon_image, load_pokemon_image
@@ -59,6 +60,7 @@ class BasePokemonCardWidget(QWidget):
     def __init__(
         self,
         container: Container,
+        view_model: PokemonCardViewModel,
         pokemon: Pokemon,
         game_state: GameState,
         parent: QWidget,
@@ -74,12 +76,13 @@ class BasePokemonCardWidget(QWidget):
         self._pokemon_service = PokemonService(container, game_state)
         self._save_service = self._container.save_service()
         self._transfer_options = transfer_options if transfer_options is not None else []
+        self._view_model = view_model
         self.setObjectName(OBJECT_NAME_CARD_WIDGET)
         self.setStyleSheet(STYLE_SHEET_WIDGET_CARD)
         self._create_context_menu()
 
     def _add_image(self, layout: QLayout) -> None:
-        self._image_label = add_pokemon_image(layout, self._pokemon.species, self)
+        self._image_label = add_pokemon_image(layout, self._view_model.species, self)
 
     def _create_context_menu(self) -> None:
         self._context_menu = QMenu(self)
@@ -110,6 +113,7 @@ class BasePokemonCardWidget(QWidget):
             self._pokemon,
             original_species,
             self._pokemon_service,
+            self._view_model,
             on_success=self._refresh,
         )
         main_window = self.window()
@@ -134,6 +138,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
     def __init__(
         self,
         container: Container,
+        view_model: PokemonCardViewModel,
         pokemon: Pokemon,
         game_state: GameState,
         parent: QWidget,
@@ -143,11 +148,11 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             (TAB_BOXED_NAME, PokemonStatus.BOXED, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(container, pokemon, game_state, parent, transfer_options)
+        super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
         self._init_ui()
 
     def _create_dvs_widget(self) -> QWidget:
-        dv_text = " | ".join(f"{stat}: {value}" for stat, value in self._pokemon.dvs.items())
+        dv_text = " | ".join(f"{stat}: {value}" for stat, value in self._view_model.dvs.items())
         return QLabel(dv_text, self)
 
     def _create_group_widget(self, label_text: str, widget: QWidget) -> QWidget:
@@ -166,26 +171,24 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
     def _create_level_widget(self) -> QWidget:
         level_spin = QSpinBox(self)
         level_spin.setRange(POKEMON_LEVEL_MIN, POKEMON_LEVEL_MAX)
-        level_spin.setValue(self._pokemon.level)
+        level_spin.setValue(self._view_model.level)
         level_spin.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
         level_spin.lineEdit().setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         level_spin.valueChanged.connect(self._on_level_changed)
         return level_spin
 
     def _create_moves_widget(self) -> QWidget:
-        species_key = self._pokemon.species
-        entry = self._pokemon_repository.get_by_id(species_key)
-        moves_entry = entry["moves"] if entry and isinstance(entry, dict) and "moves" in entry else None
         moves_layout = QHBoxLayout()
         moves_layout.setContentsMargins(NO_SPACING, NO_SPACING, NO_SPACING, NO_SPACING)
-        current_moves = self._pokemon.moves
+        current_moves = self._view_model.moves.copy()
+        available_moves = self._view_model.available_moves
         while len(current_moves) < POKEMON_MOVES_LIMIT:
             current_moves.append("")
         for i in range(POKEMON_MOVES_LIMIT):
             combo = QComboBox(self)
             combo.addItem("")
-            if moves_entry and isinstance(moves_entry, list):
-                for m in moves_entry:
+            if available_moves:
+                for m in available_moves:
                     combo.addItem(m)
             idx = combo.findText(current_moves[i])
             combo.setCurrentIndex(idx)
@@ -198,17 +201,15 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         return moves_widget
 
     def _create_species_widget(self) -> QWidget:
-        species_key = self._pokemon.species
-        entry = self._pokemon_repository.get_by_id(species_key)
-        if entry and isinstance(entry, dict) and "evolve" in entry:
-            species_options = [self._pokemon.species, *entry.get("evolve", [])]
+        if self._view_model.can_evolve:
+            species_options = [self._view_model.species, *self._view_model.evolution_options]
             species_combo = QComboBox(self)
             for opt in species_options:
                 species_combo.addItem(self._process_species_name(opt), opt)
-            species_combo.setCurrentIndex(species_options.index(self._pokemon.species))
+            species_combo.setCurrentIndex(species_options.index(self._view_model.species))
             species_combo.currentIndexChanged.connect(self._on_species_changed)
             return species_combo
-        return QLabel(self._process_species_name(self._pokemon.species), self)
+        return QLabel(self._process_species_name(self._view_model.species), self)
 
     def _init_ui(self) -> None:
         main_layout = QHBoxLayout(self)
@@ -220,7 +221,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         self._details_layout.setContentsMargins(NO_SPACING, NO_SPACING, NO_SPACING, NO_SPACING)
         self._details_layout.setSpacing(SPACING)
         self._details_layout.setRowMinimumHeight(0, LINE_HEIGHT)
-        self._nickname_label = QLabel(self._pokemon.nickname, self)
+        self._nickname_label = QLabel(self._view_model.nickname, self)
         nickname_group = self._create_group_widget(LABEL_NICKNAME, self._nickname_label)
         self._details_layout.addWidget(nickname_group, 0, 0)
         self._species_widget = self._create_species_widget()
@@ -245,6 +246,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             index,
             new_move,
             self._pokemon_service,
+            self._view_model,
             on_success=self._refresh_moves,
         )
         main_window = self.window()
@@ -252,6 +254,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
 
     def _on_level_changed(self, value: int) -> None:
         self._pokemon.level = value
+        self._view_model.level = value
         self._game_service.save_game(self._game_state)
 
     def _on_species_changed(self, index: int) -> None:
@@ -259,6 +262,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         if new_species != self._pokemon.species:
             current_species = self._pokemon.species
             self._pokemon.species = new_species
+            self._view_model.species = new_species
             self._journal_service.add_evolved_entry(self._pokemon, current_species)
             LOGGER.info("Pokemon evolved from %s to %s", current_species, self._pokemon.species)
             self._game_service.save_game(self._game_state)
@@ -274,10 +278,15 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         return name
 
     def _refresh(self) -> None:
+        view_model_factory = self._container.view_model_factory()
+        self._view_model = view_model_factory.create_pokemon_card_viewmodel(
+            self._pokemon,
+            PokemonCardType.ACTIVE,
+        )
         self._refresh_species()
-        self._nickname_label.setText(self._pokemon.nickname)
-        self._level_spin.setValue(self._pokemon.level)
-        dv_text = " | ".join(f"{stat}: {value}" for stat, value in self._pokemon.dvs.items())
+        self._nickname_label.setText(self._view_model.nickname)
+        self._level_spin.setValue(self._view_model.level)
+        dv_text = " | ".join(f"{stat}: {value}" for stat, value in self._view_model.dvs.items())
         self._dvs_label.setText(dv_text)
         self._details_layout.removeWidget(self._moves_group)
         self._refresh_moves()
@@ -289,7 +298,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         self._details_layout.addWidget(self._moves_group, 2, 0, 1, 2)
 
     def _refresh_species(self) -> None:
-        pixmap = load_pokemon_image(self._pokemon.species)
+        pixmap = load_pokemon_image(self._view_model.species)
         self._image_label.setPixmap(pixmap)
         self._details_layout.removeWidget(self._species_group)
         self._species_group.deleteLater()
@@ -302,27 +311,28 @@ class StoragePokemonCardWidget(BasePokemonCardWidget):
     def __init__(
         self,
         container: Container,
+        view_model: PokemonCardViewModel,
         pokemon: Pokemon,
         game_state: str,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
-        super().__init__(container, pokemon, game_state, parent, transfer_options)
+        super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
         self.setFixedSize(WIDGET_POKEMON_CARD_WIDTH, WIDGET_POKEMON_CARD_WIDTH)
         self._init_ui()
 
     def _add_level(self, layout: QVBoxLayout) -> None:
-        self._level_label = QLabel(f"Lv {self._pokemon.level}", self)
+        self._level_label = QLabel(f"Lv {self._view_model.level}", self)
         self._level_label.setAlignment(ALIGN_CENTER)
         layout.addWidget(self._level_label)
 
     def _add_nickname(self, layout: QVBoxLayout) -> None:
-        self._nickname_label = QLabel(self._pokemon.nickname, self)
+        self._nickname_label = QLabel(self._view_model.nickname, self)
         self._nickname_label.setAlignment(ALIGN_CENTER)
         layout.addWidget(self._nickname_label)
 
     def _add_species(self, layout: QVBoxLayout) -> None:
-        self._species_label = QLabel(self._pokemon.species, self)
+        self._species_label = QLabel(self._view_model.species, self)
         self._species_label.setAlignment(ALIGN_CENTER)
         layout.addWidget(self._species_label)
 
@@ -336,17 +346,23 @@ class StoragePokemonCardWidget(BasePokemonCardWidget):
         self._add_level(layout)
 
     def _refresh(self) -> None:
-        pixmap = load_pokemon_image(self._pokemon.species)
+        view_model_factory = self._container.view_model_factory()
+        self._view_model = view_model_factory.create_pokemon_card_viewmodel(
+            self._pokemon,
+            PokemonCardType.BOXED if isinstance(self, BoxedPokemonCardWidget) else PokemonCardType.DEAD,
+        )
+        pixmap = load_pokemon_image(self._view_model.species)
         self._image_label.setPixmap(pixmap)
-        self._nickname_label.setText(self._pokemon.nickname)
-        self._species_label.setText(self._pokemon.species)
-        self._level_label.setText(f"Lv {self._pokemon.level}")
+        self._nickname_label.setText(self._view_model.nickname)
+        self._species_label.setText(self._view_model.species)
+        self._level_label.setText(f"Lv {self._view_model.level}")
 
 
 class BoxedPokemonCardWidget(StoragePokemonCardWidget):
     def __init__(
         self,
         container: Container,
+        view_model: PokemonCardViewModel,
         pokemon: Pokemon,
         game_state: GameState,
         parent: QWidget,
@@ -356,13 +372,14 @@ class BoxedPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(container, pokemon, game_state, parent, transfer_options)
+        super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
 
 
 class DeadPokemonCardWidget(StoragePokemonCardWidget):
     def __init__(
         self,
         container: Container,
+        view_model: PokemonCardViewModel,
         pokemon: Pokemon,
         game_state: GameState,
         parent: QWidget,
@@ -372,4 +389,4 @@ class DeadPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_BOXED_NAME, PokemonStatus.BOXED, None),
         ]
-        super().__init__(container, pokemon, game_state, parent, transfer_options)
+        super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)

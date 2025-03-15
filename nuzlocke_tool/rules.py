@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import ClassVar
 
-from nuzlocke_tool.models import GameState, PokemonStatus, RulesetData
+from nuzlocke_tool.models.models import GameState, PokemonStatus, RulesetData
 
 
 class RuleStrategy(ABC):

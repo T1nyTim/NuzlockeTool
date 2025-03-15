@@ -61,7 +61,7 @@ from nuzlocke_tool.gui.card_widgets import (
 from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
-from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import GameState, Pokemon, PokemonCardType, PokemonStatus
 from nuzlocke_tool.services.game_service import GameService
 from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.services.random_decision_service import RandomDecisionService
@@ -361,11 +361,17 @@ class NuzlockeTrackerMainWindow(QMainWindow):
 
     def _update_active_party_display(self) -> None:
         clear_layout(self._active_party_layout)
-        active_pokemon = self._pokemon_service.active_pokemon
-        for mon in active_pokemon:
+        view_model_factory = self._container.view_model_factory()
+        active_view_model_pairs = view_model_factory.create_pokemon_viewmodels(
+            self._game_state,
+            PokemonStatus.ACTIVE,
+            PokemonCardType.ACTIVE,
+        )
+        for view_model, pokemon in active_view_model_pairs:
             card = ActivePokemonCardWidget(
                 self._container,
-                mon,
+                view_model,
+                pokemon,
                 self._game_state,
                 self._active_party_widget,
                 None,
@@ -402,10 +408,17 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         available_width = self._boxed_scroll_area.viewport().width()
         card_total_width = WIDGET_POKEMON_CARD_WIDTH + SPACING
         columns = max(1, available_width // card_total_width)
-        for idx, mon in enumerate(boxed_pokemon):
+        view_model_factory = self._container.view_model_factory()
+        boxed_view_model_pairs = view_model_factory.create_pokemon_viewmodels(
+            self._game_state,
+            PokemonStatus.BOXED,
+            PokemonCardType.BOXED,
+        )
+        for idx, (view_model, pokemon) in enumerate(boxed_view_model_pairs):
             card = BoxedPokemonCardWidget(
                 self._container,
-                mon,
+                view_model,
+                pokemon,
                 self._game_state,
                 self._boxed_pokemon_widget,
                 lambda: len(self._pokemon_service.active_pokemon) < ACTIVE_PARTY_LIMIT,
@@ -424,14 +437,20 @@ class NuzlockeTrackerMainWindow(QMainWindow):
 
     def _update_dead_pokemon_display(self) -> None:
         clear_layout(self._dead_pokemon_layout)
-        dead_pokemon = self._pokemon_service.dead_pokemon
         available_width = self._dead_scroll_area.viewport().width()
         card_total_width = WIDGET_POKEMON_CARD_WIDTH + SPACING
         columns = max(1, available_width // card_total_width)
-        for idx, mon in enumerate(dead_pokemon):
+        view_model_factory = self._container.view_model_factory()
+        dead_view_model_pairs = view_model_factory.create_pokemon_viewmodels(
+            self._game_state,
+            PokemonStatus.DEAD,
+            PokemonCardType.DEAD,
+        )
+        for idx, (view_model, pokemon) in enumerate(dead_view_model_pairs):
             card = DeadPokemonCardWidget(
                 self._container,
-                mon,
+                view_model,
+                pokemon,
                 self._game_state,
                 self._dead_pokemon_widget,
                 lambda: len(self._pokemon_service.active_pokemon) < ACTIVE_PARTY_LIMIT,

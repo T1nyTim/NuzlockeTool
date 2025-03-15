@@ -3,7 +3,7 @@ import logging
 
 from nuzlocke_tool.constants import ACTIVE_PARTY_LIMIT, TAB_BOXED_NAME, TAB_DEAD_NAME, TAB_PARTY_NAME
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus
 
 LOGGER = logging.getLogger(__name__)
 

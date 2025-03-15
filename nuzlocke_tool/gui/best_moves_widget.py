@@ -22,8 +22,6 @@ from nuzlocke_tool.constants import (
     LABEL_DEFENDING_POKEMON,
     LABEL_DEFENSE_STAGE,
     LABEL_LEVEL,
-    LABEL_NO_DEFENDING_POKEMON,
-    LABEL_NO_MOVES,
     LABEL_PARTY_MEMBER,
     LABEL_SPECIAL,
     LABEL_SPECIAL_STAGE,
@@ -34,7 +32,8 @@ from nuzlocke_tool.constants import (
     POKEMON_STAT_STAGE_MIN,
 )
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models import GameState
+from nuzlocke_tool.models.models import GameState
+from nuzlocke_tool.models.view_models import BestMoveViewModel
 from nuzlocke_tool.services.best_moves_service import BestMovesService
 from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.utils import add_pokemon_image, clear_layout, clear_widget, load_pokemon_image
@@ -48,43 +47,36 @@ class BestMovesToolWidget(QWidget):
         self._game_state = game_state
         self._pokemon_repository = self._container.pokemon_repository()
         self._pokemon_service = PokemonService(container, game_state)
+        self._view_model = BestMoveViewModel()
 
     def _calculate_best_moves(self) -> None:
         clear_layout(self._results_layout)
-        defending_species = self._pokemon_selector.text()
-        if not defending_species:
-            self._results_layout.addWidget(QLabel(LABEL_NO_DEFENDING_POKEMON, self))
+        self._view_model.defending_pokemon = self._pokemon_selector.text()
+        self._view_model.defending_level = self._level_spinner.value()
+        self._view_model.defense_stage = self._defense_spinner.value()
+        self._view_model.special_stage = self._special_spinner.value()
+        self._view_model.reflect_active = self._reflect_checkbox.isChecked()
+        self._view_model.light_screen_active = self._light_screen_checkbox.isChecked()
+        if not self._view_model.has_valid_defender:
+            self._results_layout.addWidget(QLabel(self._view_model.defender_display_text, self))
             return
-        attackers = []
+        self._view_model.attacker_stages = []
         for party_member, atk_spin, spe_spin, spd_spin in self._party_stage_spinboxes:
-            attackers.append((party_member, atk_spin.value(), spe_spin.value(), spd_spin.value()))
-        defender_stats, move_results = self._best_moves_service.calculate_best_moves_for_target(
-            defending_species,
-            self._level_spinner.value(),
-            (self._defense_spinner.value(), self._special_spinner.value()),
-            (self._reflect_checkbox.isChecked(), self._light_screen_checkbox.isChecked()),
-            attackers,
-        )
-        if not defender_stats:
-            self._results_layout.addWidget(QLabel(f"Invalid defending Pokemon: {defending_species}", self))
-            return
-        self._results_layout.addWidget(
-            QLabel(
-                (
-                    f"Defending {defending_species} at level {defender_stats['level']} with "
-                    f"{defender_stats['hp']} HP"
-                ),
-                self,
-            ),
-        )
-        if not move_results:
-            self._results_layout.addWidget(QLabel(LABEL_NO_MOVES, self))
-            return
-        for i, (lta, nickname, move_name, dmg_min, dmg_max) in enumerate(move_results[:5]):
-            result_text = (
-                f"{i + 1}. {nickname}'s {move_name}: Damage Range = {dmg_min} - {dmg_max} (Long-Term "
-                f"Average = {lta:.1f})"
+            self._view_model.attacker_stages.append(
+                (party_member, atk_spin.value(), spe_spin.value(), spd_spin.value()),
             )
+        defender_stats, move_results = self._best_moves_service.calculate_best_moves_for_target(
+            self._view_model.defending_pokemon,
+            self._view_model.defending_level,
+            (self._view_model.defense_stage, self._view_model.special_stage),
+            (self._view_model.reflect_active, self._view_model.light_screen_active),
+            self._view_model.attacker_stages,
+        )
+        if defender_stats:
+            self._view_model.defending_hp = defender_stats.get("hp")
+        self._view_model.move_results = move_results
+        self._results_layout.addWidget(QLabel(self._view_model.defender_display_text, self))
+        for result_text in self._view_model.formatted_results:
             self._results_layout.addWidget(QLabel(result_text, self))
 
     def init_ui(self) -> None:
@@ -140,6 +132,7 @@ class BestMovesToolWidget(QWidget):
         self._best_moves_service = BestMovesService(self._container, game_state)
         self._game_state = game_state
         self._pokemon_service = PokemonService(self._container, game_state)
+        self._view_model = BestMoveViewModel()
         self.init_ui()
 
     def _update_image(self, selected_pokemon: str) -> None:

@@ -21,7 +21,7 @@ from nuzlocke_tool.constants import (
     TABLE_COLOR_PARTY,
 )
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models import GameState, PokemonStatus
+from nuzlocke_tool.models.models import GameState, PokemonStatus
 
 
 class EncountersTab(QWidget):

@@ -1,5 +1,5 @@
 from nuzlocke_tool.data_loader import GameDataLoader
-from nuzlocke_tool.models import MoveData, PokemonData
+from nuzlocke_tool.models.models import MoveData, PokemonData
 
 
 class LocationRepository:

@@ -1,4 +1,4 @@
-from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus
 
 
 class JournalService:

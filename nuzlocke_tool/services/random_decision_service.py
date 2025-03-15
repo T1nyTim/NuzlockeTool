@@ -1,7 +1,7 @@
 import random
 
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models import GameState
+from nuzlocke_tool.models.models import GameState
 
 
 class RandomDecisionService:

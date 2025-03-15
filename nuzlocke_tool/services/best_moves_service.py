@@ -16,7 +16,7 @@ from nuzlocke_tool.constants import (
     TYPE_CHART,
 )
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models import GameState, MoveData, Pokemon, PokemonData
+from nuzlocke_tool.models.models import GameState, MoveData, Pokemon, PokemonData
 
 
 class BestMovesService:
@@ -86,7 +86,7 @@ class BestMovesService:
         move_results.sort(key=lambda x: x[0], reverse=True)
         return defender_stats, move_results
 
-    def _calculate_damage_components(  # noqa: PLR0913
+    def _calculate_damage_components(
         self,
         move_name: str,
         move_data: MoveData,
@@ -199,7 +199,7 @@ class BestMovesService:
         dv = pokemon.dvs[stat]
         return self._compute_base_stat(pokemon_data, stat, pokemon.level, dv)
 
-    def _compute_final_damage(  # noqa: PLR0913
+    def _compute_final_damage(
         self,
         base: int,
         power: int,

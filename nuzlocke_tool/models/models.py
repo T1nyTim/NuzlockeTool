@@ -33,6 +33,12 @@ class RulesetData(TypedDict):
     rules: list[str]
 
 
+class PokemonCardType(Enum):
+    ACTIVE = "active"
+    BOXED = "boxed"
+    DEAD = "dead"
+
+
 class PokemonStatus(Enum):
     ACTIVE = auto()
     BOXED = auto()

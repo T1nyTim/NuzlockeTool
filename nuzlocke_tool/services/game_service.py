@@ -2,7 +2,7 @@ from pathlib import Path
 
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models import GameState
+from nuzlocke_tool.models.models import GameState
 from nuzlocke_tool.rules import RuleStrategyFactory
 from nuzlocke_tool.utils import load_yaml_file
 

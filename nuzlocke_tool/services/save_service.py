@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 
 from nuzlocke_tool.config import PathConfig
-from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus
 
 LOGGER = logging.getLogger(__name__)
 
