@@ -61,7 +61,9 @@ from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
-from nuzlocke_tool.services import GameService, PokemonService, RandomDecisionService
+from nuzlocke_tool.services.game_service import GameService
+from nuzlocke_tool.services.pokemon_service import PokemonService
+from nuzlocke_tool.services.random_decision_service import RandomDecisionService
 from nuzlocke_tool.utils import clear_layout, load_yaml_file
 
 LOGGER = logging.getLogger(__name__)

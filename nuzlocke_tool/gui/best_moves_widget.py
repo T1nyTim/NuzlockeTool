@@ -35,7 +35,8 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.models import GameState
-from nuzlocke_tool.services import BestMovesService, PokemonService
+from nuzlocke_tool.services.best_moves_service import BestMovesService
+from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.utils import add_pokemon_image, clear_layout, clear_widget, load_pokemon_image
 
 

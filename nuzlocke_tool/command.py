@@ -4,7 +4,7 @@ from collections.abc import Callable
 
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
-from nuzlocke_tool.services import PokemonService
+from nuzlocke_tool.services.pokemon_service import PokemonService
 
 
 class Command(ABC):

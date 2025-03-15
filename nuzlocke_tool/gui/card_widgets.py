@@ -46,7 +46,8 @@ from nuzlocke_tool.constants import (
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.gui.dialogs import PokemonDialog
 from nuzlocke_tool.models import GameState, Pokemon, PokemonStatus
-from nuzlocke_tool.services import GameService, PokemonService
+from nuzlocke_tool.services.game_service import GameService
+from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.utils import add_pokemon_image, load_pokemon_image
 
 LOGGER = logging.getLogger(__name__)

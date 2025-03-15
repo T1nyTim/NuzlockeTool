@@ -2,7 +2,8 @@ from dependency_injector import containers, providers
 
 from nuzlocke_tool.data_loader import GameDataLoader
 from nuzlocke_tool.repositories import LocationRepository, MoveRepository, PokemonRepository
-from nuzlocke_tool.services import JournalService, SaveService
+from nuzlocke_tool.services.journal_service import JournalService
+from nuzlocke_tool.services.save_service import SaveService
 
 
 class Container(containers.DeclarativeContainer):
