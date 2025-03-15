@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QBrush, QColor
+from PyQt6.QtGui import QBrush
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QHeaderView,
@@ -9,19 +9,10 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from nuzlocke_tool.constants import (
-    LABEL_LOCATION,
-    LABEL_POKEMON,
-    LABEL_STATUS,
-    TAB_BOXED_NAME,
-    TAB_DEAD_NAME,
-    TAB_PARTY_NAME,
-    TABLE_COLOR_BOXED,
-    TABLE_COLOR_DEAD,
-    TABLE_COLOR_PARTY,
-)
+from nuzlocke_tool.constants import LABEL_LOCATION, LABEL_POKEMON, LABEL_STATUS
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models.models import GameState, PokemonStatus
+from nuzlocke_tool.models.models import GameState
+from nuzlocke_tool.models.view_models import EncounterViewModelFactory
 
 
 class EncountersTab(QWidget):
@@ -32,6 +23,7 @@ class EncountersTab(QWidget):
         self._game_state = game_state
         self._location_repository = self._container.location_repository()
         self._location_row = {}
+        self._view_models = []
         self._init_ui()
 
     def _init_ui(self) -> None:
@@ -62,6 +54,11 @@ class EncountersTab(QWidget):
             else:
                 item_location.setText(location)
             self._location_row[location] = row
+        self._view_models = EncounterViewModelFactory.create_view_models(
+            locations,
+            self._game_state.pokemon,
+            self._location_row,
+        )
 
     def set_state(self, game_state: GameState) -> None:
         self._game_state = game_state
@@ -73,30 +70,20 @@ class EncountersTab(QWidget):
             self.table.setItem(row, 1, QTableWidgetItem("None"))
             self.table.setItem(row, 2, QTableWidgetItem("None"))
             self.table.item(row, 0).setData(Qt.ItemDataRole.ForegroundRole, None)
-        for pokemon in self._game_state.pokemon:
-            location = pokemon.encountered
-            if location in self._location_row:
-                row = self._location_row[location]
-                details = f"{pokemon.nickname} ({pokemon.species}) - Caught Lv{pokemon.caught_level}"
-                status_map = {
-                    PokemonStatus.ACTIVE: TAB_PARTY_NAME,
-                    PokemonStatus.BOXED: TAB_BOXED_NAME,
-                    PokemonStatus.DEAD: TAB_DEAD_NAME,
-                }
-                status = status_map[pokemon.status]
-                item_details = QTableWidgetItem(details)
-                item_status = QTableWidgetItem(status)
-                if pokemon.status == PokemonStatus.ACTIVE:
-                    color = QColor(TABLE_COLOR_PARTY)
-                elif pokemon.status == PokemonStatus.BOXED:
-                    color = QColor(TABLE_COLOR_BOXED)
-                elif pokemon.status == PokemonStatus.DEAD:
-                    color = QColor(TABLE_COLOR_DEAD)
-                else:
-                    color = None
-                if color:
-                    self.table.item(row, 0).setForeground(QBrush(color))
-                    item_details.setForeground(QBrush(color))
-                    item_status.setForeground(QBrush(color))
-                self.table.setItem(row, 1, item_details)
-                self.table.setItem(row, 2, item_status)
+        self._view_models = EncounterViewModelFactory.create_view_models(
+            list(self._location_row.keys()),
+            self._game_state.pokemon,
+            self._location_row,
+        )
+        for view_model in self._view_models:
+            if not view_model.has_encounter:
+                continue
+            row = view_model.row_index
+            item_details = QTableWidgetItem(view_model.display_details)
+            item_status = QTableWidgetItem(view_model.display_status)
+            if view_model.status_color:
+                self.table.item(row, 0).setForeground(QBrush(view_model.status_color))
+                item_details.setForeground(QBrush(view_model.status_color))
+                item_status.setForeground(QBrush(view_model.status_color))
+            self.table.setItem(row, 1, item_details)
+            self.table.setItem(row, 2, item_status)
