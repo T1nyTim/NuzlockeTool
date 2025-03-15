@@ -63,6 +63,26 @@ class BestMoveViewModel:
 
 
 @dataclass
+class DecisionViewModel:
+    key: str
+    display_name: str
+    options: list[str]
+    current_outcome: str | None = None
+
+    @property
+    def button_text(self) -> str:
+        return f"Randomly pick {self.display_name}"
+
+    @property
+    def has_outcome(self) -> bool:
+        return self.current_outcome is not None
+
+    @property
+    def outcome_text(self) -> str:
+        return self.current_outcome if self.has_outcome else ""
+
+
+@dataclass
 class EncounterViewModel:
     location: str
     row_index: int

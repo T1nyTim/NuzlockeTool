@@ -17,6 +17,7 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.models.models import GameState
+from nuzlocke_tool.models.view_models import DecisionViewModel
 from nuzlocke_tool.services.random_decision_service import RandomDecisionService
 from nuzlocke_tool.utils import clear_widget, load_yaml_file
 
@@ -31,7 +32,9 @@ class RandomDecisionToolWidget(QWidget):
         self._decisions = {}
         self._game_state = game_state
         self._journal_service = self._container.journal_service_factory(self._game_state)
+        self._outcome_labels = {}
         self._save_service = self._container.save_service()
+        self._view_models = []
 
     def _extract_decision_mapping(self) -> dict[str, list[str]]:
         decisions_mapping = {}
@@ -41,6 +44,15 @@ class RandomDecisionToolWidget(QWidget):
                     decisions_mapping[decision] = generation["options"]
         return decisions_mapping
 
+    def _generate_view_models(self) -> list[DecisionViewModel]:
+        decision_mapping = self._extract_decision_mapping()
+        view_models = []
+        for key, options in decision_mapping.items():
+            display_name = self._generate_decision_name(key)
+            current_outcome = self._game_state.decisions.get(key)
+            view_models.append(DecisionViewModel(key, display_name, options, current_outcome))
+        return view_models
+
     def init_ui(self) -> None:
         clear_widget(self)
         if self.layout() is None:
@@ -48,21 +60,20 @@ class RandomDecisionToolWidget(QWidget):
             self.setLayout(layout)
         else:
             layout = self.layout()
-        self._decision_data = self._extract_decision_mapping()
-        for decision, options in self._decision_data.items():
+        self._view_models = self._generate_view_models()
+        self._outcome_labels = {}
+        for view_model in self._view_models:
             row_layout = QHBoxLayout()
-            button = QPushButton(f"Randomly pick {self._generate_decision_name(decision)}", self)
-            button.clicked.connect(lambda _, key=decision: self._randomize_decision(key))
+            button = QPushButton(view_model.button_text, self)
+            button.clicked.connect(lambda _, vm=view_model: self._randomize_decision(vm))
             row_layout.addWidget(button)
-            outcome_label = QLabel("", self)
+            outcome_label = QLabel(view_model.outcome_text, self)
             outcome_label.setAlignment(ALIGN_CENTER)
             outcome_label.setObjectName(OBJECT_NAME_LABEL_OUTCOME)
             outcome_label.setStyleSheet(STYLE_SHEET_LABEL_OUTCOME)
-            if decision in self._game_state.decisions:
-                outcome_label.setText(self._game_state.decisions[decision])
             row_layout.addWidget(outcome_label)
+            self._outcome_labels[view_model.key] = outcome_label
             layout.addLayout(row_layout)
-            self._decisions[decision] = (options, outcome_label)
         layout.addStretch()
 
     @staticmethod
@@ -78,15 +89,16 @@ class RandomDecisionToolWidget(QWidget):
         }
         return statements[decision_key]
 
-    def _randomize_decision(self, decision_key: str) -> None:
-        decision, outcome_label = self._decisions.get(decision_key, (None, None))
+    def _randomize_decision(self, view_model: DecisionViewModel) -> None:
         outcome = self._decision_service.make_decision(
-            decision_key,
-            decision,
-            self._generate_decision_name(decision_key),
+            view_model.key,
+            view_model.options,
+            view_model.display_name,
         )
+        view_model.current_outcome = outcome
+        outcome_label = self._outcome_labels[view_model.key]
         outcome_label.setText(outcome)
-        LOGGER.info("Randomly decided: %s, from: %s", outcome, ", ".join(decision))
+        LOGGER.info("Randomly decided: %s, from: %s", outcome, ", ".join(view_model.options))
 
     def set_state(self, game_state: GameState) -> None:
         self._decision_data = load_yaml_file(PathConfig.decisions_file())
