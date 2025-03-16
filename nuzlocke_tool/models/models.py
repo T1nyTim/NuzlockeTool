@@ -41,7 +41,6 @@ class EventType(Enum):
     MOVE_UPDATED = auto()
     SESSION_LOADED = auto()
     SESSION_CREATED = auto()
-    SESSION_SAVED = auto()
     DECISION_MADE = auto()
 
 
