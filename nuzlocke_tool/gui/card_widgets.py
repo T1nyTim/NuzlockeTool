@@ -263,6 +263,15 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             current_species = self._pokemon.species
             self._pokemon.species = new_species
             self._view_model.species = new_species
+            new_view_model = PokemonCardViewModel.from_pokemon(
+                self._pokemon,
+                self._container.pokemon_repository(),
+                PokemonCardType.ACTIVE,
+            )
+            self._view_model.can_evolve = new_view_model.can_evolve
+            self._view_model.evolution_options = new_view_model.evolution_options.copy()
+            self._view_model.available_moves = new_view_model.available_moves.copy()
+            self._view_model.image_path = new_view_model.image_path
             self._journal_service.add_evolved_entry(self._pokemon, current_species)
             LOGGER.info("Pokemon evolved from %s to %s", current_species, self._pokemon.species)
             self._game_service.save_game(self._game_state)
