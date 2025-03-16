@@ -735,7 +735,7 @@ Nidoqueen:
   atk: 82
   def: 87
   hp: 90
-  moves: [Bide, Blizzard, Body Slam, Bubblebeam, Counter, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Horn Drill, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Mimic, Pay Day, Poison Sting, Rage, Reflect, Rest, Rock Slide, Scratch, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Tackle, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
+  moves: [Bide, Bite, Blizzard, Body Slam, Bubblebeam, Counter, Double Kick, Double Team, Double-Edge, Earthquake, Fire Blast, Fissure, Fury Swipes, Growl, Horn Drill, Hyper Beam, Ice Beam, Mega Kick, Mega Punch, Mimic, Pay Day, Poison Sting, Rage, Reflect, Rest, Rock Slide, Scratch, Seismic Toss, Skull Bash, Strength, Submission, Substitute, Surf, Tackle, Tail Whip, Take Down, Thunder, Thunderbolt, Toxic, Water Gun]
   spd: 76
   spe: 75
   type: [Poison, Ground]

@@ -323,6 +323,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
     def _on_pokemon_transferred(self, data: dict[str, PokemonStatus]) -> None:
         previous_status = data["previous_status"]
         new_status = data["new_status"]
+        self._update_game_state_viewmodel()
         if PokemonStatus.ACTIVE in {previous_status, new_status}:
             self._update_active_party_display()
             self._best_moves_widget.update_party_stage_section()
@@ -331,7 +332,6 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         if PokemonStatus.DEAD in {previous_status, new_status}:
             self._update_dead_pokemon_display()
         self._encounters_tab.update_encounters()
-        self._update_game_state_viewmodel()
 
     def _on_session_loaded(self, data: dict[str, GameState]) -> None:
         self._game_state = data["game_state"]
