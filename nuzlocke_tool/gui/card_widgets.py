@@ -291,7 +291,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         self._details_layout.removeWidget(self._moves_group)
         self._refresh_moves()
 
-    def _refresh_moves(self) -> None:
+    def _refresh_moves(self, _: dict | None = None) -> None:
         self._moves_group.deleteLater()
         self._moves_widget = self._create_moves_widget()
         self._moves_group = self._create_group_widget(LABEL_MOVES, self._moves_widget)
