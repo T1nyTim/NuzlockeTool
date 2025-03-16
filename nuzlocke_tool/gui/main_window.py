@@ -265,6 +265,9 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self.setCentralWidget(tabs)
         tabs.addTab(self._create_rules_tab(), TAB_RULES_NAME)
         tabs.addTab(self._create_party_tab(), TAB_PARTY_NAME)
+        party_subtabs = self._party_tab.findChild(QTabWidget)
+        party_subtabs.setObjectName("party_subtabs")
+        party_subtabs.currentChanged.connect(self._on_subtab_changed)
         tabs.addTab(self._create_encounters_tab(), TAB_ENCOUNTER_NAME)
         tabs.addTab(self._create_tools_tab(), TAB_TOOLS_NAME)
 
@@ -344,6 +347,15 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._encounters_tab.set_state(self._game_state)
         self._random_decision_widget.set_state(self._game_state)
         self._best_moves_widget.set_state(self._game_state)
+
+    def _on_subtab_changed(self, index: int) -> None:
+        subtabs = self.findChild(QTabWidget, "party_subtabs")
+        if (
+            subtabs
+            and subtabs.tabText(index) == TAB_BOXED_NAME
+            and self._game_state_view_model.is_game_active
+        ):
+            QTimer.singleShot(50, self._update_boxed_pokemon_display)
 
     def _prompt_for_save_file(self) -> None:
         folder = PathConfig.save_folder()
