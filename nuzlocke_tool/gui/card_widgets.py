@@ -292,6 +292,11 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         self._refresh_moves()
 
     def _refresh_moves(self, _: dict | None = None) -> None:
+        self._view_model = PokemonCardViewModel.from_pokemon(
+            self._pokemon,
+            self._container.pokemon_repository(),
+            PokemonCardType.ACTIVE,
+        )
         self._moves_group.deleteLater()
         self._moves_widget = self._create_moves_widget()
         self._moves_group = self._create_group_widget(LABEL_MOVES, self._moves_widget)
