@@ -69,7 +69,6 @@ class PokemonService:
     def learn_move(self, pokemon: Pokemon, index: int, new_move: str) -> bool:
         old_move = pokemon.moves[index] if index < len(pokemon.moves) else ""
         pokemon.moves[index] = new_move
-        print(self._game_state)
         self._save_service.save_session(self._game_state)
         if old_move == "":
             self._journal_service.add_learn_move_entry(pokemon.nickname, new_move)

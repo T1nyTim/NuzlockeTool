@@ -1,3 +1,4 @@
+import contextlib
 import copy
 import logging
 from collections.abc import Callable
@@ -150,6 +151,9 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
         self._event_manager = self._container.event_manager()
         self._event_manager.subscribe(EventType.MOVE_UPDATED, self._refresh_moves)
+        self.destroyed.connect(
+            lambda: self._event_manager.unsubscribe(EventType.MOVE_UPDATED, self._refresh_moves),
+        )
         self._init_ui()
 
     def _create_dvs_widget(self) -> QWidget:
@@ -306,7 +310,8 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             self._container.pokemon_repository(),
             PokemonCardType.ACTIVE,
         )
-        self._moves_group.deleteLater()
+        with contextlib.suppress(RuntimeError, AttributeError):
+            self._moves_group.deleteLater()
         self._moves_widget = self._create_moves_widget()
         self._moves_group = self._create_group_widget(LABEL_MOVES, self._moves_widget)
         self._details_layout.addWidget(self._moves_group, 2, 0, 1, 2)
