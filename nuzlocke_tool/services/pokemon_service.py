@@ -79,7 +79,7 @@ class PokemonService:
         else:
             self._journal_service.add_learn_move_entry(pokemon.nickname, new_move, old_move)
             LOGGER.info("Pokemon %s learned move: %s (was: %s)", pokemon.nickname, new_move, old_move)
-        self._event_manager.publish(EventType.MOVE_UPDATED, {"pokemon": pokemon})
+        self._event_manager.publish(EventType.MOVE_UPDATED)
         return True
 
     def remove_pokemon(self, pokemon: Pokemon) -> bool:
