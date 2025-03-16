@@ -25,14 +25,14 @@ LOGGER = logging.getLogger(__name__)
 
 
 class RandomDecisionToolWidget(QWidget):
-    def __init__(self, container: Container, game_state: GameState, parent: QWidget) -> None:
+    def __init__(self, container: Container, parent: QWidget) -> None:
         super().__init__(parent)
         self._container = container
         self._decision_data = load_yaml_file(PathConfig.decisions_file())
         self._decisions = {}
         self._event_manager = self._container.event_manager()
         self._event_manager.subscribe(EventType.DECISION_MADE, self._on_decision_made)
-        self._game_state = game_state
+        self._game_state = self._container.game_state()
         self._journal_service = self._container.journal_service_factory(self._game_state)
         self._outcome_labels = {}
         self._save_service = self._container.save_service()

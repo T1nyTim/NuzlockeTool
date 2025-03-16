@@ -1,4 +1,3 @@
-import datetime
 import logging
 from dataclasses import asdict
 from pathlib import Path
@@ -6,7 +5,7 @@ from pathlib import Path
 import yaml
 
 from nuzlocke_tool.config import PathConfig
-from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import FailedEncounter, GameState, Pokemon, PokemonStatus
 
 LOGGER = logging.getLogger(__name__)
 
@@ -42,6 +41,9 @@ class SaveService:
             pokemon = Pokemon(**pokemon_dict, status=PokemonStatus[status_str])
             pokemon_list.append(pokemon)
         data["pokemon"] = pokemon_list
+        data["failed_encounters"] = [
+            FailedEncounter(**failed_dict) for failed_dict in data["failed_encounters"]
+        ]
         LOGGER.info("Game loaded from %s", filepath)
         return GameState(**data)
 

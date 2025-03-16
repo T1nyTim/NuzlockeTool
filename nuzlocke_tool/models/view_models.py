@@ -14,7 +14,7 @@ from nuzlocke_tool.constants import (
     TABLE_COLOR_DEAD,
     TABLE_COLOR_PARTY,
 )
-from nuzlocke_tool.models.models import GameState, Pokemon, PokemonCardType, PokemonStatus
+from nuzlocke_tool.models.models import FailedEncounter, GameState, Pokemon, PokemonCardType, PokemonStatus
 from nuzlocke_tool.repositories import PokemonRepository
 from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.utils import get_image_filename
@@ -101,15 +101,20 @@ class EncounterViewModel:
     caught_level: int | None = None
     status: str | None = None
     status_color: QColor | None = None
+    is_failed_encounter: bool = False
 
     @property
     def display_details(self) -> str:
-        if not self.has_encounter:
+        if not self.has_encounter and not self.is_failed_encounter:
             return "None"
+        if self.is_failed_encounter:
+            return f"FAILED: {self.species} (Lv{self.caught_level})"
         return f"{self.nickname} ({self.species}) - Caught Lv{self.caught_level}"
 
     @property
     def display_status(self) -> str:
+        if self.is_failed_encounter:
+            return "Failed"
         return self.status if self.has_encounter else "None"
 
     @property
@@ -125,6 +130,7 @@ class EncounterViewModel:
         cls,
         locations: list[str],
         pokemon: list[Pokemon],
+        failed_encounters: list[FailedEncounter],
         location_row_map: dict[str, int],
     ) -> list[Self]:
         view_models = [cls._create_from_location(loc, location_row_map[loc]) for loc in locations]
@@ -148,6 +154,16 @@ class EncounterViewModel:
                 elif mon.status == PokemonStatus.BOXED:
                     view_model.status_color = QColor(TABLE_COLOR_BOXED)
                 elif mon.status == PokemonStatus.DEAD:
+                    view_model.status_color = QColor(TABLE_COLOR_DEAD)
+        for failed in failed_encounters:
+            location = failed.location
+            if location in location_row_map:
+                row = location_row_map[location]
+                view_model = view_models[row]
+                if not view_model.has_encounter:
+                    view_model.is_failed_encounter = True
+                    view_model.species = failed.species
+                    view_model.caught_level = failed.level
                     view_model.status_color = QColor(TABLE_COLOR_DEAD)
         return view_models
 

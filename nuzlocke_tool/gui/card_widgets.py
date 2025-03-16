@@ -63,18 +63,17 @@ class BasePokemonCardWidget(QWidget):
         container: Container,
         view_model: PokemonCardViewModel,
         pokemon: Pokemon,
-        game_state: GameState,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
         super().__init__(parent)
         self._container = container
         self._game_service = GameService(self._container)
-        self._game_state = game_state
+        self._game_state = self._container.game_state()
         self._journal_service = self._container.journal_service_factory(self._game_state)
         self._pokemon = pokemon
         self._pokemon_repository = self._container.pokemon_repository()
-        self._pokemon_service = PokemonService(container, game_state)
+        self._pokemon_service = PokemonService(container, self._game_state)
         self._save_service = self._container.save_service()
         self._transfer_options = transfer_options if transfer_options is not None else []
         self._view_model = view_model
@@ -99,13 +98,7 @@ class BasePokemonCardWidget(QWidget):
 
     def _edit(self) -> None:
         original_species = copy.deepcopy(self._pokemon)
-        dialog = PokemonDialog(
-            self._container,
-            self._game_state,
-            self._pokemon.status,
-            self,
-            self._pokemon,
-        )
+        dialog = PokemonDialog(self._container, self._pokemon.status, self, self._pokemon)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         command = EditPokemonCommand(
@@ -140,7 +133,6 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         container: Container,
         view_model: PokemonCardViewModel,
         pokemon: Pokemon,
-        game_state: GameState,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -148,7 +140,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
             (TAB_BOXED_NAME, PokemonStatus.BOXED, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
+        super().__init__(container, view_model, pokemon, parent, transfer_options)
         self._event_manager = self._container.event_manager()
         self._event_manager.subscribe(EventType.MOVE_UPDATED, self._refresh_moves)
         self.destroyed.connect(
@@ -332,11 +324,10 @@ class StoragePokemonCardWidget(BasePokemonCardWidget):
         container: Container,
         view_model: PokemonCardViewModel,
         pokemon: Pokemon,
-        game_state: str,
         parent: QWidget,
         transfer_options: list[tuple[str, str, Callable[[], bool] | None]] | None = None,
     ) -> None:
-        super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
+        super().__init__(container, view_model, pokemon, parent, transfer_options)
         self.setFixedSize(WIDGET_POKEMON_CARD_WIDTH, WIDGET_POKEMON_CARD_WIDTH)
         self._init_ui()
 
@@ -383,7 +374,6 @@ class BoxedPokemonCardWidget(StoragePokemonCardWidget):
         container: Container,
         view_model: PokemonCardViewModel,
         pokemon: Pokemon,
-        game_state: GameState,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -391,7 +381,7 @@ class BoxedPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_DEAD_NAME, PokemonStatus.DEAD, None),
         ]
-        super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
+        super().__init__(container, view_model, pokemon, parent, transfer_options)
 
 
 class DeadPokemonCardWidget(StoragePokemonCardWidget):
@@ -400,7 +390,6 @@ class DeadPokemonCardWidget(StoragePokemonCardWidget):
         container: Container,
         view_model: PokemonCardViewModel,
         pokemon: Pokemon,
-        game_state: GameState,
         parent: QWidget,
         transfer_enabled_callback: Callable[[], bool] | None = None,
     ) -> None:
@@ -408,4 +397,4 @@ class DeadPokemonCardWidget(StoragePokemonCardWidget):
             (TAB_PARTY_NAME, PokemonStatus.ACTIVE, transfer_enabled_callback),
             (TAB_BOXED_NAME, PokemonStatus.BOXED, None),
         ]
-        super().__init__(container, view_model, pokemon, game_state, parent, transfer_options)
+        super().__init__(container, view_model, pokemon, parent, transfer_options)

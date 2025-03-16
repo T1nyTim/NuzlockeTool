@@ -87,7 +87,6 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._game_data_loader = self._container.game_data_loader()
         self._game_data_loader.load_location_data()
         self._game_service = GameService(container)
-        self._game_state = GameState("", "", False, None, None, None, [], [], {})
         self._game_state_view_model = GameStateViewModel(is_game_active=False)
         self._journal_service = None
         self._pokemon_service = None
@@ -100,7 +99,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         if self._pokemon_service.party_full:
             QMessageBox.warning(self, MSG_BOX_TITLE_PARTY_FULL, MSG_BOX_MSG_PARTY_FULL)
             return
-        dialog = PokemonDialog(self._container, self._game_state, PokemonStatus.ACTIVE, self)
+        dialog = PokemonDialog(self._container, PokemonStatus.ACTIVE, self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         command = AddPokemonCommand(self._container, dialog.pokemon, self._pokemon_service)
@@ -108,7 +107,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         LOGGER.info("Added active Pokemon: %s", dialog.pokemon)
 
     def _add_boxed_pokemon(self) -> None:
-        dialog = PokemonDialog(self._container, self._game_state, PokemonStatus.BOXED, self)
+        dialog = PokemonDialog(self._container, PokemonStatus.BOXED, self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         command = AddPokemonCommand(self._container, dialog.pokemon, self._pokemon_service)
@@ -168,7 +167,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         return widget
 
     def _create_encounters_tab(self) -> QWidget:
-        self._encounters_tab = EncountersTab(self._container, self._game_state, self)
+        self._encounters_tab = EncountersTab(self._container, self)
         self._encounters_tab.setEnabled(False)
         return self._encounters_tab
 
@@ -228,17 +227,9 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         tool_selector.addItems([LABEL_TOOL_RANDOM_DECISION, LABEL_TOOL_BEST_MOVE])
         layout.addWidget(tool_selector)
         tool_stack = QStackedWidget(self._tools_tab)
-        self._random_decision_widget = RandomDecisionToolWidget(
-            self._container,
-            self._game_state,
-            self._tools_tab,
-        )
+        self._random_decision_widget = RandomDecisionToolWidget(self._container, self._tools_tab)
         tool_stack.addWidget(self._random_decision_widget)
-        self._best_moves_widget = BestMovesToolWidget(
-            self._container,
-            self._game_state,
-            self._tools_tab,
-        )
+        self._best_moves_widget = BestMovesToolWidget(self._container, self._tools_tab)
         tool_stack.addWidget(self._best_moves_widget)
         tool_selector.currentIndexChanged.connect(tool_stack.setCurrentIndex)
         layout.addWidget(tool_stack)
@@ -248,7 +239,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
     def _handle_transfer(self, pokemon: Pokemon, target: PokemonStatus) -> None:
         command = TransferPokemonCommand(
             self._container,
-            self._game_state,
+            self._container.game_state(),
             pokemon,
             target,
             self._pokemon_service,
@@ -284,8 +275,8 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             return
         LOGGER.info(
             "Started new session for game|rules: %s|%s",
-            self._game_state.game,
-            self._game_state.ruleset,
+            self._container.game_state().game,
+            self._container.game_state().ruleset,
         )
 
     def _load_file(self) -> None:
@@ -299,8 +290,8 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             return
         LOGGER.info(
             "Resumed previous session for game|rules: %s|%s",
-            self._game_state.game,
-            self._game_state.ruleset,
+            self._container.game_state().game,
+            self._container.game_state().ruleset,
         )
 
     def _on_pokemon_changed(self, data: dict[str, Pokemon]) -> None:
@@ -336,17 +327,16 @@ class NuzlockeTrackerMainWindow(QMainWindow):
             self._update_dead_pokemon_display()
         self._encounters_tab.update_encounters()
 
-    def _on_session_loaded(self, data: dict[str, GameState]) -> None:
-        self._game_state = data["game_state"]
-        self._pokemon_service = PokemonService(self._container, self._game_state)
-        self._decision_service = RandomDecisionService(self._container, self._game_state)
+    def _on_session_loaded(self, _: dict[str, GameState]) -> None:
+        self._pokemon_service = PokemonService(self._container, self._container.game_state())
+        self._decision_service = RandomDecisionService(self._container, self._container.game_state())
         self._update_game_state_viewmodel()
         self._update_active_party_display()
         self._update_boxed_pokemon_display()
         self._update_dead_pokemon_display()
-        self._encounters_tab.set_state(self._game_state)
-        self._random_decision_widget.set_state(self._game_state)
-        self._best_moves_widget.set_state(self._game_state)
+        self._encounters_tab.update()
+        self._random_decision_widget.set_state(self._container.game_state())
+        self._best_moves_widget.set_state(self._container.game_state())
 
     def _on_subtab_changed(self, index: int) -> None:
         subtabs = self.findChild(QTabWidget, "party_subtabs")
@@ -370,7 +360,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
     def _save_file(self) -> None:
         if not self._game_state_view_model.is_game_active:
             return
-        self._game_service.save_game(self._game_state)
+        self._game_service.save_game(self._container.game_state())
 
     def _undo_action(self) -> None:
         self.command_manager.undo()
@@ -382,7 +372,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
     def _update_active_party_display(self) -> None:
         clear_layout(self._active_party_layout)
         active_view_model_pairs = PokemonCardViewModel.create_pokemon_viewmodels(
-            self._game_state,
+            self._container.game_state(),
             self._container.pokemon_repository(),
             PokemonStatus.ACTIVE,
             PokemonCardType.ACTIVE,
@@ -392,7 +382,6 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 self._container,
                 view_model,
                 pokemon,
-                self._game_state,
                 self._active_party_widget,
                 None,
             )
@@ -411,7 +400,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         card_total_width = WIDGET_POKEMON_CARD_WIDTH + SPACING
         columns = max(1, available_width // card_total_width)
         boxed_view_model_pairs = PokemonCardViewModel.create_pokemon_viewmodels(
-            self._game_state,
+            self._container.game_state(),
             self._container.pokemon_repository(),
             PokemonStatus.BOXED,
             PokemonCardType.BOXED,
@@ -421,7 +410,6 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 self._container,
                 view_model,
                 pokemon,
-                self._game_state,
                 self._boxed_pokemon_widget,
                 lambda: len(self._pokemon_service.active_pokemon) < ACTIVE_PARTY_LIMIT,
             )
@@ -443,7 +431,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         card_total_width = WIDGET_POKEMON_CARD_WIDTH + SPACING
         columns = max(1, available_width // card_total_width)
         dead_view_model_pairs = PokemonCardViewModel.create_pokemon_viewmodels(
-            self._game_state,
+            self._container.game_state(),
             self._container.pokemon_repository(),
             PokemonStatus.DEAD,
             PokemonCardType.DEAD,
@@ -453,7 +441,6 @@ class NuzlockeTrackerMainWindow(QMainWindow):
                 self._container,
                 view_model,
                 pokemon,
-                self._game_state,
                 self._dead_pokemon_widget,
                 lambda: len(self._pokemon_service.active_pokemon) < ACTIVE_PARTY_LIMIT,
             )
@@ -464,7 +451,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
 
     def _update_game_state_viewmodel(self) -> None:
         self._game_state_view_model = GameStateViewModel.from_game_state(
-            self._game_state,
+            self._container.game_state(),
             self._pokemon_service,
         )
         self._update_ui_from_viewmodel()

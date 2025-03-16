@@ -40,13 +40,13 @@ from nuzlocke_tool.utils import add_pokemon_image, clear_layout, clear_widget, l
 
 
 class BestMovesToolWidget(QWidget):
-    def __init__(self, container: Container, game_state: GameState, parent: QWidget) -> None:
+    def __init__(self, container: Container, parent: QWidget) -> None:
         super().__init__(parent)
-        self._best_moves_service = BestMovesService(container, game_state)
         self._container = container
-        self._game_state = game_state
+        self._game_state = self._container.game_state()
+        self._best_moves_service = BestMovesService(self._container, self._game_state)
         self._pokemon_repository = self._container.pokemon_repository()
-        self._pokemon_service = PokemonService(container, game_state)
+        self._pokemon_service = PokemonService(self._container, self._game_state)
         self._view_model = BestMoveViewModel()
 
     def _calculate_best_moves(self) -> None:

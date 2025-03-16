@@ -42,6 +42,7 @@ class EventType(Enum):
     SESSION_LOADED = auto()
     SESSION_CREATED = auto()
     DECISION_MADE = auto()
+    FAILED_ENCOUNTER_ADDED = auto()
 
 
 class PokemonCardType(Enum):
@@ -72,6 +73,13 @@ class Pokemon:
 
 
 @dataclass
+class FailedEncounter:
+    location: str
+    species: str
+    level: int
+
+
+@dataclass
 class GameState:
     game: str
     ruleset: str
@@ -80,5 +88,6 @@ class GameState:
     save_file: Path | None
     pokemon: list[Pokemon]
     encounters: list[str]
+    failed_encounters: list[FailedEncounter]
     decisions: dict[str, str]
     rule_strategy: "RuleStrategy" = None

@@ -355,6 +355,7 @@ Geodude:
 Gloom:
   atk: 65
   def: 70
+  evolve: [Vileplume]
   hp: 60
   moves: [Absorb, Acid, Bide, Cut, Double Team, Double-Edge, Mega Drain, Mimic, Petal Dance, Poisonpowder, Rage, Reflect, Rest, Sleep Powder, Solarbeam, Stun Spore, Substitute, Swords Dance, Take Down, Toxic]
   spd: 40

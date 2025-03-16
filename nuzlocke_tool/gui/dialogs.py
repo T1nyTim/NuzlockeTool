@@ -21,6 +21,7 @@ from nuzlocke_tool.constants import (
     BUTTON_CANCEL,
     BUTTON_OK,
     DIALOG_ADD_POKEMON_TITLE,
+    DIALOG_FAILED_ENCOUNTER_TITLE,
     DIALOG_NEW_SESSION_TITLE,
     LABEL_ATTACK_SHORT,
     LABEL_CHECKBOX_SUBREGIONS,
@@ -30,6 +31,7 @@ from nuzlocke_tool.constants import (
     LABEL_GAME_VERSION,
     LABEL_HEALTH_SHORT,
     LABEL_LEVEL,
+    LABEL_LOCATION,
     LABEL_MOVES,
     LABEL_NICKNAME,
     LABEL_RULESET,
@@ -56,7 +58,7 @@ from nuzlocke_tool.constants import (
     TOOLTIP_CHECKBOX_SUBREGIONS,
 )
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus, RulesetData
+from nuzlocke_tool.models.models import FailedEncounter, Pokemon, PokemonStatus, RulesetData
 from nuzlocke_tool.utils import load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
@@ -75,6 +77,63 @@ class BaseDialog(QDialog):
         buttons.accepted.connect(self._validate_and_accept)
         buttons.rejected.connect(self.reject)
         self._form_layout.addRow(buttons)
+
+
+class FailedEncounterDialog(BaseDialog):
+    def __init__(self, container: Container, location: str, parent: QWidget) -> None:
+        super().__init__(DIALOG_FAILED_ENCOUNTER_TITLE, parent)
+        self._container = container
+        self._game_state = self._container.game_state()
+        self._location = location
+        self._location_repository = self._container.location_repository()
+        self._pokemon_repository = self._container.pokemon_repository()
+        self._init_ui()
+
+    @property
+    def failed_encounter(self) -> FailedEncounter:
+        return FailedEncounter(
+            self._location_edit.text().strip(),
+            self._species_edit.text().strip(),
+            self._level_spin.value(),
+        )
+
+    def _init_ui(self) -> None:
+        self._location_edit = QLineEdit(self._location, self)
+        valid_locations = self._location_repository.get_available(
+            self._game_state.game,
+            self._game_state.sub_region_clause,
+            self._game_state.encounters,
+        )
+        location_completer = QCompleter(valid_locations)
+        location_completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self._location_edit.setCompleter(location_completer)
+        self._form_layout.addRow(LABEL_LOCATION, self._location_edit)
+        self._species_edit = QLineEdit(self)
+        species_list = self._pokemon_repository.get_all_species()
+        species_completer = QCompleter(species_list)
+        species_completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self._species_edit.setCompleter(species_completer)
+        self._form_layout.addRow(LABEL_SPECIES, self._species_edit)
+        self._level_spin = QSpinBox(self)
+        self._level_spin.setRange(POKEMON_LEVEL_MIN, POKEMON_LEVEL_MAX)
+        self._level_spin.setLayoutDirection(Qt.LayoutDirection.RightToLeft)
+        self._level_spin.lineEdit().setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self._form_layout.addRow(LABEL_LEVEL, self._level_spin)
+        self._setup_buttons()
+
+    def _validate_and_accept(self) -> None:
+        species = self._species_edit.text().strip()
+        location = self._location_edit.text().strip()
+        if not location:
+            QMessageBox.warning(self, MSG_BOX_TITLE_INPUT_ERR, MSG_BOX_MSG_NO_ENCOUNTER)
+            return
+        if not species:
+            QMessageBox.warning(self, MSG_BOX_TITLE_INPUT_ERR, MSG_BOX_MSG_NO_SPECIES)
+            return
+        if species not in self._pokemon_repository.get_all_species():
+            QMessageBox.warning(self, MSG_BOX_TITLE_INPUT_ERR, MSG_BOX_MSG_INVALID_SPECIES)
+            return
+        self.accept()
 
 
 class NewSessionDialog(BaseDialog):
@@ -136,14 +195,13 @@ class PokemonDialog(BaseDialog):
     def __init__(
         self,
         container: Container,
-        game_state: GameState,
         status: PokemonStatus,
         parent: QWidget,
         pokemon: Pokemon | None = None,
     ) -> None:
         super().__init__(DIALOG_ADD_POKEMON_TITLE, parent)
         self._container = container
-        self._game_state = game_state
+        self._game_state = self._container.game_state()
         self._location_repository = self._container.location_repository()
         self._status = status
         self.pokemon = pokemon

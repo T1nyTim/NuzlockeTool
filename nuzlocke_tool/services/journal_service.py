@@ -1,4 +1,4 @@
-from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus
+from nuzlocke_tool.models.models import FailedEncounter, GameState, Pokemon, PokemonStatus
 
 
 class JournalService:
@@ -32,6 +32,13 @@ class JournalService:
 
     def add_evolved_entry(self, pokemon: Pokemon, old_species: str) -> None:
         entry = f"{pokemon.nickname} evolved from {old_species} to {pokemon.species}"
+        self._append_entry(entry)
+
+    def add_failed_encounter_entry(self, failed_encounter: FailedEncounter) -> None:
+        entry = (
+            f"Failed to catch {failed_encounter.species} (Lv{failed_encounter.level}) in "
+            f"{failed_encounter.location}."
+        )
         self._append_entry(entry)
 
     def add_learn_move_entry(self, nickname: str, move: str, old_move: str | None = None) -> None:
