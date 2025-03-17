@@ -29,6 +29,7 @@ from nuzlocke_tool.constants import (
     LABEL_DETERMINANT_VALUES_SHORT,
     LABEL_ENCOUNTER,
     LABEL_GAME_VERSION,
+    LABEL_HEALTH_SHORT,
     LABEL_LEVEL,
     LABEL_LOCATION,
     LABEL_MOVES,
@@ -207,15 +208,15 @@ class PokemonDialog(BaseDialog):
         self._pokemon_repository = self._container.pokemon_repository()
         self._init_ui()
 
-    def _calculate_hp_dv(self, dvs: dict[str, int]) -> int:
+    def _calculate_hp_dv(self, atk_dv: int, def_dv: int, spd_dv: int, spe_dv: int) -> int:
         hp = 0
-        if dvs["Atk"] & 1:
+        if atk_dv & 1:
             hp += 8
-        if dvs["Def"] & 1:
+        if def_dv & 1:
             hp += 4
-        if dvs["Spd"] & 1:
+        if spd_dv & 1:
             hp += 2
-        if dvs["Spe"] & 1:
+        if spe_dv & 1:
             hp += 1
         return hp
 
@@ -328,8 +329,18 @@ class PokemonDialog(BaseDialog):
         species = self._species_edit.text().strip()
         level = self._level_spin.value()
         moves = [edit.text().strip() for edit in self._moves_edits]
-        dvs = {"HP": self._calculate_hp_dv(self._dv_spins)}
-        dvs.update({stat: spin.value() for stat, spin in self._dv_spins.items()})
+        atk_dv = self._dv_spins[LABEL_ATTACK_SHORT].value()
+        def_dv = self._dv_spins[LABEL_DEFENSE_SHORT].value()
+        spd_dv = self._dv_spins[LABEL_SPEED_SHORT].value()
+        spe_dv = self._dv_spins[LABEL_SPECIAL_SHORT].value()
+        hp_dv = self._calculate_hp_dv(atk_dv, def_dv, spd_dv, spe_dv)
+        dvs = {
+            LABEL_HEALTH_SHORT: hp_dv,
+            LABEL_ATTACK_SHORT: atk_dv,
+            LABEL_DEFENSE_SHORT: def_dv,
+            LABEL_SPEED_SHORT: spd_dv,
+            LABEL_SPECIAL_SHORT: spe_dv,
+        }
         encountered = self._encounter_edit.text().strip()
         if self.pokemon is None:
             self.pokemon = Pokemon(nickname, species, level, level, moves, dvs, encountered, self._status)
