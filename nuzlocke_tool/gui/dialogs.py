@@ -29,7 +29,6 @@ from nuzlocke_tool.constants import (
     LABEL_DETERMINANT_VALUES_SHORT,
     LABEL_ENCOUNTER,
     LABEL_GAME_VERSION,
-    LABEL_HEALTH_SHORT,
     LABEL_LEVEL,
     LABEL_LOCATION,
     LABEL_MOVES,
@@ -208,6 +207,18 @@ class PokemonDialog(BaseDialog):
         self._pokemon_repository = self._container.pokemon_repository()
         self._init_ui()
 
+    def _calculate_hp_dv(self, dvs: dict[str, int]) -> int:
+        hp = 0
+        if dvs["Atk"] & 1:
+            hp += 8
+        if dvs["Def"] & 1:
+            hp += 4
+        if dvs["Spd"] & 1:
+            hp += 2
+        if dvs["Spe"] & 1:
+            hp += 1
+        return hp
+
     def _init_ui(self) -> None:
         self._setup_nickname_section()
         self._setup_species_section()
@@ -222,13 +233,7 @@ class PokemonDialog(BaseDialog):
         dv_layout = QHBoxLayout(dv_widget)
         dv_layout.setContentsMargins(NO_SPACING, NO_SPACING, NO_SPACING, NO_SPACING)
         self._dv_spins = {}
-        for stat in [
-            LABEL_HEALTH_SHORT,
-            LABEL_ATTACK_SHORT,
-            LABEL_DEFENSE_SHORT,
-            LABEL_SPECIAL_SHORT,
-            LABEL_SPEED_SHORT,
-        ]:
+        for stat in [LABEL_ATTACK_SHORT, LABEL_DEFENSE_SHORT, LABEL_SPEED_SHORT, LABEL_SPECIAL_SHORT]:
             stat_label = QLabel(stat, self)
             spin = QSpinBox(self)
             spin.setRange(POKEMON_DV_MIN, POKEMON_DV_MAX)
@@ -323,7 +328,8 @@ class PokemonDialog(BaseDialog):
         species = self._species_edit.text().strip()
         level = self._level_spin.value()
         moves = [edit.text().strip() for edit in self._moves_edits]
-        dvs = {stat: spin.value() for stat, spin in self._dv_spins.items()}
+        dvs = {"HP": self._calculate_hp_dv(self._dv_spins)}
+        dvs.update({stat: spin.value() for stat, spin in self._dv_spins.items()})
         encountered = self._encounter_edit.text().strip()
         if self.pokemon is None:
             self.pokemon = Pokemon(nickname, species, level, level, moves, dvs, encountered, self._status)
