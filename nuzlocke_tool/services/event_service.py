@@ -4,7 +4,7 @@ from typing import Any
 from nuzlocke_tool.models.models import EventType
 
 
-class EventManager:
+class EventService:
     def __init__(self) -> None:
         self._subscribers = {event_type: [] for event_type in EventType}
 

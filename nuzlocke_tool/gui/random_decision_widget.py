@@ -19,7 +19,7 @@ from nuzlocke_tool.container import Container
 from nuzlocke_tool.models.models import EventType, GameState
 from nuzlocke_tool.models.view_models import DecisionViewModel
 from nuzlocke_tool.services.random_decision_service import RandomDecisionService
-from nuzlocke_tool.utils import clear_widget, load_yaml_file
+from nuzlocke_tool.utils.utils import clear_widget, load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
 

@@ -59,7 +59,7 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.models.models import FailedEncounter, Pokemon, PokemonStatus, RulesetData
-from nuzlocke_tool.utils import load_yaml_file
+from nuzlocke_tool.utils.utils import load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
 

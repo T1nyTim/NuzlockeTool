@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
@@ -91,3 +91,32 @@ class GameState:
     failed_encounters: list[FailedEncounter]
     decisions: dict[str, str]
     rule_strategy: "RuleStrategy" = None
+
+
+@dataclass
+class PokemonTypeCoverage:
+    pokemon: Pokemon
+    defensive_coverage: dict[str, float] = field(default_factory=dict)
+    offensive_coverage: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass
+class TypeCoverage:
+    type_name: str
+    multiplier: float
+
+    @property
+    def is_immunity(self) -> bool:
+        return self.multiplier == 0
+
+    @property
+    def is_resistant(self) -> bool:
+        return 0 < self.multiplier < 1
+
+    @property
+    def is_neutral(self) -> bool:
+        return self.multiplier == 1
+
+    @property
+    def is_weak(self) -> bool:
+        return self.multiplier > 1

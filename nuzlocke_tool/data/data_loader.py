@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from nuzlocke_tool.config import PathConfig
-from nuzlocke_tool.utils import load_yaml_file
+from nuzlocke_tool.utils.utils import load_yaml_file
 
 if TYPE_CHECKING:
     from nuzlocke_tool.models import LocationData, MoveData, PokemonData

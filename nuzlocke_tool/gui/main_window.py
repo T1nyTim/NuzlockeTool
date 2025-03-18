@@ -19,7 +19,6 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from nuzlocke_tool.command import AddPokemonCommand, CommandManager, TransferPokemonCommand
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import (
     ACTIVE_PARTY_LIMIT,
@@ -28,6 +27,7 @@ from nuzlocke_tool.constants import (
     BUTTON_ADD_POKEMON,
     LABEL_TOOL_BEST_MOVE,
     LABEL_TOOL_RANDOM_DECISION,
+    LABEL_TOOL_TEAM_BALANCE,
     MAIN_WINDOW_TITLE,
     MENU_ACTION_EXIT_NAME,
     MENU_ACTION_LOAD_NAME,
@@ -60,12 +60,14 @@ from nuzlocke_tool.gui.card_widgets import (
 from nuzlocke_tool.gui.dialogs import NewSessionDialog, PokemonDialog
 from nuzlocke_tool.gui.encounters_tab import EncountersTab
 from nuzlocke_tool.gui.random_decision_widget import RandomDecisionToolWidget
+from nuzlocke_tool.gui.team_balance_widget import TeamBalanceWidget
 from nuzlocke_tool.models.models import EventType, GameState, Pokemon, PokemonCardType, PokemonStatus
 from nuzlocke_tool.models.view_models import GameStateViewModel, PokemonCardViewModel
 from nuzlocke_tool.services.game_service import GameService
 from nuzlocke_tool.services.pokemon_service import PokemonService
 from nuzlocke_tool.services.random_decision_service import RandomDecisionService
-from nuzlocke_tool.utils import clear_layout, load_yaml_file
+from nuzlocke_tool.utils.command import AddPokemonCommand, CommandManager, TransferPokemonCommand
+from nuzlocke_tool.utils.utils import clear_layout, load_yaml_file
 
 LOGGER = logging.getLogger(__name__)
 
@@ -224,13 +226,15 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._tools_tab.setEnabled(False)
         layout = QVBoxLayout(self._tools_tab)
         tool_selector = QComboBox(self._tools_tab)
-        tool_selector.addItems([LABEL_TOOL_RANDOM_DECISION, LABEL_TOOL_BEST_MOVE])
+        tool_selector.addItems([LABEL_TOOL_RANDOM_DECISION, LABEL_TOOL_BEST_MOVE, LABEL_TOOL_TEAM_BALANCE])
         layout.addWidget(tool_selector)
         tool_stack = QStackedWidget(self._tools_tab)
         self._random_decision_widget = RandomDecisionToolWidget(self._container, self._tools_tab)
         tool_stack.addWidget(self._random_decision_widget)
         self._best_moves_widget = BestMovesToolWidget(self._container, self._tools_tab)
         tool_stack.addWidget(self._best_moves_widget)
+        self._team_balance_widget = TeamBalanceWidget(self._container, self._tools_tab)
+        tool_stack.addWidget(self._team_balance_widget)
         tool_selector.currentIndexChanged.connect(tool_stack.setCurrentIndex)
         layout.addWidget(tool_stack)
         self._tools_tab.setLayout(layout)
@@ -337,6 +341,7 @@ class NuzlockeTrackerMainWindow(QMainWindow):
         self._encounters_tab.update()
         self._random_decision_widget.set_state(self._container.game_state())
         self._best_moves_widget.set_state(self._container.game_state())
+        self._team_balance_widget.set_state(self._container.game_state())
 
     def _on_subtab_changed(self, index: int) -> None:
         subtabs = self.findChild(QTabWidget, "party_subtabs")

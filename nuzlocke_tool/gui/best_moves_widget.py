@@ -36,7 +36,7 @@ from nuzlocke_tool.models.models import GameState
 from nuzlocke_tool.models.view_models import BestMoveViewModel
 from nuzlocke_tool.services.best_moves_service import BestMovesService
 from nuzlocke_tool.services.pokemon_service import PokemonService
-from nuzlocke_tool.utils import add_pokemon_image, clear_layout, clear_widget, load_pokemon_image
+from nuzlocke_tool.utils.utils import add_pokemon_image, clear_layout, clear_widget, load_pokemon_image
 
 
 class BestMovesToolWidget(QWidget):

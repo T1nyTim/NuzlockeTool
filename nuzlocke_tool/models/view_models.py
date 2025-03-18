@@ -14,10 +14,17 @@ from nuzlocke_tool.constants import (
     TABLE_COLOR_DEAD,
     TABLE_COLOR_PARTY,
 )
-from nuzlocke_tool.models.models import FailedEncounter, GameState, Pokemon, PokemonCardType, PokemonStatus
-from nuzlocke_tool.repositories import PokemonRepository
+from nuzlocke_tool.data.repositories import PokemonRepository
+from nuzlocke_tool.models.models import (
+    FailedEncounter,
+    GameState,
+    Pokemon,
+    PokemonCardType,
+    PokemonStatus,
+    PokemonTypeCoverage,
+)
 from nuzlocke_tool.services.pokemon_service import PokemonService
-from nuzlocke_tool.utils import get_image_filename
+from nuzlocke_tool.utils.utils import get_image_filename
 
 
 @dataclass
@@ -259,3 +266,39 @@ class PokemonCardViewModel:
             (cls.from_pokemon(pokemon, pokemon_repository, card_type), pokemon)
             for pokemon in filtered_pokemon
         ]
+
+
+@dataclass
+class TeamBalanceViewModel:
+    defensive_coverage: dict[str, float] = field(default_factory=dict)
+    offensive_coverage: dict[str, dict[str, float]] = field(default_factory=dict)
+    offensive_best_scores: dict[str, float] = field(default_factory=dict)
+    pokemon_best_moves: dict[str, dict[str, float]] = field(default_factory=dict)
+    pokemon_best_move_details: dict[str, dict[str, tuple[str, float]]] = field(default_factory=dict)
+    pokemon_coverage: list[PokemonTypeCoverage] = field(default_factory=list)
+
+    @property
+    def defensive_categories(self) -> dict[float, list[str]]:
+        categories = {}
+        for type_name, multiplier in self.defensive_coverage.items():
+            if multiplier not in categories:
+                categories[multiplier] = []
+            categories[multiplier].append(type_name)
+        return dict(sorted(categories.items(), key=lambda x: x[0], reverse=True))
+
+    @property
+    def offensive_categories(self) -> dict[str, list[str]]:
+        categories = {}
+        for type_combo, score in self.offensive_best_scores.items():
+            if score not in categories:
+                categories[score] = []
+            categories[score].append(type_combo)
+        return dict(sorted(categories.items(), key=lambda x: x[0]))
+
+    @property
+    def sorted_defensive_types(self) -> list[tuple[str, float]]:
+        return sorted(self.defensive_coverage.items(), key=lambda x: x[1], reverse=True)
+
+    @classmethod
+    def create_empty(cls) -> Self:
+        return cls()

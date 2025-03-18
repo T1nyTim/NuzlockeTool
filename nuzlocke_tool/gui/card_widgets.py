@@ -21,7 +21,6 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from nuzlocke_tool.command import EditPokemonCommand, UpdateMoveCommand
 from nuzlocke_tool.constants import (
     ALIGN_CENTER,
     LABEL_DETERMINANT_VALUES_SHORT,
@@ -46,11 +45,12 @@ from nuzlocke_tool.constants import (
 )
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.gui.dialogs import PokemonDialog
-from nuzlocke_tool.models.models import EventType, GameState, Pokemon, PokemonCardType, PokemonStatus
+from nuzlocke_tool.models.models import EventType, Pokemon, PokemonCardType, PokemonStatus
 from nuzlocke_tool.models.view_models import PokemonCardViewModel
 from nuzlocke_tool.services.game_service import GameService
 from nuzlocke_tool.services.pokemon_service import PokemonService
-from nuzlocke_tool.utils import add_pokemon_image, load_pokemon_image
+from nuzlocke_tool.utils.command import EditPokemonCommand, UpdateMoveCommand
+from nuzlocke_tool.utils.utils import add_pokemon_image, load_pokemon_image
 
 LOGGER = logging.getLogger(__name__)
 
