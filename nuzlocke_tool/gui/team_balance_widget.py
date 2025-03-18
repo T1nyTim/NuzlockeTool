@@ -16,6 +16,7 @@ from nuzlocke_tool.constants import (
     ALIGN_CENTER,
     NEUTRAL_MULTI,
     NOT_VERY_EFFECTIVE_MULTI,
+    RESIZE_DELAY,
     SMALL_WINDOW_THRESHOLD,
     SUPER_EFFECTIVE_MULTI,
     SUPER_RESISTANCE_THRESHOLD,
@@ -43,6 +44,9 @@ class TeamBalanceWidget(QWidget):
         self._event_manager.subscribe(EventType.SESSION_LOADED, self._on_team_changed)
         self._event_manager.subscribe(EventType.SESSION_CREATED, self._on_team_changed)
         self._game_state = self._container.game_state()
+        self._resize_timer = QTimer(self)
+        self._resize_timer.setSingleShot(True)
+        self._resize_timer.timeout.connect(self._delayed_resize_update)
         self._team_balance_service = TeamBalanceService(self._container, self._game_state)
         self._init_ui()
 
@@ -138,6 +142,10 @@ class TeamBalanceWidget(QWidget):
         label.setFont(font)
         label.setAlignment(ALIGN_CENTER)
         return label
+
+    def _delayed_resize_update(self) -> None:
+        if hasattr(self, "_type_filter") and self._type_filter:
+            self._update_offensive_grid(self._type_filter.currentText())
 
     def _display_defensive_analysis(self, categories: dict[float, list[str]]) -> None:
         header = QLabel("Team Defensive Coverage Analysis", self._defensive_content)
@@ -296,7 +304,7 @@ class TeamBalanceWidget(QWidget):
             and hasattr(self, "_offensive_scroll")
             and self._type_filter
         ):
-            QTimer.singleShot(100, lambda: self._update_offensive_grid(self._type_filter.currentText()))
+            self._resize_timer.start(RESIZE_DELAY)
         return super().eventFilter(obj, event)
 
     def set_state(self, game_state: GameState) -> None:
