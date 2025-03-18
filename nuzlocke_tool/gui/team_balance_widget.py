@@ -2,6 +2,7 @@ from PyQt6.QtCore import QEvent, QObject, QTimer
 from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QComboBox,
+    QFrame,
     QGridLayout,
     QHBoxLayout,
     QLabel,
@@ -101,23 +102,51 @@ class TeamBalanceWidget(QWidget):
             elif multi >= NOT_VERY_EFFECTIVE_MULTI:
                 color = QColor(255, 150, 0)
         elif multi <= ULTRA_RESISTANCE_THRESHOLD:
-            color = QColor(150, 150, 150)
-        elif multi <= SUPER_RESISTANCE_THRESHOLD:
             color = QColor(0, 200, 0)
-        elif multi < NEUTRAL_MULTI:
+        elif multi <= SUPER_RESISTANCE_THRESHOLD:
             color = QColor(100, 255, 100)
+        elif multi < NEUTRAL_MULTI:
+            color = QColor(150, 220, 150)
         elif multi == NEUTRAL_MULTI:
             color = QColor(200, 200, 200)
         elif multi <= WEAK_RESISTANCE_THRESHOLD:
             color = QColor(255, 150, 0)
         return color
 
+    def _create_section_header(self, text: str, parent: QWidget) -> QLabel:
+        frame = QFrame(parent)
+        frame.setFrameShape(QFrame.Shape.StyledPanel)
+        frame.setFrameShadow(QFrame.Shadow.Raised)
+        frame.setStyleSheet("background-color: #2c3e50; border-radius: 4px;")
+        label = QLabel(text, frame)
+        label.setStyleSheet("color: #ecf0f1;")
+        font = QFont()
+        font.setBold(True)
+        font.setPointSize(font.pointSize() + 2)
+        label.setFont(font)
+        label.setAlignment(ALIGN_CENTER)
+        layout = QHBoxLayout(frame)
+        layout.setContentsMargins(8, 6, 8, 6)
+        layout.addWidget(label)
+        return frame
+
+    def _create_type_header(self, text: str, parent: QWidget) -> QLabel:
+        label = QLabel(text, parent)
+        label.setStyleSheet("color: #bdc3c7; border-bottom: 1px solid #34495e; padding: 4px;")
+        font = QFont()
+        font.setBold(True)
+        label.setFont(font)
+        label.setAlignment(ALIGN_CENTER)
+        return label
+
     def _display_defensive_analysis(self, categories: dict[float, list[str]]) -> None:
         header = QLabel("Team Defensive Coverage Analysis", self._defensive_content)
         header.setAlignment(ALIGN_CENTER)
-        bold_font = QFont()
-        bold_font.setBold(True)
-        header.setFont(bold_font)
+        header_font = QFont()
+        header_font.setBold(True)
+        header_font.setPointSize(header_font.pointSize() + 3)
+        header.setFont(header_font)
+        header.setStyleSheet("color: #3498db;")
         self._defensive_content_layout.addWidget(header)
         description = QLabel(
             "This analysis shows how susceptible your team is to each attack type.\n"
@@ -128,11 +157,9 @@ class TeamBalanceWidget(QWidget):
         description.setWordWrap(True)
         self._defensive_content_layout.addWidget(description)
         for multi, types in sorted(categories.items(), key=lambda x: x[0], reverse=True):
-            category_label = f"x{multi:.3f} Score"
-            category_header = QLabel(category_label, self._defensive_content)
-            category_header.setFont(bold_font)
-            category_header.setAlignment(ALIGN_CENTER)
-            self._defensive_content_layout.addWidget(category_header)
+            category_label = f"x{multi:.3g} Score"
+            section_header = self._create_section_header(category_label, self._defensive_content)
+            self._defensive_content_layout.addWidget(section_header)
             sorted_types = sorted(types)
             type_list = ", ".join(sorted_types)
             type_label = QLabel(type_list, self._defensive_content)
@@ -153,9 +180,11 @@ class TeamBalanceWidget(QWidget):
     ) -> None:
         header = QLabel("Team Offensive Coverage Analysis", self._offensive_content)
         header.setAlignment(ALIGN_CENTER)
-        bold_font = QFont()
-        bold_font.setBold(True)
-        header.setFont(bold_font)
+        header_font = QFont()
+        header_font.setBold(True)
+        header_font.setPointSize(header_font.pointSize() + 3)
+        header.setFont(header_font)
+        header.setStyleSheet("color: #3498db;")
         self._offensive_content_layout.addWidget(header)
         description = QLabel(
             "This analysis shows how effective your team's moves are against different type combinations.\n"
@@ -234,39 +263,30 @@ class TeamBalanceWidget(QWidget):
         for score, type_combos in sorted_categories:
             if score <= 0:
                 continue
-            score_label = QLabel(f"x{score:.3f} Score", self._offensive_grid_container)
-            bold_font = QFont()
-            bold_font.setBold(True)
-            score_label.setFont(bold_font)
-            score_label.setAlignment(ALIGN_CENTER)
-            self._offensive_grid_layout.addWidget(score_label, current_row, 0, 1, num_col)
+            score_header = self._create_section_header(f"x{score:.3g} Score", self._offensive_grid_container)
+            self._offensive_grid_layout.addWidget(score_header, current_row, 0, 1, num_col)
             current_row += 1
             for type_combo in sorted(type_combos):
                 type_names = type_combo.split(",")
                 combo_display = "/".join(type_names)
-                combo_label = QLabel(combo_display, self._offensive_grid_container)
-                combo_label.setFont(bold_font)
-                combo_label.setAlignment(ALIGN_CENTER)
-                self._offensive_grid_layout.addWidget(combo_label, current_row, 0, 1, num_col)
+                combo_header = self._create_type_header(combo_display, self._offensive_grid_container)
+                self._offensive_grid_layout.addWidget(combo_header, current_row, 0, 1, num_col)
                 current_row += 1
                 move_details = self._pokemon_best_move_details[type_combo]
                 pokemon_moves = [(name, details) for name, details in move_details.items()]
                 pokemon_moves.sort(key=lambda x: x[0])
-                num_rows = (len(pokemon_moves) + num_col - 1) // num_col
+                moves_container = QWidget(self._offensive_grid_container)
+                moves_layout = QGridLayout(moves_container)
                 for i, (pokemon_name, (move_name, effectiveness)) in enumerate(pokemon_moves):
-                    row = current_row + (i // num_col)
-                    col = i % num_col
-                    move_info = f"{pokemon_name}: {move_name} (x{effectiveness:.2f})"
-                    move_label = QLabel(move_info, self._offensive_grid_container)
+                    row_idx = i // num_col
+                    col_idx = i % num_col
+                    move_info = f"{pokemon_name}: {move_name} (x{effectiveness:.2g})"
+                    move_label = QLabel(move_info, moves_container)
                     move_label.setWordWrap(True)
                     color = self._create_color_for_multiplier(effectiveness, True)
-                    palette = move_label.palette()
-                    palette.setColor(move_label.foregroundRole(), color)
-                    move_label.setPalette(palette)
-                    self._offensive_grid_layout.addWidget(move_label, row, col)
-                current_row += num_rows
-                spacer = QLabel("", self._offensive_grid_container)
-                self._offensive_grid_layout.addWidget(spacer, current_row, 0)
+                    move_label.setStyleSheet(f"color: {color.name()};")
+                    moves_layout.addWidget(move_label, row_idx, col_idx)
+                self._offensive_grid_layout.addWidget(moves_container, current_row, 0, 1, num_col)
                 current_row += 1
 
     def eventFilter(self, obj: QObject, event: QEvent) -> bool:  # noqa: N802
