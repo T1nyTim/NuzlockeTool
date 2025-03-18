@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidg
 from nuzlocke_tool.config import PathConfig
 from nuzlocke_tool.constants import (
     ALIGN_CENTER,
+    LABEL_DECISION_CELADON_ENCOUNTER,
     LABEL_DECISION_CINNABAR_ENCOUNTER,
     LABEL_DECISION_DOJO_GIFT,
     LABEL_DECISION_EEVEELUTION,
@@ -63,6 +64,7 @@ class RandomDecisionToolWidget(QWidget):
             "Starter": LABEL_DECISION_STARTER,
             "Magikarp": LABEL_DECISION_MAGIKARP,
             "Fossil": LABEL_DECISION_FOSSIL,
+            "CeladonEncounter": LABEL_DECISION_CELADON_ENCOUNTER,
             "SaffronGift": LABEL_DECISION_SAFFRON_GIFT,
             "DojoGift": LABEL_DECISION_DOJO_GIFT,
             "Eeveelution": LABEL_DECISION_EEVEELUTION,

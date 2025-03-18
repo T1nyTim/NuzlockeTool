@@ -7,6 +7,9 @@ Magikarp:
 Fossil:
 - game: [Blue, Red, Yellow]
   options: [Dome Fossil, Helix Fossil]
+CeladonEncounter:
+- game: [Blue, Red, Yellow]
+  options: [Eevee, Game Corner Pokemon]
 SaffronGift:
 - game: [Blue, Red, Yellow]
   options: [Fighting Dojo, Silph Co.]
