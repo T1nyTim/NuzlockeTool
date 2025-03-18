@@ -1,11 +1,12 @@
 # NuzlockeTool
-The NuzlockeTool is a Python-based Nuzlocke Companion tool built with PyQt6 designed to help you manage and track your Pokemon Nuzlocke runs. It provides out-of-game tracking for various Nuzlocke rulesets and integrates additional tools such as random decision generation and best-move calculation.
+The NuzlockeTool is a Python-based Nuzlocke Companion tool built with PyQt6 designed to help you manage and track your Pokemon Nuzlocke runs. It provides out-of-game tracking for various Nuzlocke rulesets and integrates additional tools such as random decision generation, best-move calculation, and team balance analysis.
 
 ## Features
 - Autosave your progress - including party data, encounters, decisions
 - Loading a previous session to resume progress
 - Track party, box and dead Pokemon
 - Record encounter locations and prevents duplicate encounters
+    - Track failed encounters too
 - Maintains a separate journal of your progress throughout the run, such as catches, transfers, evolution, random decisions
 - Tool for randomly making decisions for you when you can't decide, or want to leave it to fate to decide, some example decisions are:
     - Decide what Starter Pokemon to use
@@ -17,6 +18,9 @@ The NuzlockeTool is a Python-based Nuzlocke Companion tool built with PyQt6 desi
     - Critical hits
     - Accuracy
     - Variety of move-specific modifiers (eg multi-hit, OHKO, static-damage)
+- Team Balance Analysis tool to evaluate:
+    - Defensive coverage - anaylze team weaknesses and resistances
+    - Offensive coverage - assess your team's ability to deal with various type combinations
 
 ## Nuzlocke Varients
 Initially the application only supports Generation 1 games and the standard Nuzlocke, however support for more games, and many many more rulesets will be added in future updates.
@@ -24,7 +28,9 @@ Initially the application only supports Generation 1 games and the standard Nuzl
 ## Installation
 To install the NuzlockeTool, you need to have Python installed on your system. Clone this repository to your local machine using:
 
-`git clone https://github.com/T1nyTim/NuzlockeTool.git`
+```
+git clone https://github.com/T1nyTim/NuzlockeTool.git
+```
 
 Navigate to the project directory and install the required dependencies:
 
@@ -39,7 +45,10 @@ To run the application, use the following command in the project directory:
 `NuzlockeTool`
 
 ### To Start a New Session
-Select New from under the under the File session
+Select New `Ctrl+N` from under the File session
+
+### To Load a Previous Session
+Select Load `Ctrl+L` from under the File session, and select your sessions `.sav` file, which by default will be under the `save` directory
 
 ### Directory Explanations
 log files for debugging purposes will be generated under the `logs` directory
