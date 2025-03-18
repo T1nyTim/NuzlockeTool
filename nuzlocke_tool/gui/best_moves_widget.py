@@ -32,7 +32,7 @@ from nuzlocke_tool.constants import (
     POKEMON_STAT_STAGE_MIN,
 )
 from nuzlocke_tool.container import Container
-from nuzlocke_tool.models.models import GameState
+from nuzlocke_tool.models.models import EventType, GameState
 from nuzlocke_tool.models.view_models import BestMoveViewModel
 from nuzlocke_tool.services.best_moves_service import BestMovesService
 from nuzlocke_tool.services.pokemon_service import PokemonService
@@ -43,11 +43,22 @@ class BestMovesToolWidget(QWidget):
     def __init__(self, container: Container, parent: QWidget) -> None:
         super().__init__(parent)
         self._container = container
+        self._event_manager = self._container.event_manager()
+        self._event_manager.subscribe(EventType.POKEMON_ADDED, self._on_pokemon_changed)
+        self._event_manager.subscribe(EventType.POKEMON_EDITED, self._on_pokemon_changed)
+        self._event_manager.subscribe(EventType.POKEMON_TRANSFERRED, self._on_pokemon_changed)
+        self._event_manager.subscribe(EventType.POKEMON_REMOVED, self._on_pokemon_changed)
         self._game_state = self._container.game_state()
         self._best_moves_service = BestMovesService(self._container, self._game_state)
         self._pokemon_repository = self._container.pokemon_repository()
         self._pokemon_service = PokemonService(self._container, self._game_state)
         self._view_model = BestMoveViewModel()
+
+    def __del__(self) -> None:
+        self._event_manager.unsubscribe(EventType.POKEMON_ADDED, self._on_pokemon_changed)
+        self._event_manager.unsubscribe(EventType.POKEMON_EDITED, self._on_pokemon_changed)
+        self._event_manager.unsubscribe(EventType.POKEMON_TRANSFERRED, self._on_pokemon_changed)
+        self._event_manager.unsubscribe(EventType.POKEMON_REMOVED, self._on_pokemon_changed)
 
     def _calculate_best_moves(self) -> None:
         clear_layout(self._results_layout)
@@ -78,6 +89,9 @@ class BestMovesToolWidget(QWidget):
         self._results_layout.addWidget(QLabel(self._view_model.defender_display_text, self))
         for result_text in self._view_model.formatted_results:
             self._results_layout.addWidget(QLabel(result_text, self))
+
+    def _on_pokemon_changed(self, _: dict) -> None:
+        self.update_party_stage_section()
 
     def _update_image(self, selected_pokemon: str) -> None:
         pixmap = load_pokemon_image(selected_pokemon)

@@ -252,6 +252,7 @@ class ActivePokemonCardWidget(BasePokemonCardWidget):
         self._pokemon.level = value
         self._view_model.level = value
         self._game_service.save_game(self._game_state)
+        self._container.event_manager().publish(EventType.POKEMON_EDITED, {"pokemon": self._pokemon})
 
     def _on_species_changed(self, index: int) -> None:
         new_species = self._species_widget.itemData(index)
