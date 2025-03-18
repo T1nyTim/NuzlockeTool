@@ -40,7 +40,6 @@ class TeamBalanceService:
         type_combinations: list[tuple[str, ...]],
     ) -> dict[str, dict[str, float]]:
         coverage = {}
-        pokemon_types = self._get_pokemon_types(pokemon)
         for type_combo in type_combinations:
             combo_key = ",".join(type_combo)
             coverage[combo_key] = {}
@@ -52,11 +51,9 @@ class TeamBalanceService:
             move_power = int(move_data["power"])
             if move_power == 0:
                 continue
-            stab = 1.5 if move_type in pokemon_types else 1.0
             for type_combo in type_combinations:
                 combo_key = ",".join(type_combo)
-                effectiveness = self._calculate_type_effectiveness(move_type, list(type_combo))
-                move_effectiveness = effectiveness * stab
+                move_effectiveness = self._calculate_type_effectiveness(move_type, list(type_combo))
                 coverage[combo_key][move_name] = move_effectiveness
         return coverage
 

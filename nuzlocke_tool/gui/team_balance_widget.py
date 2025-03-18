@@ -251,18 +251,12 @@ class TeamBalanceWidget(QWidget):
                 current_row += 1
                 move_details = self._pokemon_best_move_details[type_combo]
                 pokemon_moves = [(name, details) for name, details in move_details.items()]
-                for pokemon_name, effectiveness in self._pokemon_best_moves[type_combo].items():
-                    if pokemon_name not in move_details and effectiveness == 1.0:
-                        pokemon_moves.append((pokemon_name, ("Neutral", 1.0)))
                 pokemon_moves.sort(key=lambda x: x[0])
                 num_rows = (len(pokemon_moves) + num_col - 1) // num_col
                 for i, (pokemon_name, (move_name, effectiveness)) in enumerate(pokemon_moves):
                     row = current_row + (i // num_col)
                     col = i % num_col
-                    if move_name == "Neutral":
-                        move_info = f"{pokemon_name} (x1.0 - neutral)"
-                    else:
-                        move_info = f"{pokemon_name}: {move_name} (x{effectiveness:.1f})"
+                    move_info = f"{pokemon_name}: {move_name} (x{effectiveness:.2f})"
                     move_label = QLabel(move_info, self._offensive_grid_container)
                     move_label.setWordWrap(True)
                     color = self._create_color_for_multiplier(effectiveness, True)
@@ -271,6 +265,8 @@ class TeamBalanceWidget(QWidget):
                     move_label.setPalette(palette)
                     self._offensive_grid_layout.addWidget(move_label, row, col)
                 current_row += num_rows
+                spacer = QLabel("", self._offensive_grid_container)
+                self._offensive_grid_layout.addWidget(spacer, current_row, 0)
                 current_row += 1
 
     def eventFilter(self, obj: QObject, event: QEvent) -> bool:  # noqa: N802
