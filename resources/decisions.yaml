@@ -10,15 +10,28 @@ Fossil:
 CeladonEncounter:
 - game: [Blue, Red, Yellow]
   options: [Eevee, Game Corner Pokemon]
+Eeveelution:
+- game: [Blue, Red, Yellow]
+  options: [Flareon, Jolteon, Vaporeon]
+GameCorner:
+- game: [Blue]
+  options: [Pinsir, Porygon, Dratini]
+- game: [Red]
+  options: [Scyther, Porygon, Dratini]
+- game: [Yellow]
+  options: [Vulpix, Scyther, Pinsir, Porygon]
+Route16Encounter:
+- game: [Blue, Red, Yellow]
+  options: [Snorlax, Wild Encounter]
+Route12Encounter:
+- game: [Blue, Red, Yellow]
+  options: [Snorlax, Wild Encounter]
 SaffronGift:
 - game: [Blue, Red, Yellow]
   options: [Fighting Dojo, Silph Co.]
 DojoGift:
 - game: [Blue, Red, Yellow]
   options: [Hitmonchan, Hitmonlee]
-Eeveelution:
-- game: [Blue, Red, Yellow]
-  options: [Flareon, Jolteon, Vaporeon]
 CinnabarEncounter:
 - game: [Blue, Red, Yellow]
   options: [Amber, Fossil, Wild Encounter]

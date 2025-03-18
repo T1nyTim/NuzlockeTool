@@ -277,6 +277,7 @@ class PokemonDialog(BaseDialog):
         moves_layout.setContentsMargins(NO_SPACING, NO_SPACING, NO_SPACING, NO_SPACING)
         for i in range(POKEMON_MOVES_LIMIT):
             move_edit = QLineEdit(self)
+            move_edit.setFixedWidth(100)
             if self.pokemon is not None and i < len(self.pokemon.moves):
                 move_edit.setText(self.pokemon.moves[i])
             else:

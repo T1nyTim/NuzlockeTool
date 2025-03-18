@@ -268,7 +268,7 @@ Ekans:
   moves: [Acid, Bide, Bite, Body Slam, Dig, Double Team, Double-Edge, Earthquake, Fissure, Glare, Leer, Mega Drain, Mimic, Poison Sting, Rage, Rest, Rock Slide, Screech, Skull Bash, Strength, Substitute, Take Down, Toxic, Wrap]
   spd: 55
   spe: 40
-  type: [Ekans]
+  type: [Poison]
 Electabuzz:
   atk: 83
   def: 57
