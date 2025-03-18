@@ -1,4 +1,4 @@
-from nuzlocke_tool.constants import TYPE_CHART
+from nuzlocke_tool.constants import TYPE_BYPASSING_MOVES, TYPE_CHART
 from nuzlocke_tool.container import Container
 from nuzlocke_tool.models.models import GameState, Pokemon, PokemonStatus, PokemonTypeCoverage
 from nuzlocke_tool.models.view_models import TeamBalanceViewModel
@@ -53,8 +53,11 @@ class TeamBalanceService:
                 continue
             for type_combo in type_combinations:
                 combo_key = ",".join(type_combo)
-                move_effectiveness = self._calculate_type_effectiveness(move_type, list(type_combo))
-                coverage[combo_key][move_name] = move_effectiveness
+                if move_name in TYPE_BYPASSING_MOVES:
+                    coverage[combo_key][move_name] = 1.0
+                else:
+                    move_effectiveness = self._calculate_type_effectiveness(move_type, list(type_combo))
+                    coverage[combo_key][move_name] = move_effectiveness
         return coverage
 
     def _calculate_team_offensive_scores(

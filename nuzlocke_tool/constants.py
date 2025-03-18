@@ -72,6 +72,15 @@ STAT_STAGE_MULTIPLIER = {
 }
 STATIC_DAMAGE_MOVES = {"Dragon Rage", "Night Shade", "Psywave", "Seismic Toss", "Sonicboom"}
 SWIFT_MOVES = {"Swift"}
+TYPE_BYPASSING_MOVES = {
+    "Bide",
+    "Counter",
+    "Dragon Rage",
+    "Night Shade",
+    "Seismic Toss",
+    "Sonicboom",
+    "Super Fang",
+}
 TYPE_CHART = {
     "Normal": {"Rock": 0.5, "Ghost": 0},
     "Fighting": {
