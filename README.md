@@ -1,6 +1,9 @@
 # NuzlockeTool
 The NuzlockeTool is a Python-based Nuzlocke Companion tool built with PyQt6 designed to help you manage and track your Pokemon Nuzlocke runs. It provides out-of-game tracking for various Nuzlocke rulesets and integrates additional tools such as random decision generation, best-move calculation, and team balance analysis.
 
+### Current State of the Product
+At present I would only consider the NuzlockeTool an alpha product, you will find bugs, but I am working on them, but the product should at least feel use-able. I also have a number of features I plan on adding as time goes by too.
+
 ## Features
 - Autosave your progress - including party data, encounters, decisions
 - Loading a previous session to resume progress
