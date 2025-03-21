@@ -1,0 +1,14 @@
+<article>
+  <header><h3>{{ ruleset_name }} Rules</h3></header>
+  <p>You are playing <strong>{{ game }}</strong> with the <strong>{{ ruleset_name }}</strong> ruleset.</p>
+  <h4>Rules:</h4>
+  <ol>
+    {% for rule in ruleset.rules %}
+    <li>{{ rule }}</li>
+    {% endfor %}
+  </ol>
+  <div role="group">
+    <button>Start Game</button>
+    <button class="Secondary" onclick="window.location.reload()">Start Over</button>
+  </div>
+</article>

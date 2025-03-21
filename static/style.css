@@ -1,0 +1,454 @@
+@charset "UTF-8";
+
+* {
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+}
+
+:where(:root) {
+    background-color: var(--background-color);
+    color: var(--color);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    line-height: var(--line-height);
+    overflow-wrap: break-word;
+    tab-size: 4;
+    text-rendering: optimizeLegibility;
+    text-underline-offset: var(--text-underline-offset);
+}
+
+:root {
+    --block-spacing-horizontal: var(--spacing);
+    --block-spacing-vertical: var(--spacing);
+    --border-radius: 0.25rem;
+    --border-width: 0.0625rem;
+    --font-family: var(--font-family-sans-serif);
+    --font-family-sans-serif: system-ui;
+    --font-size: 100%;
+    --font-weight: 400;
+    --form-element-spacing-horizontal: 1rem;
+    --form-element-spacing-vertical: 0.75rem;
+    --grid-column-gap: var(--spacing);
+    --grid-row-gap: var(--spacing);
+    --icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(136, 145, 164)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    --line-height: 1.5;
+    --spacing: 1rem;
+    --text-underline-offset: 0.1rem;
+    --transition: 0.2s ease-in-out;
+    --typography-spacing-vertical: 1rem;
+}
+
+@media (min-width: 576px) {
+    :root {
+        --font-size: 106.25%;
+    }
+
+    .container {
+        max-width: 510px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --font-size: 112.5%;
+    }
+
+    .container {
+        max-width: 700px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --font-size: 118.75%;
+    }
+
+    .container {
+        max-width: 950px;
+    }
+}
+
+@media (min-width: 1280px) {
+    :root {
+        --font-size: 125%;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+}
+
+@media (min-width: 1536px) {
+    :root {
+        --font-size: 131.25%;
+    }
+
+    .container {
+        max-width: 1450px;
+    }
+}
+
+:focus-visible {
+    outline: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-delay: 0s !important;
+    transition-duration: 0s !important;
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --background-color: rgb(19, 23, 31);
+        --box-shadow: 0.0145rem 0.029rem 0.174rem rgba(7, 9, 12, 0.01698), 0.0335rem 0.067rem 0.402rem rgba(7, 9, 12, 0.024), 0.0625rem 0.125rem 0.75rem rgba(7, 9, 12, 0.03), 0.1125rem 0.225rem 1.35rem rgba(7, 9, 12, 0.036), 0.2085rem 0.417rem 2.502rem rgba(7, 9, 12, 0.04302), 0.5rem 1rem 6rem rgba(7, 9, 12, 0.06), 0 0 0 0.0625rem rgba(7, 9, 12, 0.015);
+        --button-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        --button-hover-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        --card-background-color: #181c25;
+        --card-border-color: var(--card-background-color);
+        --card-box-shadow: var(--box-shadow);
+        --card-sectioning-background-color: rgba(26, 31, 40);
+        --color: #c2c7d0;
+        --form-element-active-background-color: rgb(26, 31, 40);
+        --form-element-active-border-color: var(--primary-border);
+        --form-element-background-color: rgb(28, 33, 44);
+        --form-element-border-color: #2a3140;
+        --form-element-color: #e0e3e7;
+        --form-element-focus-color: var(--primary-border);
+        --form-element-placeholder-color: #8891a4;
+        --h1-color: #f0f1f3;
+        --h2-color: #e0e3e7;
+        --h3-color: #c2c7d0;
+        --muted_color: #7b8495;
+        --primary-background: #524ed2;
+        --primary-border: var(--primary-background);
+        --primary-focus: rgba(168, 148, 229, 0.375);
+        --primary-hover-background: #655cd6;
+        --primary-hover-border: var(--primary-hover-background);
+        --primary-inverse: #fff;
+        --secondary-background: #525f7a;
+        --secondary-border: var(--secondary-background);
+        --secondary-focus: rgba(144, 158, 190, 0.25);
+        --secondary-hover-background: #5d6b89;
+        --secondary-hover-border: var(--secondary-hover-background);
+        --secondary-inverse: #fff;
+        --text-selection-color: rgba(162, 148, 229, 0.5);
+    }
+}
+
+::selection {
+    background-color: var(--text-selection-color);
+}
+
+::after,
+::before {
+    text-decoration: inherit;
+    vertical-align: inherit;
+}
+
+::-moz-focus-inner {
+    border-style: none;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+}
+
+main {
+    display: block;
+}
+
+h1 {
+    --color: var(--h1-color);
+    --font-size: 2rem;
+    --line-height: 1.125;
+    --typography-spacing-vertical: 3rem;
+}
+
+h1,
+h2 {
+    --font-weight: 700;
+    color: var(--color);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    line-height: var(--line-height);
+    margin-bottom: var(--typography-spacing-vertical);
+    margin-top: 0;
+}
+
+hgroup {
+    margin-bottom: var(--typography-spacing-vertical);
+}
+
+hgroup > * {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+hgroup > :not(:first-child):last-child {
+    --color: var(--muted-color);
+    --font-weight: unset;
+    font-size: 1rem;
+}
+
+h2 {
+    --color: var(--h2-color);
+    --font-size: 1.75rem;
+    --line-height: 1.15;
+    --typography-spacing-vertical: 2.625rem;
+}
+
+p,
+ol {
+    color: var(--color);
+    font-style: normal;
+    font-weight: var(--font-weight);
+    margin-bottom: var(--typography-spacing-vertical);
+    margin-top: 0;
+}
+
+label {
+    color: var(--color);
+    display: block;
+    font-weight: var(--font-weight);
+    margin-bottom: calc(var(--spacing) * 0.375);
+}
+
+:where(select) {
+    --outline-width: 0.0625rem;
+}
+
+:where(select):focus {
+    --box-shadow: 0 0 0 var(--outline-width) var(--form-element-focus-color);
+}
+
+:where(select):is(:active, :focus) {
+    --background-color: var(--form-element-active-background-color);
+    --border-color: var(--form-element-active-border-color);
+}
+
+select {
+    --background-color: var(--form-element-background-color);
+    --border-color: var(--form-element-border-color);
+    --box-shadow: none;
+    --color: var(--form-element-color);
+    appearance: none;
+    background-color: var(--background-color);
+    background-image: var(--icon-chevron);
+    background-position: center right 0.75rem;
+    background-repeat: no-repeat;
+    background-size: 1rem auto;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    color: var(--color);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: var(--font-weight);
+    letter-spacing: inherit;
+    line-height: var(--line-height);
+    margin: 0;
+    margin-bottom: var(--spacing);
+    outline: 0;
+    padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+    padding-inline-end: calc(var(--form-element-spacing-horizontal) + 1.5rem);
+    padding-inline-start: var(--form-element-spacing-horizontal);
+    padding-left: var(--form-element-spacing-horizontal);
+    padding-right: calc(var(--form-element-spacing-horizontal) + 1.5rem);
+    text-transform: none;
+    transition: background-color var(--transition), border-color var(--transition), color var(--transition), box-shadow var(--transition);
+}
+
+select,
+button[type="submit"] {
+    width: 100%;
+}
+
+select:invalid {
+    color: var(--form-element-placeholder-color);
+    opacity: 1;
+}
+
+button {
+    font-family: inherit;
+    margin: 0;
+    overflow: visible;
+    text-transform: none;
+}
+
+button,
+[type="submit"] {
+    --background-color: var(--primary-background);
+    --border-color: var(--primary-border);
+    --box-shadow: var(--button-box-shadow);
+    --color: var(--primary-inverse);
+    background-color: var(--background-color);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    color: var(--color);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: var(--font-weight);
+    line-height: var(--line-height);
+    outline: 0;
+    padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+    text-align: center;
+    text-decoration: none;
+    transition: background-color var(--transition), border-color var(--transition), color var(--transition), box-shadow var(--transition);
+    user-select: none;
+}
+
+button:focus,
+[type="submit"]:focus {
+    --box-shadow: var(--button-hover-box-shadow), 0 0 0 var(--outline-width) var(--primary-focus);
+}
+
+button:is(:hover, :active, :focus)
+[type="submit"]:is(:hover, :active, :focus) {
+    --background-color: var(--primary-hover-background);
+    --border-color: var(--primary-hover-border);
+    --box-shadow: var(--button-hover-box-shadow);
+    --color: var(--primary-inverse);
+}
+
+:is(button, [type="submit"]).secondary {
+    --background-color: var(--secondary-background);
+    --border-color: var(--secondary-border);
+    --color: var(--secondary-inverse);
+    cursor: pointer;
+}
+
+:is(button, [type="submit"]).secondary:is(:hover, :active, :focus) {
+    --background-color: var(--secondary-hover-background);
+    --border-color: var(--secondary-hover-border);
+    --color: var(--secondary-inverse);
+}
+
+:is(button, [type="submit"]).secondary:focus {
+    --box-shadow: var(--button-hover-box-shadow), 0 0 0 var(--outline-width) var(--secondary-focus);
+}
+
+h3 {
+    --color: var(--h3-color);
+    --font-size: 1.5rem;
+    --line-height: 1.175;
+    --typography-spacing-vertical: 2.25rem;
+}
+
+article {
+    background: var(--card-background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-box-shadow);
+    margin-bottom: var(--block-spacing-vertical);
+    padding: var(--block-spacing-vertical) var(--block-spacing-horizontal);
+}
+
+article > header {
+    background-color: var(--card-sectioning-background-color);
+    border-bottom: var(--border-width) solid var(--card-border-color);
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    margin-bottom: var(--block-spacing-vertical);
+    margin-left: calc(var(--block-spacing-horizontal) * -1);
+    margin-right: calc(var(--block-spacing-horizontal) * -1);
+    margin-top: calc(var(--block-spacing-vertical) * -1);
+    padding: calc(var(--block-spacing-vertical) * 0.66);
+}
+
+strong {
+    font-weight: bolder;
+}
+
+:where(ol) li {
+    margin-bottom: calc(var(--typography-spacing-vertical) * 0.25);
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing);
+    padding-right: var(--spacing);
+    width: 100%;
+}
+
+.grid {
+    display: grid;
+    grid-column-gap: var(--grid-column-gap);
+    grid-row-gap: var(--grid-row-gap);
+    grid-template-columns: 1fr;
+}
+
+.grid > * {
+    min-width: 0;
+}
+
+[type="submit"] {
+    margin-bottom: var(--spacing);
+}
+
+[disabled] {
+    cursor: not-allowed;
+}
+
+[role="group"] {
+    border-radius: var(--border-radius);
+    box-shadow: var(--group-box-shadow);
+    display: inline-flex;
+    margin-bottom: var(--spacing);
+    position: relative;
+    transition: box-shadow var(--transition);
+    vertical-align: middle;
+    width: 100%;
+}
+
+[role="group"] > * {
+    flex: 1 1 auto;
+    margin-bottom: 0;
+    position: relative;
+}
+
+[role="group"] > :not(:last-child) {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+[role="group"] > :not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: 0;
+}
+
+[role="group"] > :focus {
+    z-index: 2;
+}
+
+[role="group"] button {
+    --form-element-spacing-horizontal: 2rem;
+    width: auto;
+}
+
+[role="group"] button:not(:first-child) {
+    margin-left: calc(var(--border-width) * -1);
+}
+
+@supports selector(:has(*)) {
+    [role="group"] button:focus {
+        box-shadow: none;
+    }
+}

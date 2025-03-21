@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Nuzlocke Tracker - New Run{% endblock %}
+{% block content %}
+<div class="grid">
+  <div>
+    <hgroup>
+      <h2>Start a New Nuzlocke Run</h2>
+      <p>Select your game to get started:</p>
+    </hgroup>
+    <form hx-post="/select-game-ruleset" hx-target="#ruleset-selector">
+      <label for="game">Game Version</label>
+      <select name="game" id="game" required>
+        <option selected disabled value="">-- Select a game --</option>
+        {% for game in games %}
+        <option value="{{ game }}">{{ game }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Continue</button>
+    </form>
+    <div id="ruleset-selector"></div>
+  </div>
+</div>
+{% endblock %}
