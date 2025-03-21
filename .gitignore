@@ -1,14 +1,6 @@
-# Byte-compiled
-**/__pycache__/
-
-# Environments
-.venv/
-
-# Build tools
-NuzlockeTool.egg-info
-
-# Formatting / Linting
-.ruff_cache/
+# Rust directory/files
+/target
+Cargo.lock
 
 # Project Specific
 journal/
