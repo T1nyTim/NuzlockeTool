@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 * {
     box-sizing: inherit;
 }
@@ -5,11 +7,11 @@
 :root {
     --active-background-l-delta: 10%;
     --active-border-l-delta: 20%;
-    --arrow-color: hsl(233, 100%, 63%);
+    --arrow-color: var(--link);
     --block-spacing: 1.5rem;
     --body-background-color: var(--scheme-main);
     --body-color: var(--text);
-    --body-family: Inter, SF Pro, Segoe UI, Roboto, Oxygen, Ubuntu, Helvetica Neue, Helvetica, Arial, sans-serif;
+    --body-family: var(--family-primary);
     --body-font-size: 1em;
     --body-line-height: 1.5;
     --body-min-width: 300px;
@@ -18,30 +20,62 @@
     --body-rendering: optimizeLegibility;
     --body-size: 1em;
     --body-weight: var(--weight-normal);
-    --border-weak: hsl(221, 14%, 21%);
-    --button-size: var(--size-normal);
+    --border-l: 24%;
+    --border-weak: hsl(var(--scheme-h), var(--scheme-s), var(--border-weak-l));
+    --border-weak-l: 21%;
     --column-gap: 0.75rem;
+    --control-border-width: 1px;
+    --control-height: 2.5em;
+    --control-line-height: 1.5;
+    --control-padding-horizontal: calc(0.75em - 1px);
+    --control-padding-vertical: calc(0.5em - 1px);
+    --control-radius: var(--radius);
+    --control-size: var(--size-normal);
     --duration: 294ms;
+    --family-primary: Inter, SF Pro, Segoe UI, Roboto, Oxygen, Ubuntu, Helvetica Neue, Helvetica, Arial, sans-serif;
+    --field-block-spacing: 0.75rem;
+    --focus-h: var(--link-h);
+    --focus-l: var(--link-l);
+    --focus-s: var(--link-s);
+    --focus-shadow-alpha: 0.25;
     --focus-shadow-size: 0 0 0 0.1875em;
-    --form-block-spacing: 0.75rem;
     --hover-background-l-delta: 5%;
     --hover-border-l-delta: 10%;
-    --input-line-height: 1.5;
-    --input-radius: 0.375rem;
     --label-color: var(--text-strong);
-    --label-spacing: 0.5rem;
-    --scheme-main: hsl(221, 14%, 9%);
-    --select-border-width: 1px;
-    --select-height: 2.5em;
-    --select-padding-horizontal: calc(0.75em - 1px);
-    --select-padding-vertical: calc(0.5em - 1px);
-    --shadow: 0 0.5em 1em -0.125em hsla(0, 0%, 100%, 0.1), 0 0px 0 1px hsla(0, 0%, 100%, 0.02);
+    --label-spacing: 0.5em;
+    --light-h: 221deg;
+    --light-invert-l: 21%;
+    --light-l: 96%;
+    --light-s: 14%;
+    --link: hsl(var(--link-h), var(--link-s), var(--link-l));
+    --link-h: 223deg;
+    --link-l: 63%;
+    --link-s: 100%;
+    --primary-05-l: 6%;
+    --primary-h: 171deg;
+    --primary-invert-l: var(--primary-05-l);
+    --primary-l: 41%;
+    --primary-s: 100%;
+    --radius: 0.375rem;
+    --scheme-h: 221deg;
+    --scheme-invert-l: 4%;
+    --scheme-main: hsl(var(--scheme-h), var(--scheme-s), var(--scheme-main-l));
+    --scheme-main-l: 9%;
+    --scheme-s: 14%;
+    --shadow: 0 0.5em 1em -0.125em hsla(var(--shadow-h), var(--shadow-s), var(--shadow-l), 0.1), 0 0px 0 1px hsla(var(--shadow-h), var(--shadow-s), var(--shadow-l), 0.02);
+    --shadow-h: 0deg;
+    --shadow-l: 100%;
+    --shadow-s: 0%;
     --size-5: 1.25rem;
     --size-normal: 1rem;
     --strong-color: var(--text-strong);
     --strong-weight: var(--weight-semibold);
-    --text: hsl(221, 14%, 71%);
-    --text-strong: hsl(221, 14%, 93%);
+    --text: hsl(var(--text-h), var(--text-s), var(--text-l));
+    --text-h: 221deg;
+    --text-l: 71%;
+    --text-s: 14%;
+    --text-strong: hsl(var(--text-h), var(--text-s), var(--text-strong-l));
+    --text-strong-l: 93%;
     --weight-bold: 700;
     --weight-extrabold: 800;
     --weight-medium: 500;
@@ -84,52 +118,25 @@ body {
     line-height: var(--body-line-height);
 }
 
-h1,
-h2,
-h3,
-h4 {
-    --title-color: var(--text-strong);
-    --title-line-height: 1.125;
-    --title-weight: var(--weight-extrabold);
-    color: var(--title-color);
-    font-weight: var(--title-weight);
-    line-height: var(--title-line-height);
-}
-
-h1,
-h2,
-h3,
-h4,
-hgroup > p {
-    word-break: break-word;
-}
-
-h1,
-h2,
-h3,
-h4,
-hgroup:not(:last-child),
-form > *:not(:last-child) {
-    margin-bottom: var(--block-spacing);
-}
-
-h1 {
+h1.title {
     font-size: 3rem;
 }
 
-h2 {
+h2.title {
     font-size: 2.5rem;
 }
 
-hgroup > h2 {
-    margin-bottom: 0;
-}
-
-h3 {
+h3.title {
     font-size: 2rem;
 }
 
-h4 {
+.content h4 {
+    color: var(--content-heading-color);
+    font-weight: var(--content-heading-weight);
+    line-height: var(--content-heading-line-height);
+}
+
+h4.title {
     font-size: 1.5rem;
 }
 
@@ -149,6 +156,17 @@ article > header:first-child {
     border-start-start-radius: var(--card-radius);
 }
 
+article > main {
+    background-color: var(--card-content-background-color);
+    padding: var(--card-content-padding);
+}
+
+article > main:last-child,
+article > footer:last-child {
+    border-end-end-radius: var(--card-radius);
+    border-end-start-radius: var(--card-radius);
+}
+
 article {
     --card-background-color: var(--scheme-main);
     --card-color: var(--text);
@@ -160,7 +178,7 @@ article {
     --card-header-background-color: transparent;
     --card-header-color: var(--text-strong);
     --card-header-padding: 0.75rem 1rem;
-    --card-header-shadow: 0 0.125em 0.25em hsla(221, 14%, 4%, 0.1);
+    --card-header-shadow: 0 0.125em 0.25em hsla(var(--scheme-h), var(--scheme-s), var(--scheme-invert-l), 0.1);
     --card-header-weight: var(--weight-bold);
     --card-radius: 0.75rem;
     --card-shadow: var(--shadow);
@@ -168,23 +186,8 @@ article {
     border-radius: var(--card-radius);
     box-shadow: var(--card-shadow);
     color: var(--card-color);
-    margin-top: 1.5rem;
     max-width: 100%;
     position: relative;
-}
-
-article > main {
-    background-color: var(--card-content-background-color);
-    padding: var(--card-content-padding);
-}
-
-article > main:last-child {
-    border-end-end-radius: var(--card-radius);
-    border-end-start-radius: var(--card-radius);
-}
-
-section {
-    margin-top: 1rem;
 }
 
 article > footer {
@@ -194,46 +197,35 @@ article > footer {
     display: flex;
 }
 
-article > footer:last-child {
-    border-end-end-radius: var(--card-radius);
-    border-end-start-radius: var(--card-radius);
-}
-
-.container {
-    margin: 0 auto;
-    position: relative;
-    width: 100%;
-}
-
-.grid {
-    margin-inline-end: calc(var(--column-gap) * -1);
-    margin-inline-start: calc(var(--column-gap) * -1);
-    margin-top: calc(var(--column-gap) * -1);
-}
-
-.grid:last-child {
-    margin-bottom: calc(var(--column-gap) * -1);
-}
-
-.grid > div {
-    display: block;
-    flex: none;
-    padding: var(--column-gap);
-    width: 100%;
-}
-
-hgroup > p {
+.title,
+.subtitle {
     --subtitle-color: var(--text);
     --subtitle-line-height: 1.25;
     --subtitle-size: var(--size-5);
+    --subtitle-strong-color: var(--text-strong);
+    --subtitle-strong-weight: var(--weight-semibold);
     --subtitle-weight: var(--weight-normal);
-    color: var(--subtitle-color);
-    font-size: var(--subtitle-size);
-    font-weight: var(--subtitle-weight);
-    line-height: var(--subtitle-line-height);
+    --title-color: var(--text-strong);
+    --title-line-height: 1.125;
+    --title-weight: var(--weight-extrabold);
+    word-break: break-word;
 }
 
-article > header > p {
+.title {
+    color: var(--title-color);
+    font-weight: var(--title-weight);
+    line-height: var(--title-line-height);
+}
+
+.title:not(:last-child) {
+    margin-bottom: var(--block-spacing);
+}
+
+.title:has(+ .subtitle) {
+    margin-bottom: 0;
+}
+
+.card-header-title {
     align-items: center;
     color: var(--card-header-color);
     display: flex;
@@ -242,27 +234,67 @@ article > header > p {
     padding: var(--card-header-padding);
 }
 
-article p:not(:last-child),
-article ol:not(:last-child) {
-    margin-bottom: 1em;
+.subtitle {
+    color: var(--subtitle-color);
+    font-size: var(--subtitle-size);
+    font-weight: var(--subtitle-weight);
+    line-height: var(--subtitle-line-height);
 }
 
-ol {
+.subtitle:not(:last-child) {
+    margin-bottom: var(--block-spacing);
+}
+
+.container {
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+}
+
+.columns {
+    margin-inline-end: calc(var(--column-gap) * -1);
+    margin-inline-start: calc(var(--column-gap) * -1);
+    margin-top: calc(var(--column-gap) * -1);
+}
+
+.columns:last-child {
+    margin-bottom: calc(var(--column-gap) * -1);
+}
+
+.column {
+    display: block;
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: var(--column-gap);
+}
+
+.content {
+    --content-block-margin-bottom: 1em;
+    --content-heading-color: var(--text-strong);
+    --content-heading-line-height: 1.125;
+    --content-heading-weight: var(--weight-extrabold);
+}
+
+.content p:not(:last-child) {
+    margin-bottom: var(--content-block-margin-bottom);
+}
+
+.content ol {
     list-style-position: outside;
     list-style-type: decimal;
     margin-inline-start: 2em;
-    margin-left: 3rem;
 }
 
-article ol:not(:first-child) {
+.content ol:not(:first-child) {
     margin-top: 1em;
 }
 
-li {
-    margin-bottom: 0.5rem;
+.content li + li {
+    margin-top: 0.25em;
 }
 
-footer > * {
+article > footer > * {
     align-items: center;
     display: flex;
     flex-basis: 0;
@@ -272,9 +304,8 @@ footer > * {
     padding: var(--card-footer-padding);
 }
 
-footer > *:not(:last-child) {
+article > footer > *:not(:last-child) {
     border-inline-end: var(--card-footer-border-top);
-    margin-right: 0.5rem;
 }
 
 strong {
@@ -282,8 +313,9 @@ strong {
     font-weight: var(--strong-weight);
 }
 
-form > * {
-    --block-spacing: var(--form-block-spacing);
+.subtitle strong {
+    color: var(--subtitle-strong-color);
+    font-weight: var(--subtitle-strong-weight);
 }
 
 label {
@@ -301,65 +333,37 @@ select,
 button {
     align-items: center;
     appearance: none;
-    border-color: hsl(221, 14%, calc(24% + var(--input-border-l-delta)));
-    border-radius: var(--input-radius);
+    border-radius: var(--control-radius);
     border-style: solid;
-    border-width: var(--select-border-width);
+    border-width: var(--control-border-width);
     box-shadow: none;
-    display: block;
-    font-size: var(--button-size);
-    height: var(--select-height);
-    line-height: var(--input-line-height);
-    padding: var(--select-padding-vertical) var(--select-padding-horizontal);
+    display: inline-flex;
+    font-size: var(--control-size);
+    height: var(--control-height);
+    line-height: var(--control-line-height);
+    padding: var(--control-padding-vertical) var(--control-padding-horizontal);
     position: relative;
     transition-duration: var(--duration);
     transition-property: background-color, border-color, box-shadow, color;
     vertical-align: top;
 }
 
-form > select,
-form > button {
-    box-sizing: border-box;
-    clear: both;
-    font-size: var(--size-normal);
-    max-width: 100%;
-    position: relative;
-    text-align: inherit;
-    width: 100%;
-}
-
 select {
-    --input-active-border-l-delta: var(--active-border-l-delta);
-    --input-border-l-delta: 0%;
-    --input-focus-shadow-size: var(--focus-shadow-size);
-    --input-hover-border-l-delta: var(--hover-border-l-delta);
-    background-color: hsl(221, 14%, 9%);
-    color: hsl(221, 14%, 93%);
+    background-color: hsl(var(--input-h), var(--input-s), calc(var(--input-background-l) + var(--input-background-l-delta)));
+    border-color: hsl(var(--input-h), var(--input-s), calc(var(--input-border-l) + var(--input-border-l-delta)));
+    border-radius: var(--input-radius);
+    color: hsl(var(--input-h), var(--input-s), var(--input-color-l));
     cursor: pointer;
+    display: block;
+    font-size: 1em;
     margin: 0;
     max-width: 100%;
     outline: none;
     padding-inline-end: 2.5em;
 }
 
-select::after {
-    border: 0.125em solid var(--arrow-color);
-    border-right: 0;
-    border-top: 0;
-    content: " ";
-    display: block;
-    height: 0.625em;
-    inset-inline-end: 1.125em;
-    margin-top: -0.4375em;
-    pointer-events: none;
-    position: absolute;
-    top: 50%;
-    transform: rotate(-45deg);
-    transform-origin: center;
-    transition-duration: var(--duration);
-    transition-property: border-color;
-    width: 0.625em;
-    z-index: 4;
+.select.is-fullwidth select {
+    width: 100%;
 }
 
 select:hover {
@@ -383,30 +387,39 @@ select:active {
 
 select:focus,
 select:focus-within {
-    border-color: hsl(233, 100%, 63%);
-    box-shadow: var(--input-focus-shadow-size) hsla(233, 100%, 63%, 0.25);
+    border-color: hsl(var(--input-focus-h), var(--input-focus-s), var(--input-focus-l));
+    box-shadow: var(--input-focus-shadow-size) hsla(var(--input-focus-h), var(--input-focus-s), var(--input-focus-l), var(--input-focus-shadow-alpha));
 }
 
 button {
     --button-active-background-l-delta: var(--active-background-l-delta);
     --button-active-border-l-delta: var(--active-border-l-delta);
+    --button-background-l: var(--primary-l);
     --button-background-l-delta: 0%;
+    --button-border-l: var(--primary-l);
     --button-border-l-delta: 0%;
     --button-border-style: solid;
     --button-border-width: 0px;
+    --button-color-l: var(--primary-invert-l);
+    --button-h: var(--primary-h);
     --button-hover-background-l-delta: var(--hover-background-l-delta);
     --button-hover-border-l-delta: var(--hover-border-l-delta);
+    --button-outer-shadow-a: 0;
+    --button-outer-shadow-h: 0;
+    --button-outer-shadow-l: 20%;
+    --button-outer-shadow-s: 0%;
     --button-padding-horizontal: 1em;
     --button-padding-vertical: 0.5em;
+    --button-s: var(--primary-s);
     --button-weight: var(--weight-medium);
     background: none;
-    background-color: hsl(171, 100%, calc(41% + var(--button-background-l-delta)));
+    background-color: hsl(var(--button-h), var(--button-s), calc(var(--button-background-l) + var(--button-background-l-delta)));
     border: none;
-    border-color: hsl(171, 100%, calc(41% + var(--button-border-l-delta)));
+    border-color: hsl(var(--button-h), var(--button-s), calc(var(--button-border-l) + var(--button-border-l-delta)));
     border-style: var(--button-border-style);
     border-width: var(--button-border-width);
-    box-shadow: 0 0.0625em 0.125em hsla(0, 0%, 20%, 0), 0, 0.125em, 0.25em hsla(0, 0%, 20%, 0);
-    color: hsl(171, 100%, 6%);
+    box-shadow: 0 0.0625em 0.125em hsla(var(--button-outer-shadow-h), var(--button-outer-shadow-s), var(--button-outer-shadow-l), var(--button-outer-shadow-a)), 0 0.125em 0.25em hsla(var(--button-outer-shadow-h), var(--button-outer-shadow-s), var(--button-outer-shadow-l), var(--button-outer-shadow-a));
+    color: hsl(var(--button-h), var(--button-s), var(--button-color-l));
     cursor: pointer;
     font-family: inherit;
     font-weight: var(--button-weight);
@@ -431,25 +444,104 @@ button:active {
 
 button:focus-visible {
     --button-border-width: 1px;
-    border-color: hsl(233, 100%, 63%);
-    box-shadow: var(--focus-shadow-size) hsla(233, 100%, 63%, 0.25);
-    outline-offset: var(--focus-offset);
-}
-
-button.success {
-    background-color: hsl(153, 53%, calc(53% + var(--button-background-l-delta)));
-    border-color: hsl(153, 53%, calc(53% + var(--button-border-l-delta)));
-    color: hsl(153, 53%, 8%);
+    border-color: hsl(var(--focus-h), var(--focus-s), var(focus-l));
+    box-shadow: var(--focus-shadow-size) hsla(var(--focus-h), var(--focus-l), var(--focus-shadow-alpha))
 }
 
 button.light {
-    background-color: hsl(221, 14%, calc(96% + var(--button-background-l-delta)));
-    border-color: hsl(221, 14%, calc(96% + var(--button-background-l-delta)));
-    color: hsl(221, 14%, 21%);
+    --button-background-l: var(--light-l);
+    --button-border-l: var(--light-l);
+    --button-border-width: 0px;
+    --button-color-l: var(--light-invert-l);
+    --button-h: var(--light-h);
+    --button-outer-shadow-a: 0;
+    --button-s: var(--light-s);
+}
+
+.field {
+    --block-spacing: var(--field-block-spacing);
+}
+
+.field:not(:last-child) {
+    margin-bottom: var(--block-spacing);
+}
+
+.control {
+    box-sizing: border-box;
+    clear: both;
+    font-size: var(--size-normal);
+    position: relative;
+    text-align: inherit;
+}
+
+.select {
+    --input-active-border-l-delta: var(--active-border-l-delta);
+    --input-background-l: var(--scheme-main-l);
+    --input-background-l-delta: 0%;
+    --input-border-l: var(--border-l);
+    --input-color-l: var(--text-strong-l);
+    --input-focus-h: var(--focus-h);
+    --input-focus-l: var(--focus-l);
+    --input-focus-s: var(--focus-s);
+    --input-focus-shadow-alpha: var(--focus-shadow-alpha);
+    --input-focus-shadow-size: var(--focus-shadow-size);
+    --input-h: var(--scheme-h);
+    --input-hover-border-l-delta: var(--hover-border-l-delta);
+    --input-radius: var(--radius);
+    --input-s: var(--scheme-s);
+    display: inline-block;
+    height: var(--control-height);
+    max-width: 100%;
+    position: relative;
+    vertical-align: top;
+}
+
+.select::after {
+    border: 0.125em solid var(--arrow-color);
+    border-right: 0;
+    border-top: 0;
+    content: " ";
+    display: block;
+    height: 0.625em;
+    inset-inline-end: 1.125em;
+    margin-top: -0.4375em;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: rotate(-45deg);
+    transform-origin: center;
+    transition-duration: var(--duration);
+    transition-property: border-color;
+    width: 0.625em;
+    z-index: 4;
+}
+
+.select.is-fullwidth {
+    width: 100%;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+.ml-6 {
+    margin-left: 3rem !important;
+}
+
+.mr-2 {
+    margin-right: 0.5rem !important;
+}
+
+.mt-4 {
+    margin-top: 1rem !important;
+}
+
+.mt-5 {
+    margin-top: 1.5rem !important;
 }
 
 @media print, screen and (min-width: 769px) {
-    .grid {
+    .columns {
         display: flex;
     }
 }

@@ -11,7 +11,6 @@ use serde::Deserialize;
 #[derive(Deserialize)]
 struct GameRulesetForm {
     game: String,
-    ruleset: Option<String>,
 }
 
 #[derive(Deserialize)]

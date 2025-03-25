@@ -1,16 +1,24 @@
-<hgroup>
-  <h3>Select Ruleset</h3>
-  <p>You've selected <strong>{{ game }}</strong>. Now choose a ruleset:</p>
-</hgroup>
+<h3 class="title">Select Ruleset</h3>
+<p class="subtitle">You've selected <strong>{{ game }}</strong>. Now choose a ruleset:</p>
 <form hx-post="/show-ruleset" hx-target="#ruleset-details">
   <input type="hidden" name="game" value="{{ game }}">
-  <label for="ruleset">Ruleset</label>
-  <select name="ruleset" id="ruleset" required>
-    <option selected disabled value="">-- Select a ruleset --</option>
-    {% for ruleset in rulesets %}
-    <option value="{{ ruleset }}">{{ ruleset }}</option>
-    {% endfor %}
-  </select>
-  <button type="submit">View Ruleset</button>
+  <div class="field">
+    <label for="ruleset">Ruleset</label>
+    <div class="control">
+      <div class="select is-fullwidth">
+        <select name="ruleset" id="ruleset" required>
+          <option selected disabled value="">-- Select a ruleset --</option>
+          {% for ruleset in rulesets %}
+          <option value="{{ ruleset }}">{{ ruleset }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="control">
+      <button type="submit">View Ruleset</button>
+    </div>
+  </div>
 </form>
-<article id="ruleset-details"></article>
+<article id="ruleset-details" class="mt-5"></article>
